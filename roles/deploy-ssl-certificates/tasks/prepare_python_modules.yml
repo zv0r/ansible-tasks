@@ -1,0 +1,9 @@
+---
+- name: "Prepare python module if needed: {{ python_module_name }}"
+  ansible.builtin.raw: "echo {{ python_module_local_file | quote }} > {{ python_lib_dir }}/{{ python_module_name }}.py"
+  with_file:
+    - "python_lib/{{ python_interpreter_version }}/{{ python_module_name }}.py"
+  loop_control:
+    loop_var: python_module_local_file
+  ignore_errors: true
+  changed_when: false

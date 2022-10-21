@@ -1,0 +1,5 @@
+---
+- name: Remove ssl certificates temp dest_key_directory
+  ansible.builtin.file:
+    path: "{{ local_temp_ssl_dir }}"
+    state: absent

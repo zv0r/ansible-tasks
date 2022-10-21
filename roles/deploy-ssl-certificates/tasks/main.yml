@@ -1,0 +1,48 @@
+---
+- name: Prepare python modules if needed
+  ansible.builtin.include_tasks: prepare_python_modules.yml
+  loop:
+    - runpy
+    - pkgutil
+    - zipfile
+    - platform
+    - ast
+    - filecmp
+    - glob
+  loop_control:
+    loop_var: python_module_name
+
+- name: Copy ca chain file
+  ansible.builtin.copy:
+    src: "{{ local_temp_ssl_dir }}/{{ item }}/ca.cer"
+    dest: "{{ dest_cert_directory }}/{{ item }}_ca.cer"
+    owner: "{{ cert_owner_user | default('root') }}"
+    group: "{{ cert_owner_group | default('root') }}"
+    mode: "0644"
+
+- name: Copy full chain file
+  ansible.builtin.copy:
+    src: "{{ local_temp_ssl_dir }}/{{ item }}/fullchain.cer"
+    dest: "{{ dest_cert_directory }}/{{ item }}_fullchain.cer"
+    owner: "{{ cert_owner_user | default('root') }}"
+    group: "{{ cert_owner_group | default('root') }}"
+    mode: "0644"
+
+- name: Copy cert file
+  ansible.builtin.copy:
+    src: "{{ local_temp_ssl_dir }}/{{ item }}/cert.pem"
+    dest: "{{ dest_cert_directory }}/{{ item }}.cer"
+    owner: "{{ cert_owner_user | default('root') }}"
+    group: "{{ cert_owner_group | default('root') }}"
+    mode: "0644"
+
+- name: Copy key file
+  ansible.builtin.copy:
+    src: "{{ local_temp_ssl_dir }}/{{ item }}/key.pem"
+    dest: "{{ dest_key_directory }}/{{ item }}.key"
+    owner: "{{ cert_owner_user | default('root') }}"
+    group: "{{ cert_owner_group | default('root') }}"
+    mode: "0400"
+
+- name: Update stunnel.pem and uca.pem
+  ansible.builtin.include_tasks: update-stunnel.yml

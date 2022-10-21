@@ -1,0 +1,59 @@
+---
+all:
+  children:
+    bsd_machines:
+      children:
+        freebsd_machines:
+          hosts:
+            gayogw01.corp.yararchive.ru:
+              ansible_host: 10.10.10.10
+    linux_machines:
+      children:
+        debian_based_machines:
+          hosts:
+            gayoansible01.corp.yararchive.ru:
+              ansible_host: 172.16.50.14
+        qnap_qts_machines:
+          hosts:
+            gayostorage02.corp.yararchive.ru:
+              ansible_host: 172.16.0.4
+    windows_machines:
+    servers:
+      children:
+        gateways:
+          hosts:
+            gayogw01.corp.yararchive.ru:
+              ansible_host: 10.10.10.10
+        acme_clients:
+          hosts:
+            gayogw01.corp.yararchive.ru:
+              ansible_host: 10.10.10.10
+        https_servers:
+          children:
+            https_servers_qts:
+              hosts:
+                gayostorage02.corp.yararchive.ru:
+                  ansible_host: 172.16.0.4
+                  ssl_cert_domains:
+                    - "*.corp.yararchive.ru"
+              vars:
+                ansible_become_user: admin
+                cert_owner_user: admin
+                cert_owner_group: administrators
+                ansible_python_interpreter: /usr/local/Python3/bin/python3
+                python_interpreter_version: 3.7.5
+                python_lib_dir: /usr/local/lib/python3.7
+          hosts:
+            gayoansible01.corp.yararchive.ru:
+              ansible_host: 172.16.50.14
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+                - "*.yararchive.ru"
+          vars:
+            acme_clients_certs_directory: /var/etc/acme-client/home
+            local_temp_ssl_dir: /tmp/ssl_cert
+            dest_cert_directory: /etc/ssl/certs
+            dest_key_directory: /etc/ssl/private
+            stunnel_pem_path: /etc/stunnel/stunnel.pem
+            uca_pem_path: /etc/stunnel/uca.pem
+

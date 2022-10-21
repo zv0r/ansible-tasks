@@ -1,0 +1,27 @@
+---
+- name: Deploy SSL certificates
+  hosts: https_servers
+  become: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: Fetch SSL certificate from ACME clients
+      ansible.builtin.include_role:
+        name: fetch-ssl-certificates-to-local-temp
+        apply:
+          delegate_to: "{{ groups['acme_clients'][0] }}"
+      with_items: "{{ ssl_cert_domains }}"
+
+  tasks:
+    - name: Deploy SSL certificate to https servers
+      ansible.builtin.include_role:
+        name: deploy-ssl-certificates
+      with_items: "{{ ssl_cert_domains }}"
+
+  post_tasks:
+    - name: Delete SSL certificates from local temp
+      ansible.builtin.include_role:
+        name: remove-ssl-certificates-from-temp
+        apply:
+          delegate_to: localhost
+      run_once: true

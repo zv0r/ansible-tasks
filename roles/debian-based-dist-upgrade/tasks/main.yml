@@ -1,0 +1,7 @@
+---
+- name: Update packages list on debian based distro
+  ansible.builtin.include_tasks: apt-update.yml
+- name: Upgrade debian based distro
+  ansible.builtin.include_tasks: dist-upgrade.yml
+- name: Reboot after upgrade if needed
+  ansible.builtin.include_tasks: reboot-after-upgrade.yml

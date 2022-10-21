@@ -1,0 +1,5 @@
+---
+- name: Upgrade all packages on servers
+  ansible.builtin.apt:
+    upgrade: dist
+    force_apt_get: true

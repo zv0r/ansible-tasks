@@ -1,0 +1,40 @@
+---
+- name: Check file stunnel.pem exists
+  ansible.builtin.stat:
+    path: "{{ stunnel_pem_path }}"
+  register: stunnel_pem_path_result
+
+- name: Update stunnel and restart services
+  when: stunnel_pem_path_result.stat.exists
+  block:
+    - name: Update stunnel.pem if exists
+      ansible.builtin.template:
+        src: stunnel.pem.j2
+        dest: "{{ stunnel_pem_path }}"
+        owner: "{{ cert_owner_user | default('root') }}"
+        group: "{{ cert_owner_group | default('root') }}"
+        mode: "0600"
+
+    - name: Update uca.pem if exists
+      ansible.builtin.copy:
+        src: "{{ local_temp_ssl_dir }}/{{ item }}/ca.cer"
+        dest: "{{ uca_pem_path }}"
+        owner: "{{ cert_owner_user | default('root') }}"
+        group: "{{ cert_owner_group | default('root') }}"
+        mode: "0600"
+
+    - name: Set type of certificate to Imported
+      ansible.builtin.command: /sbin/setcfg "SSL Import" "cert_type" 2
+      changed_when: false
+
+    - name: Restart Qthttpd
+      ansible.builtin.command: /etc/init.d/Qthttpd.sh restart
+      changed_when: false
+
+    - name: Restart thttpd
+      ansible.builtin.command: /etc/init.d/thttpd.sh restart
+      changed_when: false
+
+    - name: Restart stunnel
+      ansible.builtin.command: /etc/init.d/stunnel.sh restart
+      changed_when: false
