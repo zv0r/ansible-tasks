@@ -15,8 +15,20 @@ all:
               ansible_host: 172.16.50.14
         qnap_qts_machines:
           hosts:
+            gayostorage01.corp.yararchive.ru:
+              ansible_host: 172.16.0.2
             gayostorage02.corp.yararchive.ru:
               ansible_host: 172.16.0.4
+            cdnistorage01.corp.yararchive.ru:
+              ansible_host: 172.17.0.6
+            rbnskstorage01.corp.yararchive.ru:
+              ansible_host: 172.19.0.2
+            rbnskstorage02.corp.yararchive.ru:
+              ansible_host: 172.19.0.5
+            rstvstorage01.corp.yararchive.ru:
+              ansible_host: 172.20.0.4
+            uglchstorage01.corp.yararchive.ru:
+              ansible_host: 172.21.0.4
     windows_machines:
     servers:
       children:
@@ -28,15 +40,31 @@ all:
           hosts:
             gayogw01.corp.yararchive.ru:
               ansible_host: 10.10.10.10
+        ansible_semaphore_servers:
+          hosts:
+            gayoansible01.corp.yararchive.ru:
+              ansible_host: 172.16.50.14
         https_servers:
           children:
             https_servers_qts:
               hosts:
+                gayostorage01.corp.yararchive.ru:
+                  ansible_host: 172.16.0.2
                 gayostorage02.corp.yararchive.ru:
                   ansible_host: 172.16.0.4
-                  ssl_cert_domains:
-                    - "*.corp.yararchive.ru"
+                cdnistorage01.corp.yararchive.ru:
+                  ansible_host: 172.17.0.6
+                rbnskstorage01.corp.yararchive.ru:
+                  ansible_host: 172.19.0.2
+                rbnskstorage02.corp.yararchive.ru:
+                  ansible_host: 172.19.0.5
+                rstvstorage01.corp.yararchive.ru:
+                  ansible_host: 172.20.0.4
+                uglchstorage01.corp.yararchive.ru:
+                  ansible_host: 172.21.0.4
               vars:
+                ssl_cert_domains:
+                  - "*.corp.yararchive.ru"
                 ansible_become_user: admin
                 cert_owner_user: admin
                 cert_owner_group: administrators
@@ -48,7 +76,6 @@ all:
               ansible_host: 172.16.50.14
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
-                - "*.yararchive.ru"
           vars:
             acme_clients_certs_directory: /var/etc/acme-client/home
             local_temp_ssl_dir: /tmp/ssl_cert
@@ -56,4 +83,3 @@ all:
             dest_key_directory: /etc/ssl/private
             stunnel_pem_path: /etc/stunnel/stunnel.pem
             uca_pem_path: /etc/stunnel/uca.pem
-
