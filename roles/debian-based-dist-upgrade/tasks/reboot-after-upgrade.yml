@@ -13,4 +13,4 @@
     pre_reboot_delay: 0
     post_reboot_delay: 90
     test_command: uptime
-  when: reboot_required_file.stat.exists and not skip_reboot and ansible_connection != "local"
+  when: reboot_required_file.stat.exists and not debian_based_dist_upgrade_skip_reboot
