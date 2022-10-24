@@ -6,4 +6,4 @@
   gather_facts: false
 
   roles:
-    - set-timezone
+    - set_timezone

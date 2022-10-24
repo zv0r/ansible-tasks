@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: zv0r
+  description: Update packages on debian based systems
+  license: MIT
+  min_ansible_version: "2.13"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+dependencies:
+  - role: set_timezone

@@ -3,22 +3,22 @@
   ansible.builtin.fetch:
     src: "{{ acme_clients_certs_directory }}/{{ item }}/ca.cer"
     dest: "{{ local_temp_ssl_dir }}/{{ item }}/ca.cer"
-    flat: yes
+    flat: true
 
 - name: Fetch full chain SSL certificate from ACME clients
   ansible.builtin.fetch:
     src: "{{ acme_clients_certs_directory }}/{{ item }}/fullchain.cer"
     dest: "{{ local_temp_ssl_dir }}/{{ item }}/fullchain.cer"
-    flat: yes
+    flat: true
 
 - name: Fetch domain SSL certificate from ACME clients
   ansible.builtin.fetch:
     src: "{{ acme_clients_certs_directory }}/{{ item }}/{{ item }}.cer"
     dest: "{{ local_temp_ssl_dir }}/{{ item }}/cert.pem"
-    flat: yes
+    flat: true
 
 - name: Fetch domain SSL key from ACME clients
   ansible.builtin.fetch:
     src: "{{ acme_clients_certs_directory }}/{{ item }}/{{ item }}.key"
     dest: "{{ local_temp_ssl_dir }}/{{ item }}/key.pem"
-    flat: yes
+    flat: true
