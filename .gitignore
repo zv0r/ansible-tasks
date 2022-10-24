@@ -1,3 +1,4 @@
 .ansible_vault_pass
+.ansible_ssh_key
 .vscode/
 .venv/
