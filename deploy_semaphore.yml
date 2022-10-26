@@ -1,42 +1,8 @@
 ---
-- name: Deploy ansible semaphore
+- name: Deploy semaphore
   hosts: ansible_semaphore_servers
+  gather_facts: true
+  become: true
 
-  pre_tasks:
-    - name: "Prepare ssl certificates for {{ inventory_hostname }}"
-      ansible.builtin.include_tasks: deploy_ssl_certificates.yml
-# - name: Fetch ssl certificates
-#   hosts: gayogw01.corp.yararchive.ru
-#   gather_facts: false
-#   become: true
-#   roles:
-#     - role: fetch-ssl-certificates
-#       ssl_cert_domain_name: "*.corp.yararchive.ru"
-
-# - name: Deploy ssl certificates
-#   hosts: 127.0.0.1
-#   connection: local
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: deploy_ssl_certificates
-#       ssl_cert_domain_name: "*.corp.yararchive.ru"
-#       when: ansible_os_family == "Debian"
-
-# - name: Remove ssl certificates from temp
-#   hosts: 127.0.0.1
-#   connection: local
-#   gather_facts: false
-#   become: true
-#   roles:
-#     - role: remove_ssl_certificates_from_temp
-
-# - name: Deploy semaphore on local instanse
-#   hosts: 127.0.0.1
-#   connection: local
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: deploy-semaphore
-#       ssl_cert_domain_name: "*.corp.yararchive.ru"
-#       when: ansible_os_family == "Debian"
+- name: Prepare SSL certificates
+  ansible.builtin.import_playbook: deploy_ssl_certificates.yml
