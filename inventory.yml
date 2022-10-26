@@ -46,6 +46,7 @@ all:
           hosts:
             gayoansible01.corp.yararchive.ru:
               ansible_host: 172.16.50.14
+              ssl_cert_domain_name: "*.corp.yararchive.ru"
         https_servers:
           children:
             https_servers_qts:
