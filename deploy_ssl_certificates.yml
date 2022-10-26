@@ -1,6 +1,6 @@
 ---
 - name: Deploy SSL certificates
-  hosts: https_servers
+  hosts: "{{ deploy_ssl_certificates_hosts | default('https_servers') }}"
   become: true
   gather_facts: false
 
@@ -9,7 +9,7 @@
       ansible.builtin.include_role:
         name: fetch_ssl_certificates_to_local_temp
         apply:
-          delegate_to: "{{ groups['acme_clients'][0] }}"
+          delegate_to: "{{ groups[acme_client_group_name | default('acme_clients')][0] }}"
       with_items: "{{ ssl_cert_domains }}"
 
   tasks:
