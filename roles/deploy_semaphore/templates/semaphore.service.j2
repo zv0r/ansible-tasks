@@ -1,0 +1,16 @@
+[Unit]
+Description=Semaphore Ansible
+Documentation=https://github.com/ansible-semaphore/semaphore
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Restart=on-failure
+RestartSec=30s
+Type=simple
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ semaphore_installation_directory }}/semaphore service --config={{ semaphore_config_file }}
+SyslogIdentifier=semaphore
+Restart=always

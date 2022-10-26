@@ -1,0 +1,6 @@
+---
+semaphore_email_password: "{{ vault_semaphore_email_password }}"
+semaphore_email_sender: "{{ vault_semaphore_email_sender }}"
+semaphore_email_host: "{{ vault_semaphore_email_host }}"
+semaphore_email_port: "{{ vault_semaphore_email_port }}"
+semaphore_email_username: "{{ vault_semaphore_email_username }}"

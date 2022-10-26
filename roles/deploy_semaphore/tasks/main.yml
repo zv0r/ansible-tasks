@@ -1,0 +1,17 @@
+---
+- name: Prepare dependencies
+  ansible.builtin.include_tasks: prepare_dependencies.yml
+
+- name: Prepare ansible semaphore distro
+  ansible.builtin.include_tasks: prepare_ansible_semaphore_distro.yml
+
+- name: Prepare systemd service unit
+  ansible.builtin.include_tasks: prepare_systemd_service_unit.yml
+
+- name: Setup nginx reverse proxy
+  ansible.builtin.include_tasks: prepare_nginx_reverse_proxy.yml
+
+- name: Delete installation archive file
+  ansible.builtin.file:
+    path: "{{ semaphore_archive_dest }}"
+    state: absent

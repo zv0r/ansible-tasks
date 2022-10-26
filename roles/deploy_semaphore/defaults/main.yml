@@ -1,0 +1,10 @@
+---
+semaphore_installation_directory: "/etc/semaphore"
+semaphore_config_file: "{{ semaphore_installation_directory }}/config.json"
+semaphore_archive_dest: "/tmp/semaphore.tar.gz"
+semaphore_db_dialect: bolt # bolt|mysql|postgres
+semaphore_db_bolt_path: "{{ semaphore_installation_directory }}/db.bolt"
+semaphore_webapp_port: 3000
+semaphore_cookie_hash: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
+semaphore_cookie_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
+semaphore_key_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"

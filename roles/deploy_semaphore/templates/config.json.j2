@@ -1,0 +1,53 @@
+ {
+        "mysql": {
+                "host": "{{ semaphore_db_mysql_host | default('') }}:{{ semaphore_db_mysql_port | default('') }}",
+                "user": "{{ semaphore_db_mysql_user | default('') }}",
+                "pass": "{{ semaphore_db_mysql_password | default('') }}",
+                "name": "{{ semaphore_db_mysql_name | default('') }}",
+                "options": null
+        },
+        "bolt": {
+                "host": "{{ semaphore_db_bolt_path | default('') }}"
+        },
+        "postgres": {
+                "host": "{{ semaphore_db_postgres_host | default('') }}:{{ semaphore_db_postgres_port | default('') }}",
+                "user": "{{ semaphore_db_postgres_user | default('') }}",
+                "pass": "{{ semaphore_db_postgres_password | default('') }}",
+                "name": "{{ semaphore_db_postgres_name | default('') }}",
+                "options": null
+        },
+        "dialect": "{{ semaphore_db_dialect }}",
+        "port": "{{ semaphore_webapp_port }}",
+        "interface": "",
+        "tmp_path": "/tmp/semaphore",
+        "cookie_hash": "{{ semaphore_cookie_hash }}",
+        "cookie_encryption": "{{ semaphore_cookie_encryption }}",
+        "access_key_encryption": "{{ semaphore_key_encryption }}",
+        "email_sender": "{{ semaphore_email_sender }}",
+        "email_host": "{{ semaphore_email_host }}",
+        "email_port": "{{ semaphore_email_port }}",
+        "email_username": "{{ semaphore_email_username }}",
+        "email_password": "{{ semaphore_email_password }}",
+        "web_host": "https://{{ ansible_fqdn }}",
+        "ldap_binddn": "",
+        "ldap_bindpassword": "",
+        "ldap_server": "",
+        "ldap_searchdn": "",
+        "ldap_searchfilter": "",
+        "ldap_mappings": {
+                "dn": "",
+                "mail": "",
+                "uid": "",
+                "cn": ""
+        },
+        "telegram_chat": "",
+        "telegram_token": "",
+        "max_parallel_tasks": 0,
+        "email_alert": true,
+        "email_secure": true,
+        "telegram_alert": false,
+        "ldap_enable": false,
+        "ldap_needtls": true,
+        "ssh_config_path": "",
+        "demo_mode": false
+ }

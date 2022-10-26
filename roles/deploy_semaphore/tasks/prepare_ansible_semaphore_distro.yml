@@ -1,0 +1,30 @@
+---
+- name: Download semaphore archive
+  ansible.builtin.get_url:
+    url: "{{ semaphore_archive_url }}"
+    dest: "{{ semaphore_archive_dest }}"
+    mode: "0664"
+    checksum: "{{ semaphore_archive_checksum }}"
+
+- name: Create semaphore directory
+  ansible.builtin.file:
+    path: "{{ semaphore_installation_directory }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Unarchive semaphore installation archive
+  ansible.builtin.unarchive:
+    src: "{{ semaphore_archive_dest }}"
+    dest: "{{ semaphore_installation_directory }}"
+    remote_src: true
+
+- name: Create semaphore config file
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: "{{ semaphore_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: false

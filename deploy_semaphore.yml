@@ -1,8 +1,15 @@
 ---
-- name: Deploy semaphore
+- name: Prepare SSL certificates
+  ansible.builtin.import_playbook: deploy_ssl_certificates.yml
+  vars:
+    deploy_ssl_certificates_hosts: "ansible_semaphore_servers"
+    ssl_cert_domains:
+      - "{{ ssl_cert_domain_name }}"
+
+- name: Deploy ansible semaphore
   hosts: ansible_semaphore_servers
   gather_facts: true
   become: true
 
-- name: Prepare SSL certificates
-  ansible.builtin.import_playbook: deploy_ssl_certificates.yml
+  roles:
+    - role: deploy_semaphore
