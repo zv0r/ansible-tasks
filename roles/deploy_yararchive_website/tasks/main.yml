@@ -1,0 +1,9 @@
+---
+- name: Prepare dependencies
+  ansible.builtin.include_tasks: prepare_dependencies.yml
+
+- name: Prepare perl environment
+  ansible.builtin.include_tasks: prepare_perl_environment.yml
+
+- name: Prepare apache
+  ansible.builtin.include_tasks: prepare_apache.yml

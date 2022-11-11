@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: zv0r
+  description: Deploy yararchive website created in 2010
+  license: MIT
+  min_ansible_version: "2.7"
+  platforms:
+    - name: Debian
+      versions:
+        - all

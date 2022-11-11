@@ -1,0 +1,5 @@
+---
+yararchive_website_directory: /var/www/yararchive.ru
+yararchive_fcgi_directory: "{{ yararchive_website_directory }}/fcgi-bin"
+yararchive_cman_directory: "{{ yararchive_fcgi_directory }}/cman"
+perl_modules_directory: /usr/local/lib/site_perl

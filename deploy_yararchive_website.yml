@@ -1,0 +1,7 @@
+---
+- name: Deploy yararchive.ru website 2010
+  hosts: yararchive_website_2010_servers
+  become: true
+
+  roles:
+    - role: deploy_yararchive_website

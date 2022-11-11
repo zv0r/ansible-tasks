@@ -1,0 +1,22 @@
+<VirtualHost *:80>
+  ServerName www.yararchive.ru
+  DocumentRoot {{ yararchive_website_directory }}
+
+  SuexecUserGroup {{ ansible_user }} {{ ansible_user }}
+
+  <Directory {{ yararchive_website_directory }}>
+    Options +FollowSymLinks
+    AllowOverride All
+    AddType text/html .shtml
+    AddHandler server-parsed .shtml
+    Options +Includes
+    DirectoryIndex index.shtml
+    Require all granted
+  </Directory>
+
+  <Directory {{ yararchive_fcgi_directory }}>
+    AddHandler fcgid-script fcg fcgi fpl cgi
+    AllowOverride All
+    Options ExecCGI FollowSymLinks
+  </Directory>
+</VirtualHost>

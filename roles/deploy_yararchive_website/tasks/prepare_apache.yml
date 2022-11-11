@@ -1,0 +1,55 @@
+---
+- name: Prepare website directory
+  ansible.builtin.file:
+    path: "{{ yararchive_website_directory }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    force: false
+    state: directory
+
+- name: Remove default website config file
+  ansible.builtin.file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+
+- name: Create website config file
+  ansible.builtin.template:
+    src: yararchive.ru.conf.j2
+    dest: /etc/apache2/sites-available/yararchive.ru.conf
+    owner: root
+    group: root
+    mode: 0644
+    force: false
+
+- name: Create website config link
+  ansible.builtin.file:
+    src: /etc/apache2/sites-available/yararchive.ru.conf
+    dest: /etc/apache2/sites-enabled/yararchive.ru.conf
+    owner: root
+    group: root
+    state: link
+
+- name: Create modules load links
+  ansible.builtin.file:
+    src: "../mods-available/{{ item }}.load"
+    dest: "/etc/apache2/mods-enabled/{{ item }}.load"
+    owner: root
+    group: root
+    state: link
+  with_items:
+    - rewrite
+    - suexec
+    - expires
+    - headers
+    - include
+
+- name: Start or restart apache systemd service
+  ansible.builtin.systemd:
+    state: restarted
+    name: apache2.service
+
+- name: Allow http in ufw
+  community.general.ufw:
+    rule: allow
+    name: "WWW"

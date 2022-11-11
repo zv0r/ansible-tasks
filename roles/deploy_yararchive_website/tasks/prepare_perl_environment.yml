@@ -1,0 +1,52 @@
+---
+- name: Create perl modules directory
+  ansible.builtin.file:
+    path: "{{ perl_modules_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create perl modules links
+  ansible.builtin.file:
+    src: "{{ yararchive_cman_directory }}/{{ item }}"
+    dest: "{{ perl_modules_directory }}/{{ item }}"
+    owner: root
+    group: root
+    state: link
+    force: true
+  with_items:
+    - articles.pm
+    - articles_int.pm
+    - auth.pm
+    - auth_int.pm
+    - banners_int.pm
+    - captcha.pm
+    - captcha_int.pm
+    - cman.fcgi
+    - config.pm
+    - criteria.pm
+    - criteria_int.pm
+    - database.pm
+    - error.pm
+    - etc
+    - fortunes.pm
+    - fortunes_int.pm
+    - indexes.pm
+    - indexes_int.pm
+    - install
+    - lists.pm
+    - lists_int.pm
+    - news.pm
+    - news_int.pm
+    - orders_int.pm
+    - rss_int.pm
+    - setup.pl
+    - tempfiles.pm
+    - templates
+    - templates.pm
+    - utility.pm
+    - vercontrol.pm
+    - vocabulary
+    - votings.pm
+    - votings_int.pm
