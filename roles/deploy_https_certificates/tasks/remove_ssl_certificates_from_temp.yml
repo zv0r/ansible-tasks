@@ -3,3 +3,4 @@
   ansible.builtin.file:
     path: "{{ local_temp_ssl_dir }}"
     state: absent
+  delegate_to: localhost

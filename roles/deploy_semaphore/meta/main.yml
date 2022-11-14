@@ -12,3 +12,8 @@ dependencies:
   - role: debian_based_dist_upgrade
     vars:
       debian_based_dist_upgrade_skip_reboot: true
+  - role: deploy_https_certificates
+    vars:
+      ssl_cert_domains:
+        - "{{ ssl_cert_domain_name }}"
+      deploy_ssl_certificates_hosts: "{{ ansible_semaphore_hosts_limit | default('ansible_semaphore_servers') }}"

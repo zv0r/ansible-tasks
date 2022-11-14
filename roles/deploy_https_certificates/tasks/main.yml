@@ -1,0 +1,12 @@
+---
+- name: Fetch SSL certificates to local temp
+  ansible.builtin.include_tasks: fetch_to_local_temp.yml
+  with_items: "{{ ssl_cert_domains }}"
+
+- name: Deploy SSL certificates
+  ansible.builtin.include_tasks: deploy_ssl_certificates.yml
+  with_items: "{{ ssl_cert_domains }}"
+
+- name: Remove SSL certificates from temp
+  ansible.builtin.include_tasks: remove_ssl_certificates_from_temp.yml
+  run_once: true
