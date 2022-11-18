@@ -1,0 +1,4 @@
+---
+unattended_updates_notify_email: it@yararchive.ru
+apt_daily_timer_directory: /etc/systemd/system/apt-daily.timer.d
+apt_daily_upgrade_timer_directory: /etc/systemd/system/apt-daily-upgrade.timer.d

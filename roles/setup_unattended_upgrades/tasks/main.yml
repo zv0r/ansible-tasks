@@ -1,0 +1,53 @@
+---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - apt-config-auto-update
+    - unattended-upgrades
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Set selections for debconf
+  ansible.builtin.debconf:
+    name: unattended-upgrades
+    question: unattended-upgrades/enable_auto_updates
+    value: "true"
+    vtype: boolean
+  notify: Reconfigure unattended-upgrades
+
+- name: Prepare unattended upgrades config
+  ansible.builtin.template:
+    src: 50unattended-upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Prepare systemd timers override directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "{{ apt_daily_timer_directory }}"
+    - "{{ apt_daily_upgrade_timer_directory }}"
+
+- name: Override systemd timers settings
+  ansible.builtin.template:
+    src: "{{ item.template_file }}"
+    dest: "{{ item.override_directory }}/override.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { template_file: "apt-daily.timer.j2", override_directory: "{{ apt_daily_timer_directory }}" }
+    - { template_file: "apt-daily-upgrade.timer.j2", override_directory: "{{ apt_daily_upgrade_timer_directory }}" }
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
