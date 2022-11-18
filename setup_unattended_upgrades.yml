@@ -1,0 +1,8 @@
+---
+- name: Setup unattended upgrades
+  hosts: debian_based_machines
+  gather_facts: true
+  become: true
+
+  roles:
+    - role: setup_unattended_upgrades
