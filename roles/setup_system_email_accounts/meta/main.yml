@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: zv0r
+  description: Setup system email accounts
+  license: MIT
+  min_ansible_version: "2.7"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+dependencies:
+  - role: debian_based_dist_upgrade
+    vars:
+      debian_based_dist_upgrade_skip_reboot: true

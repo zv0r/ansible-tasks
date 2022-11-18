@@ -1,0 +1,6 @@
+---
+email_password: "{{ vault_email_password }}"
+email_sender: "{{ vault_email_sender }}"
+email_host: "{{ vault_email_host }}"
+email_port: "{{ vault_email_port }}"
+email_username: "{{ vault_email_username }}"

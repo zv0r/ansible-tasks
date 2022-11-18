@@ -1,0 +1,47 @@
+---
+- name: Register user name
+  ansible.builtin.set_fact:
+    system_user_name: "{{ ansible_user }}"
+
+- name: Add user to e-mail group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: "{{ email_user_group }}"
+    append: true
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - ssmtp
+    - bsd-mailx
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Add users aliases to mail.rc
+  ansible.builtin.lineinfile:
+    path: /etc/mail.rc
+    regexp: "^alias {{ item }}"
+    line: "alias {{ item }} {{ email_username }}"
+  with_items:
+    - root
+    - "{{ system_user_name }}"
+
+- name: Add users aliases to mail.rc
+  ansible.builtin.lineinfile:
+    path: /etc/ssmtp/revaliases
+    regexp: "^{{ item }}"
+    line: "{{ item }}:{{ email_username }}:{{ email_host }}:{{ email_port }}"
+  with_items:
+    - root
+    - "{{ system_user_name }}"
+
+- name: Prepeare ssmtp.conf
+  ansible.builtin.template:
+    src: ssmtp.conf.j2
+    dest: /etc/ssmtp/ssmtp.conf
+    owner: root
+    group: "{{ email_user_group }}"
+    mode: 0640
