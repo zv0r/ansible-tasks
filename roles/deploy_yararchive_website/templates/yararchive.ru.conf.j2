@@ -1,5 +1,4 @@
-<VirtualHost *:80>
-  ServerName www.yararchive.ru
+<VirtualHost 127.0.0.1:8080>
   DocumentRoot {{ yararchive_website_directory }}
 
   SuexecUserGroup {{ ansible_user }} {{ ansible_user }}

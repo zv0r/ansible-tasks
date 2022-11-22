@@ -49,7 +49,15 @@
     state: restarted
     name: apache2.service
 
-- name: Allow http in ufw
-  community.general.ufw:
-    rule: allow
-    name: "WWW"
+- name: Remove old listen ports
+  ansible.builtin.lineinfile:
+    path: /etc/apache2/ports.conf
+    regexp: "^Listen\\s+[0-9]+"
+    state: absent
+
+- name: Add listen port
+  ansible.builtin.lineinfile:
+    path: /etc/apache2/ports.conf
+    firstmatch: true
+    insertbefore: "^<IfModule.*$"
+    line: "Listen 127.0.0.1:8080"
