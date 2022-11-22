@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: zv0r
+  description: Setup nginx reverse proxy
+  license: MIT
+  min_ansible_version: "2.7"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+dependencies:
+  - role: debian_based_dist_upgrade
+    vars:
+      debian_based_dist_upgrade_skip_reboot: true
+  - role: deploy_https_certificates
+    vars:
+      deploy_ssl_certificates_hosts: "{{ ansible_fqdn }}"
