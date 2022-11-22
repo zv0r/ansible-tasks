@@ -79,6 +79,11 @@ all:
                 python_interpreter_version: 3.7.5
                 python_lib_dir: /usr/local/lib/python3.7
           hosts:
+            gayoweb01.corp.yararchive.ru:
+              ansible_host: 172.16.50.103
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+                - "*.yararchive.ru"
             gayoansible01.corp.yararchive.ru:
               ansible_host: 172.16.50.14
               ssl_cert_domains:
