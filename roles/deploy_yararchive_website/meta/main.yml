@@ -8,3 +8,5 @@ galaxy_info:
     - name: Debian
       versions:
         - all
+dependencies:
+  - role: setup_nginx_reverse_proxy

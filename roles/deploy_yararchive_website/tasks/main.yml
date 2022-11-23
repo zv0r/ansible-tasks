@@ -7,3 +7,11 @@
 
 - name: Prepare apache
   ansible.builtin.include_tasks: prepare_apache.yml
+
+- name: Setup nginx reverse proxy
+  ansible.builtin.include_role:
+    name: setup_nginx_reverse_proxy
+  vars:
+    template_file_name: yararchive.ru.conf.nginx.j2
+    nginx_server_config_file_name: yararchive.ru.conf
+    nginx_server_listen_port: 443

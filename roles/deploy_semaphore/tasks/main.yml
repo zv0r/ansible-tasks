@@ -9,7 +9,12 @@
   ansible.builtin.include_tasks: prepare_systemd_service_unit.yml
 
 - name: Setup nginx reverse proxy
-  ansible.builtin.include_tasks: prepare_nginx_reverse_proxy.yml
+  ansible.builtin.include_role:
+    name: setup_nginx_reverse_proxy
+  vars:
+    template_file_name: semaphore.conf.j2
+    nginx_server_config_file_name: semaphore.conf
+    nginx_server_listen_port: 443
 
 - name: Delete installation archive file
   ansible.builtin.file:

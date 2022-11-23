@@ -1,4 +1,4 @@
-<VirtualHost 127.0.0.1:8080>
+<VirtualHost 127.0.0.1:{{ apache_server_port }}>
   DocumentRoot {{ yararchive_website_directory }}
 
   SuexecUserGroup {{ ansible_user }} {{ ansible_user }}

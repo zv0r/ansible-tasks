@@ -15,7 +15,7 @@
 
 - name: Create website config file
   ansible.builtin.template:
-    src: yararchive.ru.conf.j2
+    src: yararchive.ru.conf.apache.j2
     dest: /etc/apache2/sites-available/yararchive.ru.conf
     owner: root
     group: root
