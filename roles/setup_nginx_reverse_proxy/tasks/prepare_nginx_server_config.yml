@@ -18,7 +18,7 @@
         group: root
         state: link
 
-    - name: Start or restart semaphore systemd service
+    - name: Start or restart nginx systemd service
       ansible.builtin.systemd:
         state: restarted
         name: nginx.service
