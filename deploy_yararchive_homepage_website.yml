@@ -1,0 +1,7 @@
+---
+- name: Deploy homepage.yararchive.ru website
+  hosts: yararchive_homepage_servers
+  become: true
+
+  roles:
+    - role: deploy_yararchive_homepage_website
