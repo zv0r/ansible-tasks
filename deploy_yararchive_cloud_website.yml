@@ -1,0 +1,7 @@
+---
+- name: Deploy cloud.yararchive.ru website
+  hosts: yararchive_cloud_servers
+  become: true
+
+  roles:
+    - role: deploy_yararchive_cloud_website

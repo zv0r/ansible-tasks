@@ -55,6 +55,10 @@ all:
           hosts:
             gayoweb01.corp.yararchive.ru:
               ansible_host: 172.16.50.103
+        yararchive_cloud_servers:
+          hosts:
+            gayoweb01.corp.yararchive.ru:
+              ansible_host: 172.16.50.103
         https_servers:
           children:
             https_servers_qts:
