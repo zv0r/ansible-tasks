@@ -1,0 +1,7 @@
+---
+- name: Deploy mirror.yararchive.ru website
+  hosts: yararchive_mirror_servers
+  become: true
+
+  roles:
+    - role: deploy_yararchive_mirror_website

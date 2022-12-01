@@ -1,0 +1,40 @@
+---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: cifs-utils
+    update_cache: true
+    state: present
+
+- name: Prepare website directory
+  ansible.builtin.file:
+    path: "{{ yararchive_mirror_website_directory }}"
+    owner: root
+    group: root
+    mode: 0755
+    force: false
+    state: directory
+
+- name: Prepare smbclient credentials
+  ansible.builtin.copy:
+    src: smbclient_credentials
+    dest: "{{ smbclient_credentials_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Prepare fstab
+  ansible.posix.mount:
+    src: "{{ fstab_mount_source }}"
+    path: "{{ yararchive_mirror_website_directory }}"
+    opts: "ro,noexec,nosuid,nodev,credentials={{ smbclient_credentials_path }}"
+    state: mounted
+    boot: true
+    fstype: cifs
+
+- name: Setup nginx
+  ansible.builtin.include_role:
+    name: setup_nginx_reverse_proxy
+  vars:
+    template_file_name: mirror.yararchive.ru.conf.j2
+    nginx_server_config_file_name: mirror.yararchive.ru.conf
+    nginx_server_listen_port: 443
