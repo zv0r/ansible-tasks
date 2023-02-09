@@ -4,7 +4,6 @@
     url: "{{ semaphore_archive_url }}"
     dest: "{{ semaphore_archive_dest }}"
     mode: "0664"
-    checksum: "{{ semaphore_archive_checksum }}"
 
 - name: Create semaphore directory
   ansible.builtin.file:
