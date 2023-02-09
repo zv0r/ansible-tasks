@@ -5,6 +5,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+User={{ semaphore_service_user }}
+Group={{ semaphore_service_group }}
 Restart=on-failure
 RestartSec=60
 Type=simple

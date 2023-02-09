@@ -1,4 +1,19 @@
 ---
+- name: Ensure group for systemd service user
+  ansible.builtin.group:
+    name: "{{ semaphore_service_group }}"
+    state: present
+
+- name: Add the user for systemd service
+  ansible.builtin.user:
+    name: "{{ semaphore_service_user }}"
+    comment: Ansible Semaphore user
+    group: "{{ semaphore_service_group }}"
+    home: "{{ semaphore_service_user_home }}"
+    create_home: true
+    shell: /bin/false
+    state: present
+
 - name: Create systemd service file
   ansible.builtin.template:
     src: semaphore.service.j2
