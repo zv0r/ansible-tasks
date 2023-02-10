@@ -10,3 +10,4 @@ galaxy_info:
         - all
 dependencies:
   - role: setup_system_email_accounts
+    when: not skip_setup_system_email_accounts
