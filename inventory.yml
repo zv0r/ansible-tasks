@@ -13,8 +13,34 @@ all:
           hosts:
             gayoansible01.corp.yararchive.ru:
               ansible_host: 172.16.50.14
+              vars:
+                debian_based_dist_upgrade_skip_reboot: true
             gayoweb01.corp.yararchive.ru:
               ansible_host: 172.16.50.103
+            gayodc01.corp.yararchive.ru:
+              ansible_host: 172.16.50.1
+            gayodc02.corp.yararchive.ru:
+              ansible_host: 172.16.50.100
+            cdnidc01.corp.yararchive.ru:
+              ansible_host: 172.17.50.1
+            cdnidc02.corp.yararchive.ru:
+              ansible_host: 172.17.50.100
+            cdlsdc01.corp.yararchive.ru:
+              ansible_host: 172.18.50.1
+            cdlsdc02.corp.yararchive.ru:
+              ansible_host: 172.18.50.100
+            rbnskdc01.corp.yararchive.ru:
+              ansible_host: 172.19.50.1
+            rbnskdc02.corp.yararchive.ru:
+              ansible_host: 172.19.50.100
+            rstvdc01.corp.yararchive.ru:
+              ansible_host: 172.20.50.1
+            rstvdc02.corp.yararchive.ru:
+              ansible_host: 172.20.50.100
+            uglchdc01.corp.yararchive.ru:
+              ansible_host: 172.21.50.1
+            uglchdc02.corp.yararchive.ru:
+              ansible_host: 172.21.50.100
         qnap_qts_machines:
           hosts:
             gayostorage01.corp.yararchive.ru:
@@ -34,6 +60,34 @@ all:
     windows_machines:
     servers:
       children:
+        samba_servers:
+          children:
+            samba_ad_dc_servers:
+              hosts:
+                gayodc01.corp.yararchive.ru:
+                  ansible_host: 172.16.50.1
+                gayodc02.corp.yararchive.ru:
+                  ansible_host: 172.16.50.100
+                cdnidc01.corp.yararchive.ru:
+                  ansible_host: 172.17.50.1
+                cdnidc02.corp.yararchive.ru:
+                  ansible_host: 172.17.50.100
+                cdlsdc01.corp.yararchive.ru:
+                  ansible_host: 172.18.50.1
+                cdlsdc02.corp.yararchive.ru:
+                  ansible_host: 172.18.50.100
+                rbnskdc01.corp.yararchive.ru:
+                  ansible_host: 172.19.50.1
+                rbnskdc02.corp.yararchive.ru:
+                  ansible_host: 172.19.50.100
+                rstvdc01.corp.yararchive.ru:
+                  ansible_host: 172.20.50.1
+                rstvdc02.corp.yararchive.ru:
+                  ansible_host: 172.20.50.100
+                uglchdc01.corp.yararchive.ru:
+                  ansible_host: 172.21.50.1
+                uglchdc02.corp.yararchive.ru:
+                  ansible_host: 172.21.50.100
         gateways:
           hosts:
             gayogw01.corp.yararchive.ru:
