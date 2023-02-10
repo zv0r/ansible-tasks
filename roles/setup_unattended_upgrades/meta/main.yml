@@ -9,5 +9,6 @@ galaxy_info:
       versions:
         - all
 dependencies:
+  - role: debian_based_dist_upgrade
   - role: setup_system_email_accounts
     when: not skip_setup_system_email_accounts
