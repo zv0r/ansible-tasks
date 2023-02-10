@@ -13,3 +13,6 @@ Type=simple
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStart={{ semaphore_installation_directory }}/semaphore service --config={{ semaphore_config_file }}
 SyslogIdentifier=semaphore
+
+[Install]
+WantedBy=multi-user.target
