@@ -1,5 +1,5 @@
 ---
-- name: Deploy ansible semaphore
+- name: Setup system email accounts
   hosts: debian_based_machines
   gather_facts: true
   become: true
