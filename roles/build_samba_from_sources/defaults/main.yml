@@ -1,0 +1,5 @@
+---
+samba_systemd_units: ["smb.service", "nmb.service", "winbind.service", "samba.service"]
+samba_sources_directory: /tmp/samba_src
+samba_installation_directory: /var/opt/samba
+samba_systemd_units_directory: /etc/systemd/system
