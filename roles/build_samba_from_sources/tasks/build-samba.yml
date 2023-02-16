@@ -68,3 +68,13 @@
   ansible.builtin.file:
     path: "{{ samba_sources_directory }}"
     state: absent
+
+- name: Reboot machine
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible after building samba from sources"
+    connect_timeout: 90
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 120
+    test_command: uptime
+  when: not skip_reboot_after_finish
