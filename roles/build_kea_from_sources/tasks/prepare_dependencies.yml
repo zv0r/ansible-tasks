@@ -1,0 +1,16 @@
+---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - automake
+    - libtool
+    - pkg-config
+    - build-essential
+    - ccache
+    - libboost-dev
+    - libboost-system-dev
+    - liblog4cplus-dev
+    - libssl-dev

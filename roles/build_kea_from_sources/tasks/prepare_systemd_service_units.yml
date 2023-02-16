@@ -1,0 +1,23 @@
+---
+- name: Ensure group for systemd service user
+  ansible.builtin.group:
+    name: "{{ kea_service_group }}"
+    state: present
+
+- name: Add the user for systemd service
+  ansible.builtin.user:
+    name: "{{ kea_service_user }}"
+    comment: isc-kea service user
+    group: "{{ kea_service_group }}"
+    home: "{{ kea_service_user_home }}"
+    create_home: true
+    shell: /bin/false
+    state: present
+
+- name: Create systemd service file
+  ansible.builtin.template:
+    src: isc-kea-dhcp4.service.j2
+    dest: /etc/systemd/system/isc-kea-dhcp4.service
+    owner: root
+    group: root
+    mode: 0644
