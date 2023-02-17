@@ -1,11 +1,4 @@
 ---
-- name: Stop kea related systemd services
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    state: stopped
-  with_items: "{{ kea_systemd_units }}"
-  ignore_errors: true
-
 - name: Create directory for kea sources
   ansible.builtin.file:
     path: "{{ kea_sources_directory }}"
@@ -48,6 +41,13 @@
   register: kea_make_output
   changed_when: kea_make_output.rc != 0
   failed_when: kea_make_output.rc != 0
+
+- name: Stop kea related systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items: "{{ kea_systemd_units }}"
+  ignore_errors: true
 
 - name: Make install
   ansible.builtin.command:

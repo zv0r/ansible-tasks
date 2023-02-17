@@ -1,11 +1,4 @@
 ---
-- name: Stop samba related systemd services
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    state: stopped
-  with_items: "{{ samba_systemd_units }}"
-  ignore_errors: true
-
 - name: Create directory for Samba sources
   ansible.builtin.file:
     path: "{{ samba_sources_directory }}"
@@ -53,6 +46,13 @@
   register: samba_make_output
   changed_when: samba_make_output.rc != 0
   failed_when: samba_make_output.rc != 0
+
+- name: Stop samba related systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items: "{{ samba_systemd_units }}"
+  ignore_errors: true
 
 - name: Make install
   ansible.builtin.command:
