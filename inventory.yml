@@ -41,6 +41,30 @@ all:
               ansible_host: 172.21.50.1
             uglchdc02.corp.yararchive.ru:
               ansible_host: 172.21.50.100
+            gayoapps01.corp.yararchive.ru:
+              ansible_host: 172.16.50.2
+            gayofiles01.corp.yararchive.ru:
+              ansible_host: 172.16.50.10
+            cdniapps01.corp.yararchive.ru:
+              ansible_host: 172.17.50.2
+            cdnifiles01.corp.yararchive.ru:
+              ansible_host: 172.17.50.10
+            cdlsapps01.corp.yararchive.ru:
+              ansible_host: 172.18.50.2
+            cdlsfiles01.corp.yararchive.ru:
+              ansible_host: 172.18.50.10
+            rbnskapps01.corp.yararchive.ru:
+              ansible_host: 172.19.50.2
+            rbnskfiles01.corp.yararchive.ru:
+              ansible_host: 172.19.50.10
+            rstvapps01.corp.yararchive.ru:
+              ansible_host: 172.20.50.2
+            rstvfiles01.corp.yararchive.ru:
+              ansible_host: 172.20.50.10
+            uglchapps01.corp.yararchive.ru:
+              ansible_host: 172.21.50.2
+            uglchfiles01.corp.yararchive.ru:
+              ansible_host: 172.21.50.10
         qnap_qts_machines:
           hosts:
             gayostorage01.corp.yararchive.ru:
