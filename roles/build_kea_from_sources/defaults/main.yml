@@ -1,4 +1,5 @@
 ---
+skip_reboot_after_finish: false
 kea_systemd_units: ["isc-kea-dhcp4.service", "isc-kea-dhcp6.service", "kea-ctrl-agent.service", " kea-dhcp-ddns.service"]
 kea_service_user: "_keadhcp"
 kea_service_group: "{{ kea_service_user }}"
