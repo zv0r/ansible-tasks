@@ -45,4 +45,4 @@
     mode: "0400"
 
 - name: Update stunnel.pem and uca.pem
-  ansible.builtin.include_tasks: update-stunnel.yml
+  ansible.builtin.include_tasks: update_stunnel.yml

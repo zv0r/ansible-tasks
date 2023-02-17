@@ -3,7 +3,7 @@
   ansible.builtin.include_tasks: prepare_dependencies.yml
 
 - name: Build kea
-  ansible.builtin.include_tasks: build-kea.yml
+  ansible.builtin.include_tasks: build_kea.yml
 
 - name: Prepare systemd service unit
   ansible.builtin.include_tasks: prepare_systemd_service_units.yml
