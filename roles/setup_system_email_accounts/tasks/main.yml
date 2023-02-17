@@ -44,4 +44,4 @@
     dest: /etc/ssmtp/ssmtp.conf
     owner: root
     group: "{{ email_user_group }}"
-    mode: 0640
+    mode: "0640"

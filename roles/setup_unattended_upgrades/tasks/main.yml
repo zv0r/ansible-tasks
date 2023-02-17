@@ -24,7 +24,7 @@
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 
 - name: Prepare systemd timers override directories
   ansible.builtin.file:
@@ -32,7 +32,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   with_items:
     - "{{ apt_daily_timer_directory }}"
     - "{{ apt_daily_upgrade_timer_directory }}"
@@ -43,7 +43,7 @@
     dest: "{{ item.override_directory }}/override.conf"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   with_items:
     - { template_file: "apt-daily.timer.j2", override_directory: "{{ apt_daily_timer_directory }}" }
     - { template_file: "apt-daily-upgrade.timer.j2", override_directory: "{{ apt_daily_upgrade_timer_directory }}" }

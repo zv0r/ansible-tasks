@@ -20,4 +20,4 @@
     dest: /etc/systemd/system/isc-kea-dhcp4.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"

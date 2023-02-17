@@ -10,7 +10,7 @@
     path: "{{ yararchive_mirror_website_directory }}"
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
     force: false
     state: directory
 

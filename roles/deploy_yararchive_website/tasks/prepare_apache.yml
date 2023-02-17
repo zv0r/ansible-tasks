@@ -4,7 +4,7 @@
     path: "{{ yararchive_website_directory }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0755
+    mode: "0755"
     force: false
     state: directory
 
@@ -19,7 +19,7 @@
     dest: /etc/apache2/sites-available/yararchive.ru.conf
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
     force: false
 
 - name: Create website config link

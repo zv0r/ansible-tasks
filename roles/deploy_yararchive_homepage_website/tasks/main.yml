@@ -4,7 +4,7 @@
     path: "{{ yararchive_homepage_website_directory }}"
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
     force: false
     state: directory
 
@@ -14,7 +14,7 @@
     dest: "{{ yararchive_homepage_website_directory }}"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 
 - name: Setup nginx
   ansible.builtin.include_role:

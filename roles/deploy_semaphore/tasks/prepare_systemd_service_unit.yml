@@ -20,7 +20,7 @@
     dest: /etc/systemd/system/semaphore.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   register: service_conf
 
 - name: Start or restart semaphore systemd service
