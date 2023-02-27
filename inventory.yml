@@ -204,6 +204,54 @@ all:
               ansible_host: 172.16.50.14
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+            gayodc01.corp.yararchive.ru:
+              ansible_host: 172.16.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            gayodc02.corp.yararchive.ru:
+              ansible_host: 172.16.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            cdnidc01.corp.yararchive.ru:
+              ansible_host: 172.17.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            cdnidc02.corp.yararchive.ru:
+              ansible_host: 172.17.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            cdlsdc01.corp.yararchive.ru:
+              ansible_host: 172.18.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            cdlsdc02.corp.yararchive.ru:
+              ansible_host: 172.18.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            rbnskdc01.corp.yararchive.ru:
+              ansible_host: 172.19.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            rbnskdc02.corp.yararchive.ru:
+              ansible_host: 172.16.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            rstvdc01.corp.yararchive.ru:
+              ansible_host: 172.20.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            rstvdc02.corp.yararchive.ru:
+              ansible_host: 172.20.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            uglchdc01.corp.yararchive.ru:
+              ansible_host: 172.21.50.1
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
+            uglchdc02.corp.yararchive.ru:
+              ansible_host: 172.21.50.100
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
           vars:
             acme_clients_certs_directory: /var/etc/acme-client/home
             local_temp_ssl_dir: /tmp/ssl_cert
