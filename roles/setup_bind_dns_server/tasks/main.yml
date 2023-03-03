@@ -1,0 +1,40 @@
+---
+- name: Install bind9
+  ansible.builtin.apt:
+    name: bind9
+    update_cache: true
+    state: present
+
+- name: Put yararchive.ru zone config in the bind directory
+  ansible.builtin.template:
+    src: db.yararchive.ru.j2
+    dest: "{{ bind_directory }}/db.yararchive.ru"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put local config in the bind directory
+  ansible.builtin.template:
+    src: named.conf.local.j2
+    dest: "{{ bind_directory }}/named.conf.local"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put options config in the bind directory
+  ansible.builtin.template:
+    src: named.conf.options.j2
+    dest: "{{ bind_directory }}/named.conf.options"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Open ports with ufw
+  community.general.ufw:
+    rule: allow
+    name: Bind9
+
+- name: Start or restart BIND9 systemd service
+  ansible.builtin.systemd:
+    state: restarted
+    name: bind9.service

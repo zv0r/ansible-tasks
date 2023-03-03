@@ -1,0 +1,18 @@
+$TTL    21600
+$ORIGIN yararchive.ru.
+@       6H      IN      SOA     {{ inventory_hostname }}.       hostmaster.yararchive.ru. (
+                                {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }} ; serial
+                                3H ; refresh
+                                15 ; retry
+                                1w ; expire
+                                3h ; nxdomain ttl
+                                )
+@                               IN        NS        {{ inventory_hostname }}.
+{{ inventory_hostname }}.    IN        A         {{ ansible_host }}
+@                               IN        A         172.16.50.12
+www                             IN        A         172.16.50.12
+cloud                           IN        A         172.16.50.12
+mail                            IN        CNAME     domain.mail.yandex.net.
+yar-archives                    IN        A         91.201.208.165
+homepage                        IN        A         {{ db_yararchive_ru_homepage }}
+download                        IN        A         {{ db_yararchive_ru_download }}

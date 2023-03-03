@@ -1,0 +1,36 @@
+acl "trusted" {
+    localhost;
+    localnets;
+    10.0.0.8/30;
+    10.10.10.8/30;
+    172.16.0.0/16;
+    172.17.0.0/16;
+    172.18.0.0/16;
+    172.19.0.0/16;
+    172.20.0.0/16;
+    172.21.0.0/16;
+};
+
+options {
+    directory "/var/cache/bind";
+    tkey-gssapi-keytab "/var/lib/samba/bind-dns/dns.keytab";
+    minimal-responses yes;
+
+    listen-on-v6 { any; };
+    auth-nxdomain yes;
+    notify explicit;
+    empty-zones-enable no;
+
+    allow-query { trusted; };
+    allow-recursion { trusted; };
+    allow-transfer { none; };
+
+    forwarders {
+        212.232.62.10;
+        212.232.63.3;
+        1.1.1.1;
+        1.0.0.1;
+        8.8.8.8;
+        8.8.4.4;
+    };
+};
