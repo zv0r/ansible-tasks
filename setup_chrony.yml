@@ -1,0 +1,8 @@
+---
+- name: Setup Chrony
+  hosts: samba_ad_dc_servers
+  gather_facts: true
+  become: true
+
+  roles:
+    - role: setup_chrony

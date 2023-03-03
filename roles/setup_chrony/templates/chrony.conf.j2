@@ -1,0 +1,19 @@
+keyfile {{ chrony_directory }}/chrony.keys
+driftfile /var/lib/chrony/chrony.drift
+logdir /var/log/chrony
+maxupdateskew 100.0
+hwclockfile /etc/adjtime
+rtcsync
+makestep 1 3
+bindcmdaddress 0.0.0.0
+server 0.ru.pool.ntp.org     iburst
+server 1.ru.pool.ntp.org     iburst
+server 2.ru.pool.ntp.org     iburst
+server 3.ru.pool.ntp.org     iburst
+allow 172.16.0.0/16
+allow 172.17.0.0/16
+allow 172.18.0.0/16
+allow 172.19.0.0/16
+allow 172.20.0.0/16
+allow 172.21.0.0/16
+ntpsigndsocket /var/lib/samba/ntp_signd

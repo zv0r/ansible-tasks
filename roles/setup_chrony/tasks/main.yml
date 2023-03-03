@@ -1,0 +1,32 @@
+---
+- name: Install chrony
+  ansible.builtin.apt:
+    name: chrony
+    update_cache: true
+    state: present
+
+- name: Put config in the chrony directory
+  ansible.builtin.template:
+    src: chrony.conf.j2
+    dest: "{{ chrony_directory }}/chrony.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put ufw app config in the applications.d directory
+  ansible.builtin.template:
+    src: yararchive-chrony.j2
+    dest: "/etc/ufw/applications.d/yararchive-chrony"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Open ports with ufw
+  community.general.ufw:
+    rule: allow
+    name: NTP
+
+- name: Start or restart chrony systemd service
+  ansible.builtin.systemd:
+    state: restarted
+    name: chrony.service
