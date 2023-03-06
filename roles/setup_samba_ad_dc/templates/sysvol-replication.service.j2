@@ -1,0 +1,11 @@
+[Unit]
+Description=sysvol-replication
+Requires=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rsync -XAavz --delete-after --password-file=/etc/samba/rsync-sysvol.secret rsync://sysvol-replication@172.16.50.1/SysVol/ /var/lib/samba/sysvol/
+
+[Install]
+WantedBy=multi-user.target
