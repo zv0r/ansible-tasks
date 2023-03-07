@@ -1,0 +1,98 @@
+{
+    "Dhcp4": {
+        "interfaces-config": {
+            "interfaces": [
+                "eth0"
+            ],
+            "dhcp-socket-type": "raw"
+        },
+        "control-socket": {
+            "socket-type": "unix",
+            "socket-name": "{{ kea_dhcp4_socket_name }}"
+        },
+        "lease-database": {
+            "type": "memfile",
+            "lfc-interval": 3600
+        },
+        "expired-leases-processing": {
+            "reclaim-timer-wait-time": 10,
+            "flush-reclaimed-timer-wait-time": 25,
+            "hold-reclaimed-time": 3600,
+            "max-reclaim-leases": 100,
+            "max-reclaim-time": 250,
+            "unwarned-reclaim-cycles": 5
+        },
+        "renew-timer": 900,
+        "rebind-timer": 1800,
+        "valid-lifetime": 3600,
+        "option-data": [
+{% include "templates/" + inventory_hostname + "/kea-dhcp4.conf.dns-servers.j2" %}
+
+            {
+                "name": "domain-name",
+                "code": 15,
+                "data": "corp.yararchive.ru"
+            },
+            {
+                "name": "domain-search",
+                "data": "corp.yararchive.ru"
+            },
+            {
+                "name": "default-ip-ttl",
+                "data": "0xf0"
+            }
+        ],
+        "hooks-libraries": [
+            {
+                "library": "/usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_run_script.so",
+                "parameters": {
+                    "name": "{{ libdhcp_run_script_sh_file }}",
+                    "sync": false
+                }
+            },
+            {
+                "library": "/usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_lease_cmds.so",
+                "parameters": {}
+            },
+            {
+                "library": "/usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_ha.so",
+                "parameters": {
+                    "high-availability": [
+                        {
+                            "this-server-name": "{{ inventory_hostname_short }}",
+                            "mode": "hot-standby",
+                            "heartbeat-delay": 10000,
+                            "max-response-delay": 10000,
+                            "max-ack-delay": 5000,
+                            "max-unacked-clients": 5,
+{% include "templates/" + inventory_hostname + "/kea-dhcp4.conf.ha-peers.j2" %}
+
+                        }
+                    ]
+                }
+            }
+        ],
+        "subnet4": [
+            {
+{% include "templates/" + inventory_hostname + "/kea-dhcp4.conf.subnets.j2" %}
+
+                <? include "{{ kea_directory }}/kea-dhcp4-reservations.conf" ?>
+            }
+        ],
+        "loggers": [
+            {
+                "name": "kea-dhcp4",
+                "output_options": [
+                    {
+                        "output": "/var/log/kea/kea-dhcp4.log",
+                        "flush": false,
+                        "maxsize": 10485760,
+                        "maxver": 8
+                    }
+                ],
+                "severity": "INFO",
+                "debuglevel": 0
+            }
+        ]
+    }
+}

@@ -1,0 +1,120 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: true
+    state: present
+  with_items:
+    - kea-dhcp4-server
+    - kea-ctrl-agent
+
+- name: Disable kea systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    masked: false
+    enabled: false
+  with_items:
+    - kea-dhcp4-server.service
+    - kea-ctrl-agent.service
+
+- name: Put ufw kea ctrl agent app config in the applications.d directory
+  ansible.builtin.template:
+    src: yararchive-kea-ctrl-agent.j2
+    dest: "/etc/ufw/applications.d/yararchive-kea-ctrl-agent"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put ufw kea dhcp4 server app config in the applications.d directory
+  ansible.builtin.template:
+    src: yararchive-kea-dhcp4.j2
+    dest: "/etc/ufw/applications.d/yararchive-kea-dhcp4"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Open ports with ufw
+  community.general.ufw:
+    rule: allow
+    name: "{{ item }}"
+  with_items:
+    - kea dhcp4 server
+    - kea ctrl agent
+
+- name: Put libdhcp_run_script.conf config in kea directory
+  ansible.builtin.template:
+    src: libdhcp_run_script.conf.j2
+    dest: "{{ kea_directory }}/libdhcp_run_script.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create dhcp user kerberos keytab file
+  ansible.builtin.command:
+    argv:
+      - "/usr/bin/samba-tool"
+      - "domain"
+      - "exportkeytab"
+      - "--principal={{ kerberos_keytab_user }}@{{ ansible_domain | upper }}"
+      - "{{ kerberos_keytab_file }}"
+  register: samba_tool_output
+  changed_when: samba_tool_output.rc != 0
+  failed_when: samba_tool_output.rc != 0
+
+- name: Set chmod to the keytab file
+  ansible.builtin.file:
+    path: "{{ kerberos_keytab_file }}"
+    mode: "0400"
+    owner: "{{ kea_service_user }}"
+    group: "{{ kea_service_group }}"
+
+- name: Put libdhcp_run_script.sh config in kea directory
+  ansible.builtin.template:
+    src: libdhcp_run_script.sh.j2
+    dest: "{{ libdhcp_run_script_sh_file }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Put samba-dnsupdate.sh config in kea directory
+  ansible.builtin.template:
+    src: samba-dnsupdate.sh.j2
+    dest: "{{ kea_directory }}/samba-dnsupdate.sh"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Put kea-ctrl-agent.conf config in kea directory
+  ansible.builtin.template:
+    src: kea-ctrl-agent.conf.j2
+    dest: "{{ kea_directory }}/kea-ctrl-agent.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put kea-dhcp4-reservations.conf config in kea directory
+  ansible.builtin.template:
+    src: "{{ inventory_hostname }}/kea-dhcp4-reservations.conf.j2"
+    dest: "{{ kea_directory }}/kea-dhcp4-reservations.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Put kea-dhcp4.conf config in kea directory
+  ansible.builtin.template:
+    src: "kea-dhcp4.conf.j2"
+    dest: "{{ kea_directory }}/kea-dhcp4.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Restart kea systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+    masked: false
+    enabled: true
+  with_items:
+    - kea-dhcp4-server.service
+    - kea-ctrl-agent.service

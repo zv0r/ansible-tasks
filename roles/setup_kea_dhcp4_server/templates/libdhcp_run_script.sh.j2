@@ -1,0 +1,33 @@
+#!/bin/bash
+
+. {{ kea_directory }}/libdhcp_run_script.conf || exit 1
+. /etc/environment || exit 1
+
+HNAME=`echo "${LEASE4_HOSTNAME}" | sed "s/\..*$//"`
+
+if [ -n "${LEASE4_ADDRESS}" ]; then
+    LEASE_ADDRESS="${LEASE4_ADDRESS}"
+fi
+
+if [ -n "${LEASES4_AT0_ADDRESS}" ]; then
+    LEASE_ADDRESS="${LEASES4_AT0_ADDRESS}"
+fi
+
+if [ -n "$1" ] && [ -n "${HNAME}" ] && [ -n "${LEASE_ADDRESS}" ]; then
+    case $1 in
+        leases4_committed | lease4_renew | lease4_recover)
+            ACTION=ADD
+        ;;
+        lease4_expire | lease4_release | lease4_decline)
+            ACTION=DEL
+        ;;
+        *)
+            echo "Error: invalid action \"ACTION\"."  exit 3
+        ;;
+    esac
+
+    IP=$LEASE_ADDRESS
+    export PATH KRB5CC KEYTAB DOMAIN REALM PRINCIPAL NAMESERVER ZONE ACTION IP HNAME
+
+    {{ kea_directory }}/samba-dnsupdate.sh -m &
+fi

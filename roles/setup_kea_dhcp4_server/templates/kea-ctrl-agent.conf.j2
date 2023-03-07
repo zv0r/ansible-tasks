@@ -1,0 +1,36 @@
+{
+    "Control-agent": {
+        "http-host": "{{ ansible_host }}",
+        "http-port": {{ kea_ctrl_agent_port }},
+        "control-sockets": {
+            "dhcp4": {
+                "socket-type": "unix",
+                "socket-name": "{{ kea_dhcp4_socket_name }}"
+            },
+            "dhcp6": {
+                "socket-type": "unix",
+                "socket-name": "/tmp/kea-dhcp6-ctrl.sock"
+            },
+            "d2": {
+                "socket-type": "unix",
+                "socket-name": "/tmp/kea-dhcp-ddns-ctrl.sock"
+            }
+        },
+        "hooks-libraries": [],
+        "loggers": [
+            {
+                "name": "kea-ctrl-agent",
+                "output_options": [
+                    {
+                        "output": "/var/log/kea/kea-ctrl-agent.log",
+                        "flush": false,
+                        "maxsize": 10485760,
+                        "maxver": 8
+                    }
+                ],
+                "severity": "INFO",
+                "debuglevel": 0
+            }
+        ]
+    }
+}
