@@ -10,3 +10,4 @@ galaxy_info:
         - all
 dependencies:
   - role: debian_based_dist_upgrade
+  - role: deploy_https_certificates
