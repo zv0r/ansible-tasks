@@ -34,13 +34,17 @@
     group: root
     mode: "0644"
 
-- name: Open ports with ufw
+- name: Open ports for dhcp server with ufw
   community.general.ufw:
     rule: allow
-    name: "{{ item }}"
-  with_items:
-    - kea dhcp4 server
-    - kea ctrl agent
+    name: kea dhcp4 server
+
+- name: Open ports for kea ctrl agent with ufw
+  community.general.ufw:
+    rule: allow
+    name: kea ctrl agent
+    src: "{{ item }}"
+  with_items: "{{ kea_ctrl_agent_ufw_alowed_addresses[inventory_hostname] }}"
 
 - name: Put libdhcp_run_script.conf config in kea directory
   ansible.builtin.template:

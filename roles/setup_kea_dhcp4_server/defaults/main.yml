@@ -7,3 +7,28 @@ kerberos_keytab_user: dhcpduser
 kerberos_keytab_file: "{{ kea_directory }}/libdhcp_run_script.keytab"
 kea_dhcp4_socket_name: /tmp/kea-dhcp4-ctrl.sock
 libdhcp_run_script_sh_file: "{{ kea_directory }}/libdhcp_run_script.sh"
+kea_ctrl_agent_ufw_alowed_addresses:
+  gayodc01.corp.yararchive.ru:
+    - 172.16.50.100
+  gayodc02.corp.yararchive.ru:
+    - 172.16.50.1
+  cdnidc01.corp.yararchive.ru:
+    - 172.17.50.100
+  cdnidc02.corp.yararchive.ru:
+    - 172.17.50.1
+  cdlsdc01.corp.yararchive.ru:
+    - 172.18.50.100
+  cdlsdc02.corp.yararchive.ru:
+    - 172.18.50.1
+  rbnskdc01.corp.yararchive.ru:
+    - 172.19.50.100
+  rbnskdc02.corp.yararchive.ru:
+    - 172.19.50.1
+  rstvdc01.corp.yararchive.ru:
+    - 172.20.50.100
+  rstvdc02.corp.yararchive.ru:
+    - 172.20.50.1
+  uglchdc01.corp.yararchive.ru:
+    - 172.21.50.100
+  uglchdc02.corp.yararchive.ru:
+    - 172.21.50.1
