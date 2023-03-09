@@ -1,13 +1,13 @@
                             "peers": [
                                 {
-                                    "name": "gayodc01",
-                                    "url": "http://172.16.50.1:{{ kea_ctrl_agent_port }}/",
+                                    "name": "uglchdc01",
+                                    "url": "http://172.21.50.1:{{ kea_ctrl_agent_port }}/",
                                     "role": "primary",
                                     "auto-failover": true
                                 },
                                 {
-                                    "name": "gayodc02",
-                                    "url": "http://172.16.50.100:{{ kea_ctrl_agent_port }}/",
+                                    "name": "uglchdc02",
+                                    "url": "http://172.21.50.100:{{ kea_ctrl_agent_port }}/",
                                     "role": "standby",
                                     "auto-failover": true
                                 }

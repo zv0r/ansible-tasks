@@ -1,6 +1,5 @@
 ---
 kea_directory: /etc/kea
-kea_ssl_dir: /var/lib/kea/ssl
 kea_service_user: _kea
 kea_service_group: _kea
 kea_ctrl_agent_port: 8000
