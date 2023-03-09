@@ -1,0 +1,8 @@
+---
+- name: Update Samba TLS keys
+  hosts: samba_ad_dc_servers
+  gather_facts: true
+  become: true
+
+  roles:
+    - role: update_samba_tls_keys

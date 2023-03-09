@@ -1,0 +1,32 @@
+---
+- name: Copy ca chain file
+  ansible.builtin.copy:
+    src: "{{ dest_cert_directory }}/{{ ssl_cert_domains[0] }}_ca.cer"
+    dest: "{{ samba_tls_ca }}"
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Copy cert file
+  ansible.builtin.copy:
+    src: "{{ dest_cert_directory }}/{{ ssl_cert_domains[0] }}_fullchain.cer"
+    dest: "{{ samba_tls_cert }}"
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Copy key file
+  ansible.builtin.copy:
+    src: "{{ dest_key_directory }}/{{ ssl_cert_domains[0] }}.key"
+    dest: "{{ samba_tls_key }}"
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Restart samba-ad-dc systemd service
+  ansible.builtin.systemd:
+    state: restarted
+    name: samba-ad-dc.service
