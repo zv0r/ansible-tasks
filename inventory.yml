@@ -65,6 +65,8 @@ all:
               ansible_host: 172.21.50.2
             uglchfiles01.corp.yararchive.ru:
               ansible_host: 172.21.50.10
+            gayomail01.corp.yararchive.ru:
+              ansible_host: 172.16.50.5
         qnap_qts_machines:
           hosts:
             gayostorage01.corp.yararchive.ru:
@@ -191,6 +193,10 @@ all:
           hosts:
             gayoweb01.corp.yararchive.ru:
               ansible_host: 172.16.50.103
+        mail_servers:
+          hosts:
+            gayomail01.corp.yararchive.ru:
+              ansible_host: 172.16.50.5
         https_servers:
           children:
             https_servers_qts:
