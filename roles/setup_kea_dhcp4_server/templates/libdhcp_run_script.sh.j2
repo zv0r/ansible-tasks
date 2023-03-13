@@ -18,7 +18,7 @@ if [ -n "$1" ] && [ -n "${HNAME}" ] && [ -n "${LEASE_ADDRESS}" ]; then
         leases4_committed | lease4_renew | lease4_recover)
             ACTION=ADD
         ;;
-        lease4_expire | lease4_release)
+        lease4_release)
             ACTION=DEL
         ;;
         *)
