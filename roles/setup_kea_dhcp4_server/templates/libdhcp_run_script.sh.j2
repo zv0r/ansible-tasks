@@ -19,7 +19,8 @@ if [ -n "$1" ] && [ -n "${HNAME}" ] && [ -n "${LEASE_ADDRESS}" ]; then
             ACTION=ADD
         ;;
         *)
-            echo "Error: invalid action \"ACTION\"."  exit 3
+            echo "Error: invalid action ${1} for ${HNAME} (${LEASE_ADDRESS}). Skip."
+            exit 3
         ;;
     esac
 
