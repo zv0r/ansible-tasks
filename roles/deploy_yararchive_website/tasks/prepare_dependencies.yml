@@ -13,7 +13,6 @@
     - perl
     - perl-base
     - perl-modules
-    - libapparmor-perl
     - libarchive-extract-perl
     - libauthen-sasl-perl
     - libcgi-pm-perl
