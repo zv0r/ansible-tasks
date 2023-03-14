@@ -1,0 +1,7 @@
+---
+- name: Deploy af5 website
+  hosts: yararchive_af5_servers
+  become: true
+
+  roles:
+    - role: deploy_yararchive_af5_website
