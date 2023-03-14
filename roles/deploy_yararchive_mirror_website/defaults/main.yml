@@ -1,4 +1,3 @@
 ---
 yararchive_mirror_website_directory: /var/www/mirror.yararchive.ru
-fstab_mount_source: //gayostorage02.corp.yararchive.ru/mirror
-smbclient_credentials_path: /root/.smbclient
+fstab_mount_source: gayostorage02.corp.yararchive.ru:/mirror
