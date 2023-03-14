@@ -44,11 +44,6 @@
     - headers
     - include
 
-- name: Start or restart apache systemd service
-  ansible.builtin.systemd:
-    state: restarted
-    name: apache2.service
-
 - name: Remove old listen ports
   ansible.builtin.lineinfile:
     path: /etc/apache2/ports.conf
@@ -61,3 +56,8 @@
     firstmatch: true
     insertbefore: "^<IfModule.*$"
     line: "Listen 127.0.0.1:8080"
+
+- name: Start or restart apache systemd service
+  ansible.builtin.systemd:
+    state: restarted
+    name: apache2.service
