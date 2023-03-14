@@ -93,51 +93,51 @@ all:
                 gayodc01.corp.yararchive.ru:
                   ansible_host: 172.16.50.1
                   db_yararchive_ru_download: 172.16.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 gayodc02.corp.yararchive.ru:
                   ansible_host: 172.16.50.100
                   db_yararchive_ru_download: 172.16.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 cdnidc01.corp.yararchive.ru:
                   ansible_host: 172.17.50.1
                   db_yararchive_ru_download: 172.17.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 cdnidc02.corp.yararchive.ru:
                   ansible_host: 172.17.50.100
                   db_yararchive_ru_download: 172.17.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 cdlsdc01.corp.yararchive.ru:
                   ansible_host: 172.18.50.1
                   db_yararchive_ru_download: 172.18.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 cdlsdc02.corp.yararchive.ru:
                   ansible_host: 172.18.50.100
                   db_yararchive_ru_download: 172.18.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 rbnskdc01.corp.yararchive.ru:
                   ansible_host: 172.19.50.1
                   db_yararchive_ru_download: 172.19.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 rbnskdc02.corp.yararchive.ru:
                   ansible_host: 172.19.50.100
                   db_yararchive_ru_download: 172.19.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 rstvdc01.corp.yararchive.ru:
                   ansible_host: 172.20.50.1
                   db_yararchive_ru_download: 172.20.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 rstvdc02.corp.yararchive.ru:
                   ansible_host: 172.20.50.100
                   db_yararchive_ru_download: 172.20.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 uglchdc01.corp.yararchive.ru:
                   ansible_host: 172.21.50.1
                   db_yararchive_ru_download: 172.21.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
                 uglchdc02.corp.yararchive.ru:
                   ansible_host: 172.21.50.100
                   db_yararchive_ru_download: 172.21.50.10
-                  db_yararchive_ru_homepage: 172.16.50.12
+                  db_yararchive_ru_homepage: 172.16.50.103
             samba_file_servers:
               hosts:
                 gayoapps01.corp.yararchive.ru:
@@ -193,6 +193,12 @@ all:
           hosts:
             gayoweb01.corp.yararchive.ru:
               ansible_host: 172.16.50.103
+        yararchive_af5_servers:
+          hosts:
+            gayoweb01.corp.yararchive.ru:
+              ansible_host: 172.16.50.103
+              af5_server_name: gayoaf01.corp.yararchive.ru
+              af5_host: 172.16.50.12
         mail_servers:
           hosts:
             gayomail01.corp.yararchive.ru:
@@ -230,6 +236,10 @@ all:
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
                 - "*.yararchive.ru"
+            gayomail01.corp.yararchive.ru:
+              ansible_host: 172.16.50.5
+              ssl_cert_domains:
+                - "*.corp.yararchive.ru"
             gayoansible01.corp.yararchive.ru:
               ansible_host: 172.16.50.14
               ssl_cert_domains:

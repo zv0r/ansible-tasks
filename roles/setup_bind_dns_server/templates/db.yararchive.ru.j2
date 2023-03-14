@@ -1,17 +1,21 @@
-$TTL    21600
+$TTL    900
 $ORIGIN yararchive.ru.
-@       6H      IN      SOA     {{ inventory_hostname }}.       hostmaster.yararchive.ru. (
+@               IN      SOA     {{ inventory_hostname }}.       it.yararchive.ru. (
                                 {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }} ; serial
-                                3H ; refresh
-                                15 ; retry
-                                1w ; expire
-                                3h ; nxdomain ttl
+                                900    ; refresh
+                                90     ; retry
+                                86400  ; expire
+                                900    ; nxdomain ttl
                                 )
+@                               IN        CAA       0 issue "letsencrypt.org"
+@                               IN        CAA       0 issuewild "letsencrypt.org"
+@                               IN        CAA       0 iodef "mailto:it@yararchive.ru"
 @                               IN        NS        {{ inventory_hostname }}.
-{{ inventory_hostname }}.    IN        A         {{ ansible_host }}
-@                               IN        A         172.16.50.12
-www                             IN        A         172.16.50.12
-cloud                           IN        A         172.16.50.12
+@                               IN        A         172.16.50.103
+{{ inventory_hostname }}.       IN        A         {{ ansible_host }}
+www                             IN        A         172.16.50.103
+cloud                           IN        A         172.16.50.103
+mirror                          IN        A         172.16.50.103
 mail                            IN        CNAME     domain.mail.yandex.net.
 yar-archives                    IN        A         91.201.208.165
 homepage                        IN        A         {{ db_yararchive_ru_homepage }}
