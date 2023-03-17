@@ -42,7 +42,7 @@
     dest: "{{ dest_key_directory }}/{{ item }}.key"
     owner: "{{ cert_owner_user | default('root') }}"
     group: "{{ cert_owner_group | default('root') }}"
-    mode: "0400"
+    mode: "0440"
 
 - name: Update stunnel.pem and uca.pem
   ansible.builtin.include_tasks: update_stunnel.yml
