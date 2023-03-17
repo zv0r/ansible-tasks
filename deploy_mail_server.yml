@@ -1,0 +1,7 @@
+---
+- name: Deploy mail server (postfix, dovecot, nextcloud)
+  hosts: mail_servers
+  become: true
+
+  roles:
+    - role: deploy_mail_server

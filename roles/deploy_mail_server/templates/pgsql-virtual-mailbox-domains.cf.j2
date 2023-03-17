@@ -1,0 +1,5 @@
+user = {{ postgresql_mail_server_databse_user_name }}
+password = {{ postgresql_mail_server_databse_user_password }}
+hosts = {{ postgresql_host }}
+dbname = {{ postgresql_mail_server_databse_name }}
+query = SELECT * FROM domains WHERE domain='%s';

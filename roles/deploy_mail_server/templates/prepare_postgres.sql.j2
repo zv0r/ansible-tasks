@@ -1,0 +1,133 @@
+DO $$ BEGIN
+    CREATE DOMAIN local_part TEXT NOT NULL CHECK (LENGTH(VALUE) <= 64);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+  CREATE DOMAIN domain_part TEXT NOT NULL CHECK (LENGTH(VALUE) <= 253);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+  CREATE DOMAIN user_input TEXT CHECK (LENGTH(VALUE) <= 256);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+CREATE TABLE IF NOT EXISTS domains (
+    domain domain_part PRIMARY KEY -- e.g. {{ mail_domain }}
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    domain domain_part REFERENCES domains(domain) ON DELETE RESTRICT,
+    local local_part NOT NULL, -- e.g. alice
+    password_hash user_input,
+    display_name user_input,
+    PRIMARY KEY(domain, local),
+    -- entire e-mail address should not exceed 254 characters (RFC 3696)
+    CHECK(char_length(local || domain) <= 254)
+);
+
+CREATE TABLE IF NOT EXISTS aliases (
+    -- source is the alias, destination is the real e-mail account
+    -- local and domain part are stored separatelly to enable proper REFERENCES
+    source_local local_part NOT NULL,
+    source_domain domain_part REFERENCES domains(domain) ON DELETE RESTRICT,
+    destination_local local_part,
+    destination_domain domain_part,
+    PRIMARY KEY(source_local, source_domain),
+    FOREIGN KEY (destination_local, destination_domain) REFERENCES users (local, domain) ON DELETE CASCADE,
+    -- entire e-mail address should not exceed 254 characters (RFC 3696)
+    CHECK(char_length(source_local || source_domain) <= 254)
+    -- destination needs no check because it references already existing (and already checked) rows.
+);
+
+CREATE TABLE IF NOT EXISTS shared_mailboxes (
+    -- local and domain part are stored separately to enable proper REFERENCES
+    shared_mailbox_local local_part,
+    shared_mailbox_domain domain_part,
+    shared_to_local local_part,
+    shared_to_domain domain_part,
+    PRIMARY KEY (shared_mailbox_local, shared_mailbox_domain, shared_to_local, shared_to_domain),
+    FOREIGN KEY (shared_mailbox_local, shared_mailbox_domain) REFERENCES users (local, domain) ON DELETE CASCADE,
+    FOREIGN KEY (shared_to_local, shared_to_domain) REFERENCES users (local, domain) ON DELETE CASCADE
+);
+
+CREATE OR REPLACE VIEW users_fqda AS
+    -- fqda = Fully qualified domain address, e.g. alice@{{ mail_domain }}
+    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name
+    FROM users, domains
+    WHERE users.domain = domains.domain;
+
+CREATE OR REPLACE VIEW aliases_fqda AS
+    -- fqda = Fully qualified domain address,  e.g. alice@{{ mail_domain }}
+    SELECT source_local || '@' || source_domain AS "fqda"
+    FROM aliases;
+
+CREATE OR REPLACE VIEW view_shared_mailboxes AS
+    -- This view is needed for Dovecot because it needs fqda's and can't handle separate local and domain parts
+    -- dummy is 1 always because Dovecot needs this. Probably to indicate that this share is active.
+    SELECT shared_mailbox_local || '@' || shared_mailbox_domain AS "shared_mailbox", shared_to_local || '@' || shared_to_domain AS "shared_to", 1 AS "dummy"
+    FROM shared_mailboxes;
+
+CREATE OR REPLACE VIEW view_public_mailboxes AS
+    -- dummy view to satisfy Dovecot's shared/shared-boxes/anyone pattern mapping
+    SELECT NULL as "public_mailbox", NULL as "dummy" LIMIT 0;
+
+CREATE OR REPLACE RULE view_shared_mailboxes_insert AS ON INSERT TO view_shared_mailboxes
+  DO INSTEAD
+  INSERT INTO shared_mailboxes (shared_mailbox_local, shared_mailbox_domain, shared_to_local, shared_to_domain)
+  VALUES (split_part(NEW.shared_mailbox,'@',1), split_part(NEW.shared_mailbox,'@',2), split_part(NEW.shared_to,'@',1), split_part(NEW.shared_to,'@',2));
+
+CREATE OR REPLACE RULE view_shared_mailboxes_delete AS ON DELETE TO view_shared_mailboxes
+  DO INSTEAD
+  DELETE FROM shared_mailboxes
+  WHERE shared_mailbox_local = split_part(OLD.shared_mailbox,'@',1) AND
+shared_mailbox_domain = split_part(OLD.shared_mailbox,'@',2) AND
+shared_to_local = split_part(OLD.shared_to,'@',1) AND
+shared_to_domain = split_part(OLD.shared_to,'@',2);
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql_mail_server_databse_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql_mail_server_databse_user_password }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql_mail_server_databse_name }} TO {{ postgresql_mail_server_databse_user_name }};
+GRANT SELECT ON domains, users, aliases, users_fqda, aliases_fqda, view_shared_mailboxes, view_public_mailboxes TO {{ postgresql_mail_server_databse_user_name }};
+GRANT INSERT, DELETE ON view_shared_mailboxes TO {{ postgresql_mail_server_databse_user_name }};
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql_nextcloud_databse_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql_nextcloud_databse_user_password }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql_mail_server_databse_name }} TO {{ postgresql_nextcloud_databse_user_name }};
+GRANT SELECT, INSERT, DELETE ON users TO {{ postgresql_nextcloud_databse_user_name }};
+GRANT SELECT ON domains, users_fqda TO {{ postgresql_nextcloud_databse_user_name }};
+GRANT UPDATE (password_hash, display_name) ON users TO {{ postgresql_nextcloud_databse_user_name }};
+
+INSERT INTO domains (domain) VALUES ('{{ mail_domain }}') ON CONFLICT DO NOTHING;
+
+-- THIS IS A TEST DATA
+INSERT INTO domains (domain) VALUES ('corp.yararchive.ru') ON CONFLICT DO NOTHING;
+
+INSERT INTO users (local, domain, password_hash) VALUES
+('alice','{{ mail_domain }}','$argon2id$v=19$m=16,t=2,p=1$QUplUG8wTnc0V0dCczFYcQ$MtOlTfFTDeUb/aVv9nj9Fg'),
+('bob','{{ mail_domain }}','$argon2id$v=19$m=16,t=2,p=1$c0swTXl5OTFiUXFZNHlFdA$2R3pzVbXY5KlQ58npSZViQ'),
+('carl','corp.yararchive.ru','$argon2id$v=19$m=16,t=2,p=1$bE43MUFpa21iQWJWR1dCUA$sC/zUoW8YtcWghrKd645Vg')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO aliases (source_local, source_domain, destination_local, destination_domain) VALUES
+('boss', '{{ mail_domain }}', 'alice', '{{ mail_domain }}'),
+('postmaster','{{ mail_domain }}','alice','{{ mail_domain }}'),
+('secretary', '{{ mail_domain }}', 'bob', '{{ mail_domain }}'),
+('orders', '{{ mail_domain }}', 'carl', 'corp.yararchive.ru')
+ON CONFLICT DO NOTHING;
+
+INSERT into shared_mailboxes (shared_mailbox_local, shared_mailbox_domain, shared_to_local, shared_to_domain) VALUES
+('alice', '{{ mail_domain }}', 'bob', '{{ mail_domain }}')
+ON CONFLICT DO NOTHING;

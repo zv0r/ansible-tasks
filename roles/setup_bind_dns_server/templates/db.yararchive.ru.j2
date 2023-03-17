@@ -12,6 +12,10 @@ $ORIGIN yararchive.ru.
 @                               IN        CAA       0 iodef "mailto:it@yararchive.ru"
 @                               IN        NS        {{ inventory_hostname }}.
 @                               IN        A         172.16.50.103
+@                               IN        MX 10     m
+@                               IN        TXT       "v=spf1 mx -all"
+m                               IN        A         172.16.50.5
+_dmarc                          IN        TXT       "v=DMARC1; p=reject; rua=mailto:it@yararchive.ru; adkim=s; aspf=s; pct=100;"
 {{ inventory_hostname }}.       IN        A         {{ ansible_host }}
 www                             IN        A         172.16.50.103
 cloud                           IN        A         172.16.50.103
