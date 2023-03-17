@@ -1,0 +1,6 @@
+---
+ssl_cert_domains:
+  - "*.corp.yararchive.ru"
+units_to_restart:
+  - samba-ad-dc.service
+  - kea-dhcp4-server.service

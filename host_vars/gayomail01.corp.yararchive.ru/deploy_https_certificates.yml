@@ -1,0 +1,7 @@
+---
+ssl_cert_domains:
+  - "*.yararchive.ru"
+  - "*.corp.yararchive.ru"
+units_to_restart:
+  - postgresql.service
+  - postfix.service

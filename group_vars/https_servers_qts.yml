@@ -1,0 +1,9 @@
+---
+ssl_cert_domains:
+  - "*.corp.yararchive.ru"
+ansible_become_user: admin
+cert_owner_user: admin
+cert_owner_group: administrators
+ansible_python_interpreter: /usr/local/Python3/bin/python3
+python_interpreter_version: 3.7.5
+python_lib_dir: /usr/local/lib/python3.7

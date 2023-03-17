@@ -1,0 +1,5 @@
+---
+ssl_cert_domains:
+  - "*.corp.yararchive.ru"
+units_to_restart:
+  - nginx.service

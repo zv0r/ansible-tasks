@@ -1,0 +1,9 @@
+---
+acme_clients_certs_directory: /var/etc/acme-client/home
+local_temp_ssl_dir: /tmp/ssl_cert
+dest_cert_directory: /etc/ssl/certs
+dest_key_directory: /etc/ssl/private
+cert_owner_user: root
+cert_owner_group: ssl-cert
+stunnel_pem_path: /etc/stunnel/stunnel.pem
+uca_pem_path: /etc/stunnel/uca.pem
