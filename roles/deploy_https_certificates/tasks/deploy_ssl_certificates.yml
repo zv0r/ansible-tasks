@@ -1,4 +1,11 @@
 ---
+- name: Install ssl-cert package if possible
+  ansible.builtin.apt:
+    name: ssl-cert
+    update_cache: true
+    state: present
+  ignore_errors: true
+
 - name: Prepare python modules if needed
   ansible.builtin.include_tasks: prepare_python_modules.yml
   loop:
