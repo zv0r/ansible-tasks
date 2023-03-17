@@ -236,66 +236,112 @@ all:
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
                 - "*.yararchive.ru"
+              units_to_restart:
+                - nginx.service
             gayomail01.corp.yararchive.ru:
               ansible_host: 172.16.50.5
               ssl_cert_domains:
+                - "*.yararchive.ru"
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - postgresql.service
+                - postfix.service
             gayoansible01.corp.yararchive.ru:
               ansible_host: 172.16.50.14
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - nginx.service
             gayodc01.corp.yararchive.ru:
               ansible_host: 172.16.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             gayodc02.corp.yararchive.ru:
               ansible_host: 172.16.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             cdnidc01.corp.yararchive.ru:
               ansible_host: 172.17.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             cdnidc02.corp.yararchive.ru:
               ansible_host: 172.17.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             cdlsdc01.corp.yararchive.ru:
               ansible_host: 172.18.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             cdlsdc02.corp.yararchive.ru:
               ansible_host: 172.18.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             rbnskdc01.corp.yararchive.ru:
               ansible_host: 172.19.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             rbnskdc02.corp.yararchive.ru:
               ansible_host: 172.16.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             rstvdc01.corp.yararchive.ru:
               ansible_host: 172.20.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             rstvdc02.corp.yararchive.ru:
               ansible_host: 172.20.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             uglchdc01.corp.yararchive.ru:
               ansible_host: 172.21.50.1
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
             uglchdc02.corp.yararchive.ru:
               ansible_host: 172.21.50.100
               ssl_cert_domains:
                 - "*.corp.yararchive.ru"
+              units_to_restart:
+                - samba-ad-dc.service
+                - kea-dhcp4-server.service
           vars:
             acme_clients_certs_directory: /var/etc/acme-client/home
             local_temp_ssl_dir: /tmp/ssl_cert
             dest_cert_directory: /etc/ssl/certs
             dest_key_directory: /etc/ssl/private
+            cert_owner_user: root
+            cert_owner_group: ssl-cert
             stunnel_pem_path: /etc/stunnel/stunnel.pem
             uca_pem_path: /etc/stunnel/uca.pem
