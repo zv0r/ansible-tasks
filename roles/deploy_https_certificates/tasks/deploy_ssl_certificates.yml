@@ -57,6 +57,7 @@
     state: restarted
   with_items: "{{ units_to_restart }}"
   when: units_to_restart is defined
+  ignore_errors: true
 
 - name: Update stunnel.pem and uca.pem
   ansible.builtin.include_tasks: update_stunnel.yml
