@@ -1,13 +1,11 @@
 ---
 mail_domain: yararchive.ru
 mail_server_fqdn: "m.{{ mail_domain }}"
-mail_storage_directory: /mnt/mail_storage
-postgresql_host: localhost
-postgresql_postgres_user_password: "{{ lookup('ansible.builtin.password', '/dev/null seed=inventory_hostname chars=ascii_letters,digits length=32') }}"
-postgresql_mail_server_databse_name: mail_server
-postgresql_mail_server_databse_user_name: mail_user
-postgresql_mail_server_databse_user_password: "{{ lookup('ansible.builtin.password', \
-  '/dev/null seed=postgresql_mail_server_databse_user_name chars=ascii_letters,digits length=32') }}"
-postgresql_nextcloud_databse_user_name: mail_admin
-postgresql_nextcloud_databse_user_password: "{{ lookup('ansible.builtin.password', \
-  '/dev/null seed=postgresql_nextcloud_databse_user_name chars=ascii_letters,digits length=32') }}"
+webmail_fqdn: "{{ mail_server_fqdn }}"
+cert_fullchain_file: /etc/ssl/certs/*.yararchive.ru_fullchain.cer
+cert_key_file: /etc/ssl/private/*.yararchive.ru.key
+mail_storage_user: vmail
+mail_storage_group: vmail
+mail_storage_uid: 5000
+mail_storage_gid: 5000
+mail_storage_user_home: /var/vmail

@@ -143,6 +143,89 @@
     group: postfix
     mode: "0640"
   with_items:
-    - { src: pgsql-virtual-alias-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-alias-maps.cf }
-    - { src: pgsql-virtual-mailbox-domains.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-domains.cf }
-    - { src: pgsql-virtual-mailbox-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-maps.cf }
+    - { src: postfix/pgsql-virtual-alias-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-alias-maps.cf }
+    - { src: postfix/pgsql-virtual-mailbox-domains.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-domains.cf }
+    - { src: postfix/pgsql-virtual-mailbox-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-maps.cf }
+
+- name: Copy main.cf settings file
+  ansible.builtin.template:
+    src: postfix/main.cf.j2
+    dest: /etc/postfix/main.cf
+    mode: "0644"
+
+- name: Copy master.cf settings file
+  ansible.builtin.template:
+    src: postfix/master.cf.j2
+    dest: /etc/postfix/master.cf
+    mode: "0644"
+
+- name: Copy submission_header_cleanup.cf settings file
+  ansible.builtin.template:
+    src: postfix/submission_header_cleanup.cf.j2
+    dest: /etc/postfix/submission_header_cleanup.cf
+    mode: "0644"
+
+- name: Create group for mail storage directories
+  ansible.builtin.group:
+    name: "{{ mail_storage_group }}"
+    state: present
+    gid: "{{ mail_storage_gid }}"
+
+- name: Create user for mail storage directories
+  ansible.builtin.user:
+    name: "{{ mail_storage_user }}"
+    uid: "{{ mail_storage_uid }}"
+    shell: /usr/sbin/nologin
+    home: "{{ mail_storage_user_home }}"
+    group: "{{ mail_storage_group }}"
+
+- name: Set ownership for mail storage directory
+  ansible.builtin.file:
+    state: directory
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    path: "{{ mail_storage_user_home }}"
+    mode: "0700"
+    recurse: true
+
+- name: Copy milter_headers.conf settings file
+  ansible.builtin.template:
+    src: rspamd/milter_headers.conf.j2
+    dest: /etc/rspamd/override.d/milter_headers.conf
+    mode: "0644"
+
+- name: Create rspamd dkim directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ dkim_directory }}"
+    owner: "{{ rspamd_user }}"
+    group: "{{ rspamd_group }}"
+    mode: "0770"
+
+- name: Copy dkim_signing.conf settings file
+  ansible.builtin.template:
+    src: rspamd/dkim_signing.conf.j2
+    dest: /etc/rspamd/local.d/dkim_signing.conf
+    mode: "0644"
+
+- name: Generate DKIM
+  ansible.builtin.command: "rspamadm dkim_keygen \
+    -b 2048 \
+    -d {{ mail_domain }} \
+    -s {{ dkim_identifier }} \
+    -k {{ dkim_key_file | ansible.builtin.quote }}"
+  changed_when: true
+  failed_when: false
+  register: dkim_pubkey
+  notify: Process DKIM key
+  when: not skip_dkim_gen
+
+- name: Flush handlers before last message
+  ansible.builtin.meta: flush_handlers
+
+- name: Finish
+  ansible.builtin.debug:
+    msg:
+      - "Job finished."
+      - "Don't forget to create TXT record {{ dkim_identifier }}._domainkey.{{ mail_domain }}"
+      - "with value from file {{ dkim_pubkey_file }}"

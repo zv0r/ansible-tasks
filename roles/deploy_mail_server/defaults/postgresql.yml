@@ -1,0 +1,9 @@
+postgresql_host: localhost
+postgresql_postgres_user_password: "{{ lookup('ansible.builtin.password', '/dev/null seed=inventory_hostname chars=ascii_letters,digits length=32') }}"
+postgresql_mail_server_databse_name: mail_server
+postgresql_mail_server_databse_user_name: mail_user
+postgresql_mail_server_databse_user_password: "{{ lookup('ansible.builtin.password', \
+  '/dev/null seed=postgresql_mail_server_databse_user_name chars=ascii_letters,digits length=32') }}"
+postgresql_nextcloud_databse_user_name: mail_admin
+postgresql_nextcloud_databse_user_password: "{{ lookup('ansible.builtin.password', \
+  '/dev/null seed=postgresql_nextcloud_databse_user_name chars=ascii_letters,digits length=32') }}"

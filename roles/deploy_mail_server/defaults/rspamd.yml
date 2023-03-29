@@ -1,0 +1,8 @@
+---
+rspamd_user: _rspamd
+rspamd_group: "{{ rspamd_user }}"
+skip_dkim_gen: false
+dkim_directory: /var/lib/rspamd/dkim
+dkim_identifier: "{{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}"
+dkim_key_file: "{{ [dkim_directory, mail_domain + '.' + dkim_identifier + '.key'] | ansible.builtin.path_join }}"
+dkim_pubkey_file: "{{ dkim_key_file }}.pub"
