@@ -11,6 +11,9 @@
 - name: Setup Postfix
   ansible.builtin.import_tasks: setup_postfix.yml
 
+- name: Flush hadlers before finish message
+  ansible.builtin.meta: flush_handlers
+
 - name: Finish
   ansible.builtin.debug:
     msg:

@@ -1,0 +1,5 @@
+user = {{ postgresql_mail_server_databse_user_name }}
+password = {{ postgresql_mail_server_databse_user_password }}
+hosts = {{ postgresql_host }}:{{ postgresql_port }}
+dbname = {{ postgresql_mail_server_databse_name }}
+query = SELECT fqda FROM users_fqda WHERE fqda='%s';

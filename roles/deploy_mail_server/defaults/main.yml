@@ -9,7 +9,7 @@ dkim_identifier: "{{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ an
 dkim_key_file: "{{ [dkim_directory, mail_domain + '.' + dkim_identifier + '.key'] | ansible.builtin.path_join }}"
 dkim_pubkey_file: "{{ dkim_key_file }}.pub"
 # postgresql
-postgresql_host: localhost
+postgresql_host: 127.0.0.1
 postgresql_port: 5432
 postgresql_mail_server_databse_name: mail_server
 postgresql_mail_server_databse_user_name: mail_user
