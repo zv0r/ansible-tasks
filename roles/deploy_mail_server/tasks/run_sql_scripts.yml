@@ -1,0 +1,19 @@
+---
+- name: Copy, run, delete SQL scripts
+  when: item.when
+  block:
+    - name: "Copy to target machine: {{ item.src }}"
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "0644"
+
+    - name: "Run SQL script: {{ item.dest }}"
+      community.postgresql.postgresql_script:
+        db: "{{ postgresql_mail_server_databse_name }}"
+        path: "{{ item.dest }}"
+
+    - name: "Remove SQL script file: {{ item.dest }}"
+      ansible.builtin.file:
+        path: "{{ item.dest }}"
+        state: absent

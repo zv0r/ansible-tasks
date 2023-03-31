@@ -1,0 +1,19 @@
+mail_location = maildir:~/Maildir
+
+namespace inbox {
+  type = private
+  separator = /
+  prefix =
+  inbox = yes
+}
+
+namespace {
+  type = shared
+  separator = /
+  prefix = shared/%%u/
+  location = maildir:%%h/Maildir:INDEXPVT=~/Maildir/shared/%%u
+  subscriptions = no
+  list = children
+}
+
+mail_plugins = acl, quota

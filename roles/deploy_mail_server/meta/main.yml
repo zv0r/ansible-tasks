@@ -1,13 +1,10 @@
 ---
 galaxy_info:
   author: zv0r
-  description: Deploy mail server
+  description: Deploy mail server (postfix, dovecot, nextcloud, postgresql, nginx)
   license: MIT
-  min_ansible_version: "2.7"
+  min_ansible_version: "2.10"
   platforms:
     - name: Debian
       versions:
-        - all
-dependencies:
-  - role: debian_based_dist_upgrade
-  - role: deploy_https_certificates
+        - bookworm

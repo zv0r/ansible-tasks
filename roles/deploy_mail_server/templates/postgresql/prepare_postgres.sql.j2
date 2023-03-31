@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS users (
     local local_part NOT NULL, -- e.g. alice
     password_hash user_input,
     display_name user_input,
+    quota bigint,
     PRIMARY KEY(domain, local),
     -- entire e-mail address should not exceed 254 characters (RFC 3696)
     CHECK(char_length(local || domain) <= 254)
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS shared_mailboxes (
 
 CREATE OR REPLACE VIEW users_fqda AS
     -- fqda = Fully qualified domain address, e.g. alice@{{ mail_domain }}
-    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name
+    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name, users.quota
     FROM users, domains
     WHERE users.domain = domains.domain;
 
@@ -111,23 +112,3 @@ GRANT SELECT ON domains, users_fqda TO {{ postgresql_nextcloud_databse_user_name
 GRANT UPDATE (password_hash, display_name) ON users TO {{ postgresql_nextcloud_databse_user_name }};
 
 INSERT INTO domains (domain) VALUES ('{{ mail_domain }}') ON CONFLICT DO NOTHING;
-
--- THIS IS A TEST DATA
-INSERT INTO domains (domain) VALUES ('corp.yararchive.ru') ON CONFLICT DO NOTHING;
-
-INSERT INTO users (local, domain, password_hash) VALUES
-('alice','{{ mail_domain }}','$argon2id$v=19$m=16,t=2,p=1$QUplUG8wTnc0V0dCczFYcQ$MtOlTfFTDeUb/aVv9nj9Fg'),
-('bob','{{ mail_domain }}','$argon2id$v=19$m=16,t=2,p=1$c0swTXl5OTFiUXFZNHlFdA$2R3pzVbXY5KlQ58npSZViQ'),
-('carl','corp.yararchive.ru','$argon2id$v=19$m=16,t=2,p=1$bE43MUFpa21iQWJWR1dCUA$sC/zUoW8YtcWghrKd645Vg')
-ON CONFLICT DO NOTHING;
-
-INSERT INTO aliases (source_local, source_domain, destination_local, destination_domain) VALUES
-('boss', '{{ mail_domain }}', 'alice', '{{ mail_domain }}'),
-('postmaster','{{ mail_domain }}','alice','{{ mail_domain }}'),
-('secretary', '{{ mail_domain }}', 'bob', '{{ mail_domain }}'),
-('orders', '{{ mail_domain }}', 'carl', 'corp.yararchive.ru')
-ON CONFLICT DO NOTHING;
-
-INSERT into shared_mailboxes (shared_mailbox_local, shared_mailbox_domain, shared_to_local, shared_to_domain) VALUES
-('alice', '{{ mail_domain }}', 'bob', '{{ mail_domain }}')
-ON CONFLICT DO NOTHING;

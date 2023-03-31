@@ -22,5 +22,5 @@
 
 - name: Restart rspamd
   ansible.builtin.systemd:
-    name: rspamd.services
+    name: rspamd.service
     state: restarted
