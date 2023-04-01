@@ -1,6 +1,6 @@
 {
     "Control-agent": {
-        "http-host": "{{ ansible_host }}",
+        "http-host": "{{ ansible_default_ipv4.address }}",
         "http-port": {{ kea_ctrl_agent_port }},
         "control-sockets": {
             "dhcp4": {
