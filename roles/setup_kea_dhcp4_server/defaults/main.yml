@@ -5,7 +5,7 @@ kea_service_group: _kea
 kea_ctrl_agent_port: 8000
 kerberos_keytab_user: dhcpduser
 kerberos_keytab_file: "{{ kea_directory }}/libdhcp_run_script.keytab"
-kea_dhcp4_socket_name: /tmp/kea-dhcp4-ctrl.sock
+kea_dhcp4_socket_name: /run/kea/kea4-ctrl-socket
 libdhcp_run_script_sh_file: "{{ kea_directory }}/libdhcp_run_script.sh"
 kea_ctrl_agent_ufw_alowed_addresses:
   gayodc01.corp.yararchive.ru:

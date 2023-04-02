@@ -113,6 +113,27 @@
     group: root
     mode: "0644"
 
+- name: Allow to read /etc/resolv.conf in apparmor
+  ansible.builtin.lineinfile:
+    state: present
+    path: /etc/apparmor.d/usr.sbin.kea-lfc
+    insertbefore: "^}"
+    line: "  /etc/resolv.conf r,"
+
+- name: Allow to read /etc/resolv.conf in apparmor
+  ansible.builtin.lineinfile:
+    state: present
+    path: /etc/apparmor.d/usr.sbin.kea-lfc
+    insertbefore: ".*/etc/resolv.conf"
+    line: "  network inet stream,"
+
+- name: Allow to run libdhcp_run_script.sh in apparmor
+  ansible.builtin.lineinfile:
+    state: present
+    path: /etc/apparmor.d/usr.sbin.kea-dhcp4
+    insertbefore: "^}"
+    line: "  /etc/kea/libdhcp_run_script.sh Ux,"
+
 - name: Restart kea systemd services
   ansible.builtin.systemd:
     name: "{{ item }}"
@@ -122,3 +143,4 @@
   with_items:
     - kea-dhcp4-server.service
     - kea-ctrl-agent.service
+    - apparmor.service
