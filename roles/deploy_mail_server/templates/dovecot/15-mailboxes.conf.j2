@@ -1,0 +1,33 @@
+namespace inbox {
+  mailbox Inbox {
+    auto = subscribe
+    autoexpunge = 365d
+  }
+
+  mailbox Archive {
+    auto = subscribe
+    special_use = \Archive
+  }
+
+  mailbox Drafts {
+    auto = subscribe
+    special_use = \Drafts
+  }
+
+  mailbox Junk {
+    auto = subscribe
+    special_use = \Junk
+    autoexpunge = 7d
+  }
+
+  mailbox Trash {
+    auto = subscribe
+    special_use = \Trash
+    autoexpunge = 7d
+  }
+
+  mailbox Sent {
+    auto = subscribe
+    special_use = \Sent
+  }
+}

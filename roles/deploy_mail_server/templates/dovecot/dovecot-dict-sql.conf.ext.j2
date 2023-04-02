@@ -1,0 +1,27 @@
+connect = \
+  host={{ postgresql_host }} \
+  port=5432 \
+  dbname={{ postgresql_mail_server_databse_name }} \
+  user={{ postgresql_mail_server_databse_user_name }} \
+  password={{ postgresql_mail_server_databse_user_password }}
+
+map {
+  pattern = shared/shared-boxes/user/$to/$from
+  table = view_shared_mailboxes
+  value_field = dummy
+
+  fields {
+    shared_mailbox = $from
+    shared_to = $to
+  }
+}
+
+map {
+  pattern = shared/shared-boxes/anyone/$from
+  table = view_public_mailboxes
+  value_field = dummy
+
+  fields {
+    public_mailbox = $from
+  }
+}

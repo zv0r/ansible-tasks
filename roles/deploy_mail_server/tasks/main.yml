@@ -11,6 +11,12 @@
 - name: Setup Postfix
   ansible.builtin.import_tasks: setup_postfix.yml
 
+- name: Setup Rspamd
+  ansible.builtin.import_tasks: setup_rspamd.yml
+
+- name: Setup Dovecot
+  ansible.builtin.import_tasks: setup_dovecot.yml
+
 - name: Flush hadlers before finish message
   ansible.builtin.meta: flush_handlers
 
@@ -25,4 +31,4 @@
       - "Also keep up to date TLS fullchain certificate in {{ cert_fullchain_file }}"
       - "and TLS key in {{ cert_key_file }}."
       - ""
-      - "You need to open http and https ports in your firewall."
+      - "You need to open ports 80/tcp, 443/tcp, 25/tcp, 587/tcp in your firewall."

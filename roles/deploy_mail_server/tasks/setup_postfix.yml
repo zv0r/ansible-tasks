@@ -10,7 +10,7 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
-- name: Copy postfix configs with postgres settings
+- name: Copy Postfix configs
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"

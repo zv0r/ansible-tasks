@@ -1,0 +1,66 @@
+---
+- name: Install Dovecot and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - dovecot-imapd
+    - dovecot-pgsql
+    - dovecot-lmtpd
+    - dovecot-sieve
+    - dovecot-managesieved
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Create group for mail storage directories
+  ansible.builtin.group:
+    name: "{{ mail_storage_group }}"
+    state: present
+    gid: "{{ mail_storage_gid }}"
+
+- name: Create user for mail storage directories
+  ansible.builtin.user:
+    name: "{{ mail_storage_user }}"
+    uid: "{{ mail_storage_uid }}"
+    shell: /usr/sbin/nologin
+    home: "{{ mail_storage_user_home }}"
+    group: "{{ mail_storage_group }}"
+
+- name: Set ownership for mail storage directory
+  ansible.builtin.file:
+    state: directory
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    path: "{{ mail_storage_user_home }}"
+    mode: "0770"
+    recurse: true
+
+- name: Create sieve-before directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ sieve_dir }}"
+    group: "{{ mail_storage_group }}"
+    mode: "0775"
+
+- name: Copy Dovecot configs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items:
+    - { src: dovecot/10-dict.conf.j2, dest: /etc/dovecot/conf.d/10-dict.conf, group: root }
+    - { src: dovecot/10-ssl.conf.j2, dest: /etc/dovecot/conf.d/10-ssl.conf, group: root }
+    - { src: dovecot/10-auth.conf.j2, dest: /etc/dovecot/conf.d/10-auth.conf, group: root }
+    - { src: dovecot/dovecot-sql.conf.ext.j2, dest: /etc/dovecot/dovecot-sql.conf.ext, group: dovecot, mode: "0640" }
+    - { src: dovecot/dovecot-dict-sql.conf.ext.j2, dest: /etc/dovecot/dovecot-dict-sql.conf.ext, group: dovecot, mode: "0640" }
+    - { src: dovecot/10-mail.conf.j2, dest: /etc/dovecot/conf.d/10-mail.conf, group: root }
+    - { src: dovecot/15-mailboxes.conf.j2, dest: /etc/dovecot/conf.d/15-mailboxes.conf, group: root }
+    - { src: dovecot/10-master.conf.j2, dest: /etc/dovecot/conf.d/10-master.conf, group: root }
+    - { src: dovecot/20-lmtp.conf.j2, dest: /etc/dovecot/conf.d/20-lmtp.conf, group: root }
+    - { src: dovecot/20-imap.conf.j2, dest: /etc/dovecot/conf.d/20-imap.conf, group: root }
+    - { src: dovecot/90-acl.conf.j2, dest: /etc/dovecot/conf.d/90-acl.conf, group: root }
+    - { src: dovecot/90-sieve.conf.j2, dest: /etc/dovecot/conf.d/90-sieve.conf, group: root }
+    - { src: dovecot/spam-to-junk.sieve.j2, dest: "{{ [sieve_dir, 'spam-to-junk.sieve'] | ansible.builtin.path_join }}", group: "{{ mail_storage_group }}" }
+  notify: Restart Dovecot
