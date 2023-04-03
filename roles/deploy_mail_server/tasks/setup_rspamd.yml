@@ -30,7 +30,6 @@
 
 - name: Generate DKIM
   ansible.builtin.command: "rspamadm dkim_keygen \
-    -b 2048 \
     -d {{ mail_domain }} \
     -s {{ dkim_identifier }} \
     -k {{ dkim_key_file | ansible.builtin.quote }}"
