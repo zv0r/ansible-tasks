@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS users (
     local local_part NOT NULL, -- e.g. alice
     password_hash user_input,
     display_name user_input,
-    quota bigint,
+    quota bigint default 0,
     PRIMARY KEY(domain, local),
     -- entire e-mail address should not exceed 254 characters (RFC 3696)
-    CHECK(char_length(local || domain) <= 254)
+    CHECK(char_length(local || domain) < 254)
 );
 
 CREATE TABLE IF NOT EXISTS aliases (
