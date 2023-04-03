@@ -1,3 +1,0 @@
----
-- name: Process DKIM key
-  ansible.builtin.include_tasks: process_dkim_key.yml
