@@ -20,7 +20,6 @@
     - { src: postfix/pgsql-virtual-mailbox-domains.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-domains.cf, mode: "0640", group: postfix }
     - { src: postfix/pgsql-virtual-mailbox-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-mailbox-maps.cf, mode: "0640", group: postfix }
     - { src: postfix/pgsql-virtual-alias-maps.cf.j2, dest: /etc/postfix/pgsql-virtual-alias-maps.cf, mode: "0640", group: postfix }
-    - { src: postfix/submission_header_cleanup.cf.j2, dest: /etc/postfix/submission_header_cleanup.cf, mode: "0644", group: root }
     - { src: postfix/main.cf.j2, dest: /etc/postfix/main.cf, mode: "0644", group: root }
     - { src: postfix/master.cf.j2, dest: /etc/postfix/master.cf, mode: "0644", group: root }
   notify: Restart Postfix

@@ -50,17 +50,14 @@
     group: "{{ item.group }}"
     mode: "{{ item.mode | default('0644') }}"
   with_items:
-    - { src: dovecot/10-dict.conf.j2, dest: /etc/dovecot/conf.d/10-dict.conf, group: root }
     - { src: dovecot/10-ssl.conf.j2, dest: /etc/dovecot/conf.d/10-ssl.conf, group: root }
     - { src: dovecot/10-auth.conf.j2, dest: /etc/dovecot/conf.d/10-auth.conf, group: root }
     - { src: dovecot/dovecot-sql.conf.ext.j2, dest: /etc/dovecot/dovecot-sql.conf.ext, group: dovecot, mode: "0640" }
-    - { src: dovecot/dovecot-dict-sql.conf.ext.j2, dest: /etc/dovecot/dovecot-dict-sql.conf.ext, group: dovecot, mode: "0640" }
     - { src: dovecot/10-mail.conf.j2, dest: /etc/dovecot/conf.d/10-mail.conf, group: root }
     - { src: dovecot/15-mailboxes.conf.j2, dest: /etc/dovecot/conf.d/15-mailboxes.conf, group: root }
     - { src: dovecot/10-master.conf.j2, dest: /etc/dovecot/conf.d/10-master.conf, group: root }
     - { src: dovecot/20-lmtp.conf.j2, dest: /etc/dovecot/conf.d/20-lmtp.conf, group: root }
     - { src: dovecot/20-imap.conf.j2, dest: /etc/dovecot/conf.d/20-imap.conf, group: root }
-    - { src: dovecot/90-acl.conf.j2, dest: /etc/dovecot/conf.d/90-acl.conf, group: root }
     - { src: dovecot/90-sieve.conf.j2, dest: /etc/dovecot/conf.d/90-sieve.conf, group: root }
     - { src: dovecot/spam-to-junk.sieve.j2, dest: "{{ [sieve_dir, 'spam-to-junk.sieve'] | ansible.builtin.path_join }}", group: "{{ mail_storage_group }}" }
   notify: Restart Dovecot
