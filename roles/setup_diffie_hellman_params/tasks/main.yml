@@ -1,0 +1,21 @@
+---
+- name: Install ca-certificates package
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - ca-certificates
+    - ssl-cert
+
+- name: Copy DH params pem's to /etc/ssl
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ ['/etc/ssl', item] | ansible.builtin.path_join }}"
+    mode: "0444"
+  with_items:
+    - ffdhe2048.pem
+    - ffdhe3072.pem
+    - ffdhe4096.pem
+    - ffdhe6144.pem
+    - ffdhe8192.pem
