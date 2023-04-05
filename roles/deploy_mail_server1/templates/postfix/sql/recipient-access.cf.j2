@@ -1,0 +1,8 @@
+user = {{ postgresql.mail_server_user_name }}
+password = {{ postgresql.mail_server_user_pass }}
+hosts = {{ postgresql.host }}:{{ postgresql.port }}
+dbname = {{ postgresql.mail_server_database }}
+# Without aliases exception:
+# query = SELECT CASE WHEN (sendonly = true) THEN 'REJECT' ELSE 'OK' END AS access FROM accounts WHERE username = '%u' AND domain = '%d' AND enabled = true LIMIT 1;
+# With aliases exception
+query = SELECT CASE WHEN (accounts.sendonly = true AND NOT EXISTS (SELECT FROM aliases WHERE aliases.source_username = '%u' AND aliases.source_domain = '%d' AND aliases.enabled = true)) THEN 'REJECT' ELSE 'OK' END AS access FROM accounts WHERE accounts.username = '%u' AND accounts.domain = '%d' AND accounts.enabled = true LIMIT 1;

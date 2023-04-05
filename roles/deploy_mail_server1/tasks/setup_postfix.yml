@@ -1,0 +1,65 @@
+---
+- name: Install Dovecot and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - postfix
+    - postfix-pgsql
+    - rsyslog
+    - postfix-mta-sts-resolver
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Copy Postfix configs
+  ansible.builtin.template:
+    src: "postfix/{{ item }}.j2"
+    dest: "/etc/postfix/{{ item }}"
+    mode: "0644"
+  with_items:
+    - main.cf
+    - vmail_ssl.map
+    - master.cf
+    - submission_header_cleanup
+    - without_ptr
+    - postscreen_access
+  notify: Restart Postfix
+
+- name: Create vmail_ssl map
+  ansible.builtin.command: "postmap -F hash:/etc/postfix/vmail_ssl.map"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Create without_ptr map
+  ansible.builtin.command: "postmap postmap /etc/postfix/without_ptr"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Create vmail_ssl map
+  ansible.builtin.command: "postmap -F hash:/etc/postfix/vmail_ssl.map"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Create directory for Postfix SQL maps
+  ansible.builtin.file:
+    state: directory
+    path: /etc/postfix/sql
+    mode: "0750"
+
+- name: Copy Postfix maps
+  ansible.builtin.template:
+    src: "postfix/sql/{{ item }}.j2"
+    dest: "/etc/postfix/sql/{{ item }}"
+    mode: "0640"
+  with_items:
+    - accounts.cf
+    - aliases.cf
+    - domains.cf
+    - recipient-access.cf
+    - sender-login-maps.cf
+    - tls-policy.cf
+  notify: Restart Postfix

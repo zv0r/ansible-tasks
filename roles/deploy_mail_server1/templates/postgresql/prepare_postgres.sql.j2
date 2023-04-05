@@ -1,0 +1,64 @@
+DO $$ BEGIN
+  CREATE TYPE policy AS ENUM ('none', 'may', 'encrypt', 'dane', 'dane-only', 'fingerprint', 'verify', 'secure');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+CREATE TABLE IF NOT EXISTS domains (
+    id serial PRIMARY KEY,
+    domain varchar(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS accounts (
+    id serial PRIMARY KEY,
+    username varchar(64) NOT NULL,
+    domain varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
+    quota numeric CHECK(quota >= 0) DEFAULT '0',
+    enabled boolean DEFAULT true,
+    sendonly boolean DEFAULT false,
+    UNIQUE (username, domain),
+    FOREIGN KEY (domain) REFERENCES domains (domain)
+);
+
+CREATE TABLE IF NOT EXISTS aliases (
+    id serial PRIMARY KEY,
+    source_username varchar(64) NOT NULL,
+    source_domain varchar(255) NOT NULL,
+    destination_username varchar(64) NOT NULL,
+    destination_domain varchar(255) NOT NULL,
+    enabled boolean DEFAULT true,
+    UNIQUE (source_username, source_domain, destination_username, destination_domain),
+    FOREIGN KEY (source_domain) REFERENCES domains (domain)
+);
+
+CREATE TABLE IF NOT EXISTS tlspolicies (
+    id serial PRIMARY KEY,
+    domain varchar(255) UNIQUE NOT NULL,
+    policy policy NOT NULL,
+    params varchar(255)
+);
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql.mail_server_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.mail_server_user_pass }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.mail_server_user_name }};
+GRANT SELECT ON accounts, aliases, domains, tlspolicies TO {{ postgresql.mail_server_user_name }};
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql.nextcloud_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.nextcloud_user_pass }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.nextcloud_user_name }};
+GRANT SELECT, INSERT, DELETE ON accounts, aliases TO {{ postgresql.nextcloud_user_name }};
+GRANT SELECT ON domains TO {{ postgresql.nextcloud_user_name }};
+GRANT UPDATE (password) ON accounts TO {{ postgresql.nextcloud_user_name }};
+
+{% for mail_domain in mail_domains %}
+INSERT INTO domains (domain) VALUES ('{{ mail_domain.name }}') ON CONFLICT DO NOTHING;
+{% endfor %}

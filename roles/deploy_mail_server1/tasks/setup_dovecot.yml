@@ -1,0 +1,102 @@
+---
+- name: Install Dovecot and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-lmtpd
+    - dovecot-pgsql
+    - dovecot-sieve
+    - dovecot-managesieved
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Create group for mail storage directories
+  ansible.builtin.group:
+    name: "{{ mail_storage_group }}"
+    state: present
+    gid: "{{ mail_storage_gid }}"
+
+- name: Create user for mail storage directories
+  ansible.builtin.user:
+    name: "{{ mail_storage_user }}"
+    uid: "{{ mail_storage_uid }}"
+    shell: /usr/sbin/nologin
+    password: "!"
+    system: true
+    home: "{{ mail_storage_user_home }}"
+    group: "{{ mail_storage_group }}"
+
+- name: Create mailboxes and sieve directories
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    mode: "0770"
+  with_items:
+    - "{{ mailboxes_dir }}"
+    - "{{ sieve_global_dir }}"
+
+- name: Set ownership for mail storage directory
+  ansible.builtin.file:
+    state: directory
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    path: "{{ mail_storage_user_home }}"
+    mode: "0770"
+    recurse: true
+
+- name: Clear /etc/dovecot directory
+  ansible.builtin.file:
+    state: "{{ item }}"
+    mode: "0755"
+    path: /etc/dovecot
+  with_items:
+    - absent
+    - directory
+  notify: Restart Dovecot
+
+- name: Copy Dovecot config
+  ansible.builtin.template:
+    src: dovecot/dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
+    mode: "0644"
+  notify: Restart Dovecot
+
+- name: Copy Dovecot SQL config
+  ansible.builtin.template:
+    src: dovecot/dovecot-sql.conf.j2
+    dest: /etc/dovecot/dovecot-sql.conf
+    group: dovecot
+    mode: "0440"
+  notify: Restart Dovecot
+
+- name: Create sieve script directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ sieve_pipe_bin_dir }}"
+    mode: "0755"
+
+- name: Copy scripts to sieve pipe bin directory
+  ansible.builtin.copy:
+    src: "dovecot/{{ item }}"
+    dest: "{{ [sieve_pipe_bin_dir, item] | ansible.builtin.path_join }}"
+    mode: "0755"
+  with_items:
+    - rspamd-learn-ham.sh
+    - rspamd-learn-spam.sh
+  notify: Restart Dovecot
+
+- name: Copy sieve scripts
+  ansible.builtin.copy:
+    src: "dovecot/{{ item }}"
+    dest: "{{ [sieve_global_dir, item] | ansible.builtin.path_join }}"
+    group: dovecot
+    mode: "0644"
+  with_items:
+    - spam-global.sieve
+    - learn-spam.sieve
+    - learn-ham.sieve
+  notify: Restart Dovecot

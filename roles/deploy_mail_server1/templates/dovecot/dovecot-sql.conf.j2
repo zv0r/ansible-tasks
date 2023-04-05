@@ -1,0 +1,14 @@
+driver = pgsql
+default_pass_scheme = ARGON2ID
+connect = \
+  host={{ postgresql.host }} \
+  port={{ postgresql.port }} \
+  dbname={{ postgresql.mail_server_database }} \
+  user={{ postgresql.mail_server_user_name }} \
+  password={{ postgresql.mail_server_user_pass }}
+
+password_query = SELECT username AS user, domain, password FROM accounts WHERE username = '%n' AND domain = '%d' and enabled = true;
+user_query = SELECT CONCAT('*:storage=', quota, 'M') AS quota_rule FROM accounts WHERE username = '%n' AND domain = '%d' AND sendonly = false;
+
+# For using doveadm -A
+iterate_query = SELECT username, domain FROM accounts WHERE sendonly = false;
