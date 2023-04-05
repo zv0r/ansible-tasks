@@ -3,6 +3,7 @@ ssl_cert_domains:
   - "m.yararchive.ru"
   - "m.corp.yararchive.ru"
   - "static-212.232.41.203.yarnet.ru"
+  - "static-37.1.80.89.yarnet.ru"
 units_to_restart:
   - postgresql.service
   - postfix.service
