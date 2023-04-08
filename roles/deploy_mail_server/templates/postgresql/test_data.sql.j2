@@ -1,0 +1,26 @@
+-- passwords are alice123, bob123, carl123, tech123
+{% for mail_domain in mail_domains %}
+INSERT INTO users (local, domain, password_hash, quota_bytes) VALUES
+('tech','{{ mail_domain.name }}','$argon2id$v=19$m=16,t=2,p=1$T0lZZ2Q4ZGZnaA$Ih9I537tvyQIEcBr+T3TkrY7z3R8XQ', 10737418240)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO aliases (source_local, source_domain, destination_local, destination_domain) VALUES
+('postmaster','{{ mail_domain.name }}','tech','{{ mail_domain.name }}'),
+('abuse','{{ mail_domain.name }}','tech','{{ mail_domain.name }}')
+ON CONFLICT DO NOTHING;
+
+{% if skip_database_test_data is not defined %}
+INSERT INTO users (local, domain, password_hash, quota_bytes) VALUES
+('alice','{{ mail_domain.name }}','$argon2id$v=19$m=16,t=2,p=1$QUplUG8wTnc0V0dCczFYcQ$MtOlTfFTDeUb/aVv9nj9Fg', 10737418240),
+('bob','{{ mail_domain.name }}','$argon2id$v=19$m=16,t=2,p=1$c0swTXl5OTFiUXFZNHlFdA$2R3pzVbXY5KlQ58npSZViQ', 10737418240),
+('carl','{{ mail_domain.name }}','$argon2id$v=19$m=16,t=2,p=1$bE43MUFpa21iQWJWR1dCUA$sC/zUoW8YtcWghrKd645Vg', 10737418240)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO aliases (source_local, source_domain, destination_local, destination_domain) VALUES
+('boss', '{{ mail_domain.name }}', 'alice', '{{ mail_domain.name }}'),
+('secretary', '{{ mail_domain.name }}', 'bob', '{{ mail_domain.name }}'),
+('orders', '{{ mail_domain.name }}', 'carl', '{{ mail_domain.name }}')
+ON CONFLICT DO NOTHING;
+{% endif %}
+
+{% endfor %}

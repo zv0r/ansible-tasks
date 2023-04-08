@@ -1,0 +1,19 @@
+---
+- name: Copy data backend config
+  ansible.builtin.template:
+    src: "postfix/pgsql_{{ item.map }}.cf.j2"
+    dest: "/etc/postfix/pgsql_{{ item.map }}.cf"
+    group: postfix
+    mode: "0640"
+
+- name: Enable cf file in postfix config
+  ansible.builtin.command: "postconf {{ item.map }}=pgsql:/etc/postfix/pgsql_{{ item.map }}.cf"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Test data backend
+  ansible.builtin.command: "postmap -q {{ item.test_data }} pgsql:/etc/postfix/pgsql_{{ item.map }}.cf"
+  register: res
+  failed_when: res.stdout != item.res
+  changed_when: false

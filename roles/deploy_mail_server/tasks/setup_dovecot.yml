@@ -1,0 +1,65 @@
+---
+- name: Install Dovecot and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - dovecot-imapd
+    - dovecot-pgsql
+    - dovecot-lmtpd
+    - dovecot-sieve
+    - dovecot-managesieved
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Create group for mail storage directories
+  ansible.builtin.group:
+    name: "{{ mail_storage_group }}"
+    state: present
+    gid: "{{ mail_storage_gid }}"
+
+- name: Create user for mail storage directories
+  ansible.builtin.user:
+    name: "{{ mail_storage_user }}"
+    uid: "{{ mail_storage_uid }}"
+    shell: /usr/sbin/nologin
+    home: "{{ mail_storage_user_home }}"
+    group: "{{ mail_storage_group }}"
+
+- name: Set ownership for mail storage directory
+  ansible.builtin.file:
+    state: directory
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    path: "{{ mail_storage_user_home }}"
+    mode: "0770"
+    recurse: true
+
+- name: Copy Dovecot configs
+  ansible.builtin.template:
+    src: "dovecot/{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
+    mode: "0644"
+  with_items:
+    - 10-auth.conf
+    - 10-mail.conf
+    - 10-master.conf
+    - 10-ssl.conf
+    - 15-mailboxes.conf
+    - 20-lmtp.conf
+    - 90-quota.conf
+  notify: Restart Dovecot
+
+- name: Copy Dovecot SQL config
+  ansible.builtin.template:
+    src: dovecot/dovecot-sql.conf.ext.j2
+    dest: /etc/dovecot/dovecot-sql.conf.ext
+    mode: "0440"
+  notify: Restart Dovecot
+
+- name: Copy quota warning script
+  ansible.builtin.template:
+    src: dovecot/quota-warning.sh.j2
+    dest: /usr/local/bin/quota-warning.sh
+    mode: "0755"

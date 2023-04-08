@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: zv0r
+  description: Deploy mail server (postfix, dovecot, nextcloud, postgresql, nginx)
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+dependencies:
+  - role: setup_diffie_hellman_params
+  - role: deploy_https_certificates

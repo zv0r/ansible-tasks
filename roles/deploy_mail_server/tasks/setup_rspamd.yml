@@ -1,0 +1,93 @@
+---
+- name: Install Rspamd and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - rspamd
+    - redis-server
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Set Postfix config for Rspamd
+  ansible.builtin.command: "postconf {{ item | quote }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+  with_items:
+    - smtpd_milters=inet:127.0.0.1:11332
+    - non_smtpd_milters=inet:127.0.0.1:11332
+    - milter_mail_macros=i {mail_addr} {client_addr} {client_name} {auth_authen}
+
+- name: Set local config
+  ansible.builtin.copy:
+    src: "rspamd/local.d/{{ item }}"
+    dest: "/etc/rspamd/local.d/{{ item }}"
+    mode: "0644"
+  with_items:
+    - actions.conf
+    - classifier-bayes.conf
+  notify: Restart Rspamd
+
+- name: Set override config
+  ansible.builtin.copy:
+    src: "rspamd/override.d/{{ item }}"
+    dest: "/etc/rspamd/override.d/{{ item }}"
+    mode: "0644"
+  with_items:
+    - milter_headers.conf
+    - redis.conf
+    - classifier-bayes.conf
+  notify: Restart Rspamd
+
+- name: Create sieve directories scripts
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    mode: "0755"
+  with_items:
+    - "{{ dovecot.sieve_after_dir }}"
+    - "{{ dovecot.sieve_dir }}"
+
+- name: Copy spam-to-folder sieve script
+  ansible.builtin.copy:
+    src: rspamd/spam-to-folder.sieve
+    dest: "{{ [dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
+    mode: "0644"
+
+- name: Copy learm spam and ham sieve scripts
+  ansible.builtin.copy:
+    src: "rspamd/{{ item }}"
+    dest: "{{ [dovecot.sieve_dir, item] | ansible.builtin.path_join }}"
+    owner: "{{ mail_storage_user }}"
+    group: "{{ mail_storage_group }}"
+    mode: "{{ (item | splitext | last == '.sh') | ternary('0755', '0644') }}"
+  with_items:
+    - learn-spam.sieve
+    - rspamd-learn-spam.sh
+    - learn-ham.sieve
+    - rspamd-learn-ham.sh
+  notify: Restart Dovecot
+
+- name: Copy dovecot sieve configs
+  ansible.builtin.template:
+    src: "dovecot/{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
+    mode: "0644"
+  with_items:
+    - 20-imap.conf
+    - 90-sieve.conf
+  notify: Restart Dovecot
+
+- name: Compile sieve scripts
+  ansible.builtin.command: "sievec {{ item }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Dovecot
+  with_items:
+    - "{{ [dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
+    - "{{ [dovecot.sieve_dir, 'learn-ham.sieve'] | ansible.builtin.path_join }}"
+    - "{{ [dovecot.sieve_dir, 'learn-spam.sieve'] | ansible.builtin.path_join }}"

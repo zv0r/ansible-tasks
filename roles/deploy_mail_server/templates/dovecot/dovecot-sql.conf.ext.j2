@@ -1,0 +1,19 @@
+driver = pgsql
+default_pass_scheme = ARGON2ID
+connect = \
+  host={{ postgresql.host }} \
+  port={{ postgresql.port }} \
+  dbname={{ postgresql.mail_server_database }} \
+  user={{ postgresql.mail_server_user_name }} \
+  password={{ postgresql.mail_server_user_pass }}
+
+user_query = SELECT fqda as user, \
+  '*:bytes=' || quota_bytes AS "quota_rule", \
+  '{{ [mail_storage_user_home, '%d', '%n'] | ansible.builtin.path_join }}' AS "home", \
+  {{ mail_storage_uid }} AS "uid", \
+  {{ mail_storage_gid }} AS "gid" \
+  FROM users_fqda WHERE fqda = '%u';
+
+password_query = SELECT fqda AS user, password_hash AS password FROM users_fqda WHERE fqda = '%u';
+
+iterate_query = SELECT fqda AS user FROM users_fqda;

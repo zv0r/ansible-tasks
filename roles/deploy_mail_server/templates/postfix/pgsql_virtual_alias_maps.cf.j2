@@ -1,0 +1,5 @@
+user = {{ postgresql.mail_server_user_name }}
+password = {{ postgresql.mail_server_user_pass }}
+hosts = {{ postgresql.host }}:{{ postgresql.port }}
+dbname = {{ postgresql.mail_server_database }}
+query = SELECT destination_fqda FROM aliases_fqda WHERE source_fqda='%s';

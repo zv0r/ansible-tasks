@@ -1,0 +1,33 @@
+---
+public_ips:
+  - 212.232.41.203
+mail_domains:
+  - name: corp.yararchive.ru
+    server_fqdn: m.corp.yararchive.ru
+    cert_fullchain_file: /etc/ssl/certs/m.corp.yararchive.ru_fullchain.cer
+    cert_key_file: /etc/ssl/private/m.corp.yararchive.ru.key
+  - name: yararchive.ru
+    server_fqdn: m.yararchive.ru
+    cert_fullchain_file: /etc/ssl/certs/m.yararchive.ru_fullchain.cer
+    cert_key_file: /etc/ssl/private/m.yararchive.ru.key
+postfix:
+  myhostname: static-212.232.41.203.yarnet.ru
+dovecot:
+  sieve_after_dir: /etc/dovecot/global/sieve_after
+  sieve_dir: /etc/dovecot/global/sieve
+postgresql:
+  host: 127.0.0.1
+  port: 5432
+  mail_server_database: vmail
+  mail_server_user_name: vmail
+  mail_server_user_pass: "{{ lookup('ansible.builtin.password', \
+    '/dev/null seed=postgresql.mail_server_user_name chars=ascii_letters,digits length=32') }}"
+  nextcloud_user_name: nextcloud
+  nextcloud_user_pass: "{{ lookup('ansible.builtin.password', \
+    '/dev/null seed=postgresql.nextcloud_user_name chars=ascii_letters,digits length=32') }}"
+dh_params: /etc/ssl/ffdhe4096.pem
+mail_storage_user: vmail
+mail_storage_group: vmail
+mail_storage_uid: 5000
+mail_storage_gid: 5000
+mail_storage_user_home: /var/vmail

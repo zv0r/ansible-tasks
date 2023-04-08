@@ -1,0 +1,110 @@
+---
+- name: Install Postfix and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - postfix
+    - postfix-pgsql
+    - rsyslog
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Set base config
+  ansible.builtin.command: "postconf {{ item.key }}={{ item.value | quote }}"
+  failed_when: false
+  changed_when: true
+  with_items: "{{ postfix | ansible.builtin.dict2items }}"
+
+- name: Set proxy_interfaces if pulic IP's list is defined
+  ansible.builtin.command: "postconf proxy_interfaces={{ public_ips | join(', ') | quote }}"
+  failed_when: false
+  changed_when: true
+  when: public_ips is defined
+  notify: Restart Postfix
+
+- name: Set SSL certs for domains
+  ansible.builtin.template:
+    src: "postfix/vmail_ssl.map.j2"
+    dest: "/etc/postfix/vmail_ssl.map"
+    mode: "0644"
+  notify: Restart Postfix
+
+- name: Compile certs map
+  ansible.builtin.command: "postmap -F hash:/etc/postfix/vmail_ssl.map"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Set default cert
+  ansible.builtin.command: "postconf smtpd_tls_chain_files={{ [mail_domains[0].cert_key_file, mail_domains[0].cert_fullchain_file] | join(', ') | quote }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Set certs map
+  ansible.builtin.command: "postconf tls_server_sni_maps=hash:/etc/postfix/vmail_ssl.map"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Set smtpd SSL config
+  ansible.builtin.command: "postconf {{ item | quote }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+  with_items:
+    - smtpd_tls_CApath=/etc/ssl/certs
+    - smtpd_tls_security_level=may
+    - smtpd_tls_auth_only=yes
+    - smtp_tls_security_level=may
+    - "smtpd_tls_cert_file={{ mail_domains[0].cert_fullchain_file }}"
+    - "smtpd_tls_key_file={{ mail_domains[0].cert_key_file }}"
+
+- name: Set virtual transport
+  ansible.builtin.command: "postconf virtual_transport=lmtp:unix:private/dovecot-lmtp"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Set overquota restrictions
+  ansible.builtin.command: "postconf smtpd_recipient_restrictions=reject_unauth_destination,\"check_policy_service unix:private/quota-status\""
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+
+- name: Set SMTP authentication config
+  ansible.builtin.command: "postconf {{ item | quote }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix
+  with_items:
+    - smtpd_sasl_type=dovecot
+    - smtpd_sasl_path=private/auth
+    - smtpd_sasl_auth_enable=yes
+
+- name: Set users, aliases, domains data backends
+  ansible.builtin.include_tasks: set_postfix_data_backends.yml
+  with_items:
+    - { map: virtual_mailbox_domains, test_data: "{{ mail_domains[0].name }}", res: "1" }
+    - { map: virtual_mailbox_maps, test_data: "tech@{{ mail_domains[0].name }}", res: "1" }
+    - { map: virtual_alias_maps, test_data: "postmaster@{{ mail_domains[0].name }}", res: "tech@{{ mail_domains[0].name }}" }
+    - { map: smtpd_sender_login_maps, test_data: "postmaster@{{ mail_domains[0].name }}", res: "tech@{{ mail_domains[0].name }}" }
+
+- name: Enable submission in master.cf
+  ansible.builtin.command: >-
+    postconf -M
+    submission/inet="submission inet n - y - - smtpd
+    -o syslog_name=postfix/submission
+    -o smtpd_tls_security_level=encrypt
+    -o smtpd_sasl_auth_enable=yes
+    -o smtpd_tls_auth_only=yes
+    -o smtpd_reject_unlisted_recipient=no
+    -o smtpd_recipient_restrictions=
+    -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+    -o milter_macro_daemon_name=ORIGINATING
+    -o smtpd_sender_restrictions=reject_sender_login_mismatch,permit_sasl_authenticated,reject"
+  failed_when: false
+  changed_when: true
+  notify: Restart Postfix

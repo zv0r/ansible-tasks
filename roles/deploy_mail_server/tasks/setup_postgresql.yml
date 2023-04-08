@@ -1,0 +1,27 @@
+---
+- name: Install PostgreSQL and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - postgresql
+    - python3-psycopg2 # for ansible postgresql module
+    - acl # for becoming unprivileged user in ansible postgresql module
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Set PostgreSQL up
+  become: true
+  become_method: sudo
+  become_user: postgres
+  block:
+    - name: Create mail server database
+      community.postgresql.postgresql_db:
+        name: "{{ postgresql.mail_server_database }}"
+
+    - name: Run SQL scripts
+      ansible.builtin.include_tasks: run_sql_scripts.yml
+      with_items:
+        - { src: postgresql/prepare_postgres.sql.j2, dest: /tmp/prepare_postgres.sql }
+        - { src: postgresql/test_data.sql.j2, dest: /tmp/test_data.sql }

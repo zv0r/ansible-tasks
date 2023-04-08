@@ -1,0 +1,82 @@
+DO $$ BEGIN
+    CREATE DOMAIN local_part TEXT NOT NULL CHECK (LENGTH(VALUE) <= 64);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+  CREATE DOMAIN domain_part TEXT NOT NULL CHECK (LENGTH(VALUE) <= 253);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+  CREATE DOMAIN user_input TEXT CHECK (LENGTH(VALUE) <= 256);
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+CREATE TABLE IF NOT EXISTS domains (
+    domain domain_part PRIMARY KEY -- e.g. {{ mail_domains[0].name }}
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    domain domain_part REFERENCES domains(domain) ON DELETE RESTRICT,
+    local local_part NOT NULL, -- e.g. alice
+    password_hash user_input,
+    display_name user_input,
+    quota_bytes bigint default 0,
+    PRIMARY KEY(domain, local),
+    -- entire e-mail address should not exceed 254 characters (RFC 3696)
+    CHECK(char_length(local || domain) < 254)
+);
+
+CREATE TABLE IF NOT EXISTS aliases (
+    -- source is the alias, destination is the real e-mail account
+    -- local and domain part are stored separatelly to enable proper REFERENCES
+    source_local local_part NOT NULL,
+    source_domain domain_part REFERENCES domains(domain) ON DELETE RESTRICT,
+    destination_local local_part,
+    destination_domain domain_part,
+    PRIMARY KEY(source_local, source_domain),
+    FOREIGN KEY (destination_local, destination_domain) REFERENCES users (local, domain) ON DELETE CASCADE,
+    -- entire e-mail address should not exceed 254 characters (RFC 3696)
+    CHECK(char_length(source_local || source_domain) < 254)
+    -- destination needs no check because it references already existing (and already checked) rows.
+);
+
+CREATE OR REPLACE VIEW users_fqda AS
+    -- fqda = Fully qualified domain address, e.g. alice@{{ mail_domains[0].name }}
+    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name, users.quota_bytes
+    FROM users, domains
+    WHERE users.domain = domains.domain;
+
+CREATE OR REPLACE VIEW aliases_fqda AS
+    -- fqda = Fully qualified domain address,  e.g. alice@{{ mail_domains[0].name }}
+    SELECT source_local || '@' || source_domain AS "source_fqda",
+    destination_local || '@' || destination_domain AS "destination_fqda"
+    FROM aliases;
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql.mail_server_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.mail_server_user_pass }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.mail_server_user_name }};
+GRANT SELECT ON domains, users, aliases, users_fqda, aliases_fqda TO {{ postgresql.mail_server_user_name }};
+
+DO $$ BEGIN
+  CREATE ROLE {{ postgresql.nextcloud_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.nextcloud_user_pass }}';
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.nextcloud_user_name }};
+GRANT SELECT, INSERT, DELETE ON users TO {{ postgresql.nextcloud_user_name }};
+GRANT SELECT ON domains, users_fqda TO {{ postgresql.nextcloud_user_name }};
+GRANT UPDATE (password_hash, display_name) ON users TO {{ postgresql.nextcloud_user_name }};
+
+{% for mail_domain in mail_domains %}
+INSERT INTO domains (domain) VALUES ('{{ mail_domain.name }}') ON CONFLICT DO NOTHING;
+{% endfor %}
