@@ -35,6 +35,11 @@ postfix:
 dovecot:
   sieve_after_dir: /etc/dovecot/global/sieve_after
   sieve_dir: /etc/dovecot/global/sieve
+  mail_storage_user: vmail
+  mail_storage_group: vmail
+  mail_storage_uid: 5000
+  mail_storage_gid: 5000
+  mail_storage_user_home: /var/vmail
 rspamd:
   dkim_dir: /var/lib/rspamd/dkim
   dkim_id: "{{ ansible_date_time.epoch }}"
@@ -49,8 +54,3 @@ postgresql:
   nextcloud_user_pass: "{{ lookup('ansible.builtin.password', \
     '/dev/null seed=postgresql.nextcloud_user_name chars=ascii_letters,digits length=32') }}"
 dh_params: /etc/ssl/ffdhe4096.pem
-mail_storage_user: vmail
-mail_storage_group: vmail
-mail_storage_uid: 5000
-mail_storage_gid: 5000
-mail_storage_user_home: /var/vmail

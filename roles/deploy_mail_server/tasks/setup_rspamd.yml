@@ -52,8 +52,8 @@
   ansible.builtin.file:
     state: directory
     path: "{{ item }}"
-    owner: "{{ mail_storage_user }}"
-    group: "{{ mail_storage_group }}"
+    owner: "{{ dovecot.mail_storage_user }}"
+    group: "{{ dovecot.mail_storage_group }}"
     mode: "0755"
   with_items:
     - "{{ dovecot.sieve_after_dir }}"
@@ -69,8 +69,8 @@
   ansible.builtin.copy:
     src: "rspamd/{{ item }}"
     dest: "{{ [dovecot.sieve_dir, item] | ansible.builtin.path_join }}"
-    owner: "{{ mail_storage_user }}"
-    group: "{{ mail_storage_group }}"
+    owner: "{{ dovecot.mail_storage_user }}"
+    group: "{{ dovecot.mail_storage_group }}"
     mode: "{{ (item | splitext | last == '.sh') | ternary('0755', '0644') }}"
   with_items:
     - learn-spam.sieve
