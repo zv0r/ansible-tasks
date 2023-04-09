@@ -16,6 +16,8 @@ $ORIGIN yararchive.ru.
 @                               IN        TXT       "v=spf1 mx -all"
 1680642962._domainkey           IN        TXT       "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFAJRvsvh9kQyMyS0QtNdu64e4W5IPNjx+EnD8XzbIfBJfQS7MjHzVADBR0jbwwKAw3GRCmAyt/Ldpeyp+j+fkhuPNRuq39riiOloN/ohUv/4wA44HbDKL0dO5b5NAqfxCU4CnBtfTUWtjBl4Kp+EQPwWbkCIKnLfulG3V8LwbpwIDAQAB"
 m                               IN        A         172.16.50.5
+imap                            IN        CNAME     m
+smtp                            IN        CNAME     m
 _dmarc                          IN        TXT       "v=DMARC1; p=reject; rua=mailto:it@yararchive.ru; adkim=s; aspf=s; pct=100;"
 {{ inventory_hostname }}.       IN        A         {{ ansible_default_ipv4.address }}
 www                             IN        A         172.16.50.103
