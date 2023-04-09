@@ -1,7 +1,11 @@
 ---
 ssl_cert_domains:
   - "m.yararchive.ru"
+  - "imap.yararchive.ru"
+  - "smtp.yararchive.ru"
   - "m.corp.yararchive.ru"
+  - "imap.corp.yararchive.ru"
+  - "smtp.corp.yararchive.ru"
   - "static-212.232.41.203.yarnet.ru"
 units_to_restart:
   - postgresql.service
