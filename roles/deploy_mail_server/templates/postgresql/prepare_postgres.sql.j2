@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS aliases (
     source_domain domain_part REFERENCES domains(domain) ON DELETE RESTRICT,
     destination_local local_part,
     destination_domain domain_part,
-    PRIMARY KEY(source_local, source_domain),
+    PRIMARY KEY(source_local, source_domain, destination_local, destination_domain),
     FOREIGN KEY (destination_local, destination_domain) REFERENCES users (local, domain) ON DELETE CASCADE,
     -- entire e-mail address should not exceed 254 characters (RFC 3696)
     CHECK(char_length(source_local || source_domain) < 254)
