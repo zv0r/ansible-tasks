@@ -4,4 +4,11 @@
 {{ mail_domain.server_fqdn }} 
   {{ mail_domain.cert_key_file }}
   {{ mail_domain.cert_fullchain_file }}
+{% if mail_domain.aliases is defined %}
+{% for alias in mail_domain.aliases %}
+{{ alias.name }} 
+  {{ alias.cert_key_file }}
+  {{ alias.cert_fullchain_file }}
+{% endfor %}
+{% endif %}
 {% endfor %}

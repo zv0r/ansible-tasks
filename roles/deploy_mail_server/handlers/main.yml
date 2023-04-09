@@ -13,3 +13,8 @@
   ansible.builtin.systemd:
     name: rspamd.service
     state: restarted
+
+- name: Restart Nginx
+  ansible.builtin.systemd:
+    name: nginx.service
+    state: restarted

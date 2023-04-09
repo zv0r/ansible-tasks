@@ -17,6 +17,15 @@ local_name {{ mail_domain.server_fqdn }} {
   ssl_cert = <{{ mail_domain.cert_fullchain_file }}
   ssl_key = <{{ mail_domain.cert_key_file }}
 }
+{% if mail_domain.aliases is defined %}
+{% for alias in mail_domain.aliases %}
+
+local_name {{ alias.name }} {
+  ssl_cert = <{{ alias.cert_fullchain_file }}
+  ssl_key = <{{ alias.cert_key_file }}
+}
+{% endfor %}
+{% endif %}
 {% endfor %}
 
 # If key file is password protected, give the password here. Alternatively

@@ -20,6 +20,9 @@
 - name: Setup Rspamd
   ansible.builtin.import_tasks: setup_rspamd.yml
 
+- name: Setup mail clients autoconfig
+  ansible.builtin.import_tasks: setup_mail_clients_autoconfig.yml
+
 - name: Flush hadlers before finish message
   ansible.builtin.meta: flush_handlers
 

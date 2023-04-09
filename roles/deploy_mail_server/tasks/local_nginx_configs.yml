@@ -1,0 +1,16 @@
+---
+- name: Create directories for websites
+  ansible.builtin.file:
+    state: directory
+    path: "/var/www/autoconfig.{{ mail_domain.name }}/mail"
+    mode: "0775"
+    owner: www-data
+    group: www-data
+
+- name: "Put xml config in /var/www/autoconfig.{{ mail_domain.name }}"
+  ansible.builtin.template:
+    src: nginx/config-v1.1.xml.j2
+    dest: "/var/www/autoconfig.{{ mail_domain.name }}/mail/config-v1.1.xml"
+    mode: "0644"
+    owner: www-data
+    group: www-data

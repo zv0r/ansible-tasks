@@ -1,0 +1,31 @@
+---
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    update_cache: true
+    state: present
+
+- name: Remove nginx default website config
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart Nginx
+
+- name: Setup local nginx configs
+  ansible.builtin.include_tasks: local_nginx_configs.yml
+  vars:
+    template_local_config: true
+  loop: "{{ mail_domains }}"
+  loop_control:
+    loop_var: mail_domain
+
+- name: Setup reverse proxy nginx hosts configs
+  ansible.builtin.include_role:
+    name: setup_nginx_reverse_proxy
+  vars:
+    template_file_name: nginx/autoconfig.conf.j2
+    nginx_server_config_file_name: "autoconfig.{{ mail_domain.name }}.conf"
+    nginx_server_listen_port: 443
+  loop: "{{ mail_domains }}"
+  loop_control:
+    loop_var: mail_domain

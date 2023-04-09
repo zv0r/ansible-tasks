@@ -6,10 +6,30 @@ mail_domains:
     server_fqdn: m.corp.yararchive.ru
     cert_fullchain_file: /etc/ssl/certs/m.corp.yararchive.ru_fullchain.cer
     cert_key_file: /etc/ssl/private/m.corp.yararchive.ru.key
+    autoconfig:
+      cert_fullchain_file: /etc/ssl/certs/*.corp.yararchive.ru_fullchain.cer
+      cert_key_file: /etc/ssl/private/*.corp.yararchive.ru.key
+    aliases:
+      - name: imap.corp.yararchive.ru
+        cert_fullchain_file: /etc/ssl/certs/imap.corp.yararchive.ru_fullchain.cer
+        cert_key_file: /etc/ssl/private/imap.corp.yararchive.ru.key
+      - name: smtp.corp.yararchive.ru
+        cert_fullchain_file: /etc/ssl/certs/smtp.corp.yararchive.ru_fullchain.cer
+        cert_key_file: /etc/ssl/private/smtp.corp.yararchive.ru.key
   - name: yararchive.ru
     server_fqdn: m.yararchive.ru
     cert_fullchain_file: /etc/ssl/certs/m.yararchive.ru_fullchain.cer
     cert_key_file: /etc/ssl/private/m.yararchive.ru.key
+    autoconfig:
+      cert_fullchain_file: /etc/ssl/certs/*.yararchive.ru_fullchain.cer
+      cert_key_file: /etc/ssl/private/*.yararchive.ru.key
+    aliases:
+      - name: imap.yararchive.ru
+        cert_fullchain_file: /etc/ssl/certs/imap.yararchive.ru_fullchain.cer
+        cert_key_file: /etc/ssl/private/imap.yararchive.ru.key
+      - name: smtp.yararchive.ru
+        cert_fullchain_file: /etc/ssl/certs/smtp.yararchive.ru_fullchain.cer
+        cert_key_file: /etc/ssl/private/smtp.yararchive.ru.key
 postfix:
   myhostname: static-212.232.41.203.yarnet.ru
 dovecot:
