@@ -10,6 +10,12 @@
   environment:
     DEBIAN_FRONTEND: noninteractive
 
+- name: Add _rspamd user to the redis group
+  ansible.builtin.user:
+    name: _rspamd
+    groups: redis
+    append: true
+
 - name: Set Postfix config for Rspamd
   ansible.builtin.command: "postconf {{ item | quote }}"
   failed_when: false
@@ -28,6 +34,7 @@
   with_items:
     - actions.conf
     - classifier-bayes.conf
+    - dkim_signing.conf
   notify: Restart Rspamd
 
 - name: Set override config
@@ -91,3 +98,38 @@
     - "{{ [dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
     - "{{ [dovecot.sieve_dir, 'learn-ham.sieve'] | ansible.builtin.path_join }}"
     - "{{ [dovecot.sieve_dir, 'learn-spam.sieve'] | ansible.builtin.path_join }}"
+
+- name: Create directory for DKIM signatures
+  ansible.builtin.file:
+    state: directory
+    path: "{{ rspamd.dkim_dir }}"
+    owner: "_rspamd"
+    group: "_rspamd"
+    mode: "0770"
+
+- name: Generate DKIM signatures
+  ansible.builtin.include_tasks: generate_dkim.yml
+  when: skip_dkim_gen is not defined
+  loop: "{{ mail_domains }}"
+  loop_control:
+    loop_var: mail_domain
+
+- name: Generate DKIM selectors map
+  ansible.builtin.template:
+    src: rspamd/dkim_selectors.map.j2
+    dest: /etc/rspamd/dkim_selectors.map
+    mode: "0644"
+  when: skip_dkim_gen is not defined
+  notify: Restart Rspamd
+
+- name: Fix DKIM directory and conating files permissions
+  ansible.builtin.file:
+    state: directory
+    path: "{{ rspamd.dkim_dir }}"
+    owner: _rspamd
+    group: _rspamd
+    mode: "{{ item.mode }}"
+    recurse: "{{ item.recurse }}"
+  with_items:
+    - { mode: "0440", recurse: true }
+    - { mode: "0770", recurse: false }

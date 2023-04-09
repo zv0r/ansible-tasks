@@ -1,0 +1,21 @@
+---
+- name: "Set key file for {{ mail_domain.name }}"
+  ansible.builtin.set_fact:
+    dkim_key_file: "{{ [rspamd.dkim_dir, rspamd.dkim_id + '.' + mail_domain.name + '.key'] | ansible.builtin.path_join }}"
+
+- name: "Generate DKIM for {{ mail_domain.name }}"
+  ansible.builtin.command: "rspamadm dkim_keygen \
+    -d {{ mail_domain.name }} \
+    -s {{ rspamd.dkim_id }} \
+    -k {{ dkim_key_file | ansible.builtin.quote }}"
+  failed_when: false
+  changed_when: true
+  register: dkim_pubkey
+
+- name: Save pubkey file
+  ansible.builtin.template:
+    src: rspamd/dkim_pubkey.j2
+    dest: "{{ dkim_key_file + '.pub' | ansible.builtin.quote }}"
+    owner: _rspamd
+    group: _rspamd
+    mode: "0644"

@@ -15,6 +15,9 @@ postfix:
 dovecot:
   sieve_after_dir: /etc/dovecot/global/sieve_after
   sieve_dir: /etc/dovecot/global/sieve
+rspamd:
+  dkim_dir: /var/lib/rspamd/dkim
+  dkim_id: "{{ ansible_date_time.epoch }}"
 postgresql:
   host: 127.0.0.1
   port: 5432
