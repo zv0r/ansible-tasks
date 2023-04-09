@@ -1,5 +1,7 @@
 ---
 ssl_cert_domains:
+  - "*.yararchive.ru"
+  - "*.corp.yararchive.ru"
   - "m.yararchive.ru"
   - "imap.yararchive.ru"
   - "smtp.yararchive.ru"
