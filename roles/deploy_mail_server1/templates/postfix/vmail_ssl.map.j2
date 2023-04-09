@@ -1,8 +1,0 @@
-# Compile with postmap -F hash:/etc/postfix/vmail_ssl.map when updating
-# One host per line
-{% for mail_domain in mail_domains %}
-{{ mail_domain.server_fqdn }}
-  {{ mail_domain.cert_key_file }}
-  {{ mail_domain.cert_fullchain_file }}
-
-{% endfor %}

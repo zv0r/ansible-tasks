@@ -1,5 +1,0 @@
-user = {{ postgresql_mail_server_databse_user_name }}
-password = {{ postgresql_mail_server_databse_user_password }}
-hosts = {{ postgresql_host }}:{{ postgresql_port }}
-dbname = {{ postgresql_mail_server_databse_name }}
-query = SELECT destination_local || '@' || destination_domain FROM aliases WHERE source_local='%u' AND source_domain='%d';

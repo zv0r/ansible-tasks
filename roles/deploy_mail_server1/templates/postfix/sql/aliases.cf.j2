@@ -1,5 +1,0 @@
-user = {{ postgresql.mail_server_user_name }}
-password = {{ postgresql.mail_server_user_pass }}
-hosts = {{ postgresql.host }}:{{ postgresql.port }}
-dbname = {{ postgresql.mail_server_database }}
-query = SELECT CONCAT(destination_username, '@', destination_domain) AS destinations FROM aliases WHERE source_username = '%u' AND source_domain = '%d' AND enabled = true;
