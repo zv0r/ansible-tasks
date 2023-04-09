@@ -18,6 +18,7 @@ $ORIGIN yararchive.ru.
 m                               IN        A         172.16.50.5
 imap                            IN        CNAME     m
 smtp                            IN        CNAME     m
+autoconfig                      IN        CNAME     m
 _dmarc                          IN        TXT       "v=DMARC1; p=reject; rua=mailto:it@yararchive.ru; adkim=s; aspf=s; pct=100;"
 {{ inventory_hostname }}.       IN        A         {{ ansible_default_ipv4.address }}
 www                             IN        A         172.16.50.103
