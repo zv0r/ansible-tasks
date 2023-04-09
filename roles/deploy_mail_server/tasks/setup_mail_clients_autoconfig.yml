@@ -26,6 +26,7 @@
     template_file_name: nginx/autoconfig.conf.j2
     nginx_server_config_file_name: "autoconfig.{{ mail_domain.name }}.conf"
     nginx_server_listen_port: 443
+    skip_deploy_certs: true
   loop: "{{ mail_domains }}"
   loop_control:
     loop_var: mail_domain

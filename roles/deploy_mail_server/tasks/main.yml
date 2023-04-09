@@ -23,6 +23,9 @@
 - name: Setup mail clients autoconfig
   ansible.builtin.import_tasks: setup_mail_clients_autoconfig.yml
 
+- name: Setup nextcloud
+  ansible.builtin.import_tasks: setup_nextcloud.yml
+
 - name: Flush hadlers before finish message
   ansible.builtin.meta: flush_handlers
 
@@ -44,6 +47,7 @@
       - "PostgreSQL user is {{ postgresql.mail_server_user_name }}, password is {{ postgresql.mail_server_user_pass }}"
       - "Database name is {{ postgresql.mail_server_database }}"
       - ""
-      - "You need to open ports"
+      - "Nextcloud user name is {{ nextcloud.admin_user }}, password is {{ nextcloud.admin_pass }}"
+      - ""
+      - "You need to open these ports in your firewall:"
       - "80/tcp, 443/tcp, 25/tcp, 587/tcp, 143/tcp, 993/tcp, 4190/tcp"
-      - "in your firewall."
