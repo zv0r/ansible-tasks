@@ -1,0 +1,13 @@
+---
+- name: Install Roundcube and dependencies
+  ansible.builtin.apt:
+    state: present
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - roundcube
+    - roundcube-plugins
+    - roundcube-plugins-extra
+    - roundcube-pgsql
+  environment:
+    DEBIAN_FRONTEND: noninteractive

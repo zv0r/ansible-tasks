@@ -44,6 +44,8 @@ rspamd:
   dkim_dir: /var/lib/rspamd/dkim
   dkim_id: "{{ ansible_date_time.epoch }}"
 nextcloud:
+  logtimezone: "Europe/Moscow"
+  default_phone_region: "RU"
   server_fqdn: nextcloud.corp.yararchive.ru
   cert_fullchain_file: /etc/ssl/certs/*.corp.yararchive.ru_fullchain.cer
   cert_key_file: /etc/ssl/private/*.corp.yararchive.ru.key

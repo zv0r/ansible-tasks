@@ -1,5 +1,7 @@
 GRANT CONNECT ON DATABASE {{ postgresql.nextcloud_database }} TO {{ postgresql.nextcloud_user_name }};
 GRANT USAGE ON SCHEMA public TO {{ postgresql.nextcloud_user_name }};
+GRANT CREATE ON SCHEMA public TO {{ postgresql.nextcloud_user_name }};
+GRANT CREATE ON DATABASE {{ postgresql.nextcloud_database }} TO {{ postgresql.nextcloud_user_name }};
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO {{ postgresql.nextcloud_user_name }};
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {{ postgresql.nextcloud_user_name }};
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO {{ postgresql.nextcloud_user_name }};

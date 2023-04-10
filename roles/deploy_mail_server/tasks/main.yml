@@ -23,8 +23,8 @@
 - name: Setup mail clients autoconfig
   ansible.builtin.import_tasks: setup_mail_clients_autoconfig.yml
 
-- name: Setup nextcloud
-  ansible.builtin.import_tasks: setup_nextcloud.yml
+- name: Setup Roundcube
+  ansible.builtin.import_tasks: setup_roundcube.yml
 
 - name: Flush hadlers before finish message
   ansible.builtin.meta: flush_handlers

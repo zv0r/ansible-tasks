@@ -1,0 +1,8 @@
+[Unit]
+Description=nextcloud-cron
+Requires=network.target
+
+[Service]
+User=www-data
+Type=oneshot
+ExecStart=/usr/bin/php -f /var/www/nextcloud/cron.php
