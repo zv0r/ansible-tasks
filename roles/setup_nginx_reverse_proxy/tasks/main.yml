@@ -10,16 +10,5 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
 
-- name: Open ports with ufw
-  community.general.ufw:
-    rule: allow
-    name: WWW Full
-
 - name: Setup nginx reverse proxy
   ansible.builtin.include_tasks: prepare_nginx_server_config.yml
-
-- name: Start or restart nginx systemd service
-  ansible.builtin.systemd:
-    state: restarted
-    name: nginx.service
-    daemon_reload: true

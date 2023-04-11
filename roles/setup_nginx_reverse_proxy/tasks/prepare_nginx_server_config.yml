@@ -1,6 +1,5 @@
 ---
 - name: Prepare nginx server config
-  when: template_file_name is defined and nginx_server_config_file_name is defined and nginx_server_listen_port is defined
   block:
     - name: Create nginx website config
       ansible.builtin.template:
@@ -22,8 +21,3 @@
       ansible.builtin.systemd:
         state: restarted
         name: nginx.service
-        daemon_reload: true
-
-    - name: Wait for webapp start
-      ansible.builtin.wait_for:
-        port: "{{ nginx_server_listen_port }}"
