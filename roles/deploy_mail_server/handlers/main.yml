@@ -23,3 +23,8 @@
   ansible.builtin.systemd:
     name: "php{{ php_version }}-fpm.service"
     state: restarted
+
+- name: Restart Apache
+  ansible.builtin.systemd:
+    name: apache2.service
+    state: restarted

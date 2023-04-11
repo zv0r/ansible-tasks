@@ -1,0 +1,8 @@
+<VirtualHost *:443>
+    ServerName {{ roundcube.server_fqdn }}
+    DocumentRoot /var/lib/roundcube/public_html
+    Include /etc/roundcube/apache.conf
+    SSLEngine on
+    SSLCertificateFile {{ roundcube.cert_fullchain_file }}
+    SSLCertificateKeyFile {{ roundcube.cert_key_file }}
+</VirtualHost>

@@ -6,7 +6,15 @@
     line: "{{ ansible_default_ipv4.address }} \
       {{ inventory_hostname }} \
       {{ inventory_hostname_short }}\
-      {% for mail_domain in mail_domains %} {{ mail_domain.server_fqdn }}{% endfor %}"
+      {{ roundcube.server_fqdn }} \
+      {% for mail_domain in mail_domains %} \
+      {{ mail_domain.server_fqdn }}\
+      {% if mail_domain.aliases is defined %}\
+      {% for alias in mail_domain.aliases %} \
+      {{ alias.name }}
+      {% endfor %}
+      {% endif %}
+      {% endfor %}"
 
 - name: Setup PostgreSQL
   ansible.builtin.import_tasks: setup_postgresql.yml
@@ -46,8 +54,6 @@
       - ""
       - "PostgreSQL user is {{ postgresql.mail_server_user_name }}, password is {{ postgresql.mail_server_user_pass }}"
       - "Database name is {{ postgresql.mail_server_database }}"
-      - ""
-      - "Nextcloud user name is {{ nextcloud.admin_user }}, password is {{ nextcloud.admin_pass }}"
       - ""
       - "You need to open these ports in your firewall:"
       - "80/tcp, 443/tcp, 25/tcp, 587/tcp, 143/tcp, 993/tcp, 4190/tcp"

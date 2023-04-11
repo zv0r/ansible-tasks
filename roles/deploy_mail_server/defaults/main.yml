@@ -43,16 +43,10 @@ dovecot:
 rspamd:
   dkim_dir: /var/lib/rspamd/dkim
   dkim_id: "{{ ansible_date_time.epoch }}"
-nextcloud:
-  logtimezone: "Europe/Moscow"
-  default_phone_region: "RU"
-  server_fqdn: nextcloud.corp.yararchive.ru
+roundcube:
+  server_fqdn: mail.corp.yararchive.ru
   cert_fullchain_file: /etc/ssl/certs/*.corp.yararchive.ru_fullchain.cer
   cert_key_file: /etc/ssl/private/*.corp.yararchive.ru.key
-  data_dir: /mnt/nextcloud/data
-  admin_user: manager
-  admin_pass: "{{ lookup('ansible.builtin.password', \
-    '/dev/null seed=nextcloud.admin_user chars=ascii_letters,digits length=32') }}"
 postgresql:
   host: 127.0.0.1
   port: 5432
@@ -60,8 +54,8 @@ postgresql:
   mail_server_user_name: vmail
   mail_server_user_pass: "{{ lookup('ansible.builtin.password', \
     '/dev/null seed=postgresql.mail_server_user_name chars=ascii_letters,digits length=32') }}"
-  nextcloud_database: nextcloud
-  nextcloud_user_name: nextcloud
-  nextcloud_user_pass: "{{ lookup('ansible.builtin.password', \
-    '/dev/null seed=postgresql.nextcloud_user_name chars=ascii_letters,digits length=32') }}"
+  roundcube_database: roundcube
+  roundcube_user_name: roundcube
+  roundcube_user_pass: "{{ lookup('ansible.builtin.password', \
+    '/dev/null seed=postgresql.roundcube_user_name chars=ascii_letters,digits length=32') }}"
 dh_params: /etc/ssl/ffdhe4096.pem

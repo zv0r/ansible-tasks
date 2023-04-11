@@ -11,3 +11,99 @@
     - roundcube-pgsql
   environment:
     DEBIAN_FRONTEND: noninteractive
+
+- name: Enable Apache modules
+  ansible.builtin.command: "a2enmod {{ item }}"
+  failed_when: false
+  changed_when: true
+  with_items:
+    - ssl
+    - rewrite
+  notify: Restart Apache
+
+- name: Disable Apache default site
+  ansible.builtin.command: "a2dissite 000-default"
+  failed_when: false
+  changed_when: true
+  notify: Restart Apache
+
+- name: Copy Rouncube host Apache config
+  ansible.builtin.template:
+    src: roundcube/roundcube.conf.j2
+    dest: "/etc/apache2/sites-available/{{ roundcube.server_fqdn }}.conf"
+    mode: "0644"
+
+- name: Enable Roundcube site in Apache
+  ansible.builtin.command: "a2ensite {{ roundcube.server_fqdn }}"
+  failed_when: false
+  changed_when: true
+  notify: Restart Apache
+
+- name: Setup Roundcube PostgreSQL db
+  become: true
+  become_method: sudo
+  become_user: postgres
+  block:
+    - name: Create Roundcube database
+      community.postgresql.postgresql_db:
+        name: "{{ postgresql.roundcube_database }}"
+
+    - name: Run SQL scripts
+      ansible.builtin.include_tasks: run_sql_scripts.yml
+      with_items:
+        - { db: "{{ postgresql.roundcube_database }}", src: postgresql/prepare_roundcube.sql.j2, dest: /tmp/prepare_roundcube.sql }
+
+- name: Set Roundcube database config
+  ansible.builtin.template:
+    src: roundcube/debian-db.php.j2
+    dest: /etc/roundcube/debian-db.php
+    owner: root
+    group: www-data
+    mode: "0640"
+
+- name: Set main config values
+  ansible.builtin.lineinfile:
+    path: /etc/roundcube/config.inc.php
+    regexp: "^\\$config\\['{{ item.key }}'\\]"
+    line: "$config['{{ item.key }}'] = '{{ item.value }}';"
+  with_items:
+    - { key: default_host, value: "tls://{{ mail_domains[0].server_fqdn }}" }
+    - { key: smtp_host, value: "tls://{{ mail_domains[0].server_fqdn }}:587" }
+    - { key: imap_host, value: "tls://{{ mail_domains[0].server_fqdn }}:143" }
+    - { key: product_name, value: "{{ mail_domains[0].name }}" }
+
+- name: Enable roundcube plugins
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/config.inc.php
+    insertafter: "^\\$config\\['plugins'\\].*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      'managesieve',
+      'password'
+
+- name: Remove empty configs in plugins
+  ansible.builtin.lineinfile:
+    path: "/etc/roundcube/plugins/{{ item }}/config.inc.php"
+    state: absent
+    regexp: ".*array().*"
+  with_items:
+    - password
+    - managesieve
+
+- name: Set password plugin values
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/plugins/password/config.inc.php
+    insertbefore: "^?>.*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['password_driver'] = 'sql';
+      $config['password_minimum_length'] = 8;
+      $config['password_force_save'] = true;
+      $config['password_algorithm'] = 'dovecot';
+      $config['password_algorithm_options'] = [];
+      $config['password_algorithm_prefix'] = '';
+      $config['password_db_dsn'] = 'pgsql://{{ postgresql.roundcube_user_name }}:{{ postgresql.roundcube_user_pass }}@{{ postgresql.host }}';
+      $config['password_query'] = 'UPDATE users SET password_hash=%P WHERE local=%l AND domain=%d';
+      $config['password_dovecotpw_method'] = 'ARGON2ID';
+      $config['password_dovecotpw'] = '/usr/bin/doveadm pw -r 2';
+      $config['password_dovecotpw_with_method'] = false;
