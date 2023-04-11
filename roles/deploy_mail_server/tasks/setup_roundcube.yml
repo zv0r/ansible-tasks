@@ -93,7 +93,7 @@
 - name: Set password plugin values
   ansible.builtin.blockinfile:
     path: /etc/roundcube/plugins/password/config.inc.php
-    insertbefore: "^?>.*"
+    insertbefore: "^\\?>.*"
     marker: "// {mark} ANSIBLE MANAGED BLOCK"
     block: |
       $config['password_driver'] = 'sql';
@@ -107,3 +107,11 @@
       $config['password_dovecotpw_method'] = 'ARGON2ID';
       $config['password_dovecotpw'] = '/usr/bin/doveadm pw -r 2';
       $config['password_dovecotpw_with_method'] = false;
+
+- name: Set managesieve plugin values
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/plugins/managesieve/config.inc.php
+    insertbefore: "^\\?>.*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['managesieve_host'] = 'localhost';
