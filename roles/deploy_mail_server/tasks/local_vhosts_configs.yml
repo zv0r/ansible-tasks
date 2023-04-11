@@ -1,5 +1,5 @@
 ---
-- name: Create directories for websites
+- name: "Create directories for {{ mail_domain.name }}"
   ansible.builtin.file:
     state: directory
     path: "/var/www/autoconfig.{{ mail_domain.name }}/mail"
@@ -14,3 +14,14 @@
     mode: "0644"
     owner: www-data
     group: www-data
+
+- name: "Create Apache virtual host config for autoconfig.{{ mail_domain.name }}"
+  ansible.builtin.template:
+    src: autoconfig/autoconfig.apache.j2
+    dest: "/etc/apache2/sites-available/autoconfig.{{ mail_domain.name }}.conf"
+    mode: "0644"
+
+- name: "Enable site autoconfig.{{ mail_domain.name }}"
+  ansible.builtin.command: "a2ensite autoconfig.{{ mail_domain.name }}"
+  failed_when: false
+  changed_when: true

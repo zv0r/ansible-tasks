@@ -9,8 +9,33 @@
     - roundcube-plugins
     - roundcube-plugins-extra
     - roundcube-pgsql
+    - php-ldap
+    - php-net-ldap3
   environment:
     DEBIAN_FRONTEND: noninteractive
+
+- name: Get PHP params
+  block:
+    - name: Register php command output
+      ansible.builtin.command: php -v
+      register: php_version_command_output
+      failed_when: php_version_command_output.rc != 0
+      changed_when: true
+
+    - name: Get PHP version with regexp
+      ansible.builtin.set_fact:
+        php_version: "{{ php_version_command_output.stdout | regex_search('php ([0-9]+\\.[0-9]+)', '\\1', ignorecase=true) | first }}"
+
+    - name: Get PHP directory
+      ansible.builtin.set_fact:
+        php_directory: "/etc/php/{{ php_version }}/apache2"
+
+- name: Enable LDAP extension in PHP
+  ansible.builtin.lineinfile:
+    path: "{{ [php_directory, 'php.ini'] | ansible.builtin.path_join }}"
+    regexp: "^;?extension=ldap"
+    line: "extension=ldap"
+  notify: Restart Apache
 
 - name: Enable Apache modules
   ansible.builtin.command: "a2enmod {{ item }}"
@@ -71,6 +96,7 @@
     - { key: smtp_host, value: "tls://{{ mail_domains[0].server_fqdn }}:587" }
     - { key: imap_host, value: "tls://{{ mail_domains[0].server_fqdn }}:143" }
     - { key: product_name, value: "{{ mail_domains[0].name }}" }
+    - { key: address_book_type, value: "sql" }
 
 - name: Enable roundcube plugins
   ansible.builtin.blockinfile:
@@ -79,7 +105,8 @@
     marker: "// {mark} ANSIBLE MANAGED BLOCK"
     block: |
       'managesieve',
-      'password'
+      'password',
+      'markasjunk'
 
 - name: Remove empty configs in plugins
   ansible.builtin.lineinfile:
@@ -115,3 +142,60 @@
     marker: "// {mark} ANSIBLE MANAGED BLOCK"
     block: |
       $config['managesieve_host'] = 'localhost';
+
+- name: Set addressbooks
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/config.inc.php
+    marker: "// {mark} addressbook {{ book.index }} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['ldap_public']['{{ book.index }}'] = array(
+        'name' => '{{ book.name }}',
+        'hosts' => array(
+        {% for host in book.hosts %}
+        '{{ host }}',
+        {% endfor %}
+        ),
+        'ldap_version' => 3,
+        'network_timeout' => 10,
+        'user_specific' => false,
+        'base_dn' => '{{ book.base_dn }}',
+        'bind_dn' => '{{ book.bind_dn }}',
+        'bind_pass' => '{{ book.bind_pass }}',
+        'writable' => false,
+        'LDAP_Object_Classes' => array('top', 'person'),
+        'required_fields' => array('cn', 'sn', 'givenName', 'mail'),
+        'LDAP_rdn' => 'mail',
+        'ldap_version' => 3,
+        'search_fields' => array('mail', 'cn'),
+        'sort' => 'cn',
+        'scope' => 'sub',
+        'filter' => '{{ book.filter }}',
+        'fuzzy_search' => true,
+        'sizelimit' => '0',
+        'timelimit' => '0',
+        'fieldmap' => [
+          'name' => 'cn',
+          'surname' => 'sn',
+          'firstname' => 'givenName',
+          'jobtitle' => 'title',
+          'email' => 'mail:*',
+          'phone:home' => 'homePhone',
+          'phone:work' => 'telephoneNumber',
+          'phone:mobile' => 'mobile',
+          'phone:pager' => 'pager',
+          'phone:workfax' => 'facsimileTelephoneNumber',
+          'street:work' => 'streetAddress',
+          'zipcode:work' => 'postalCode',
+          'region:work' => 'st',
+          'locality:work' => 'l',
+          'country:work' => 'c',
+          'organization' => 'company',
+          'department' => 'department',
+          'jobtitle' => 'title',
+          'notes' => 'description',
+          'photo' => 'jpegPhoto',
+        ],
+      );
+  loop: "{{ roundcube.ldap_addressbooks }}"
+  loop_control:
+    loop_var: book
