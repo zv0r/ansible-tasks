@@ -8,11 +8,3 @@ galaxy_info:
     - name: Debian
       versions:
         - all
-dependencies:
-  - role: debian_based_dist_upgrade
-    vars:
-      debian_based_dist_upgrade_skip_reboot: true
-  - role: deploy_https_certificates
-    when: skip_deploy_certs is not defined
-    vars:
-      deploy_ssl_certificates_hosts: "{{ ansible_fqdn }}"

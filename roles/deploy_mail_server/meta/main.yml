@@ -10,4 +10,3 @@ galaxy_info:
         - bookworm
 dependencies:
   - role: setup_diffie_hellman_params
-  - role: deploy_https_certificates
