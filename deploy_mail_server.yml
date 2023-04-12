@@ -1,5 +1,5 @@
 ---
-- name: Deploy mail server (postfix, dovecot, nextcloud, postgresql, nginx)
+- name: Deploy mail server (postfix, dovecot, roundcube, postgresql, apache)
   hosts: mail_servers
   become: true
 

@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: zv0r
-  description: Deploy mail server (postfix, dovecot, roundcube, postgresql, nginx)
+  description: Deploy mail server (postfix, dovecot, roundcube, postgresql, apache)
   license: MIT
   min_ansible_version: "2.10"
   platforms:
