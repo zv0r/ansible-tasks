@@ -167,6 +167,18 @@
       $config['html5_notifier_smbox'] = '1';
       $config['html5_notifier_excluded_directories'] = 'Trash';
 
+- name: Set autocomplete settings
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/config.inc.php
+    marker: "// {mark} autocomplete settings ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['autocomplete_addressbooks'] = [
+        'sql'
+        {% for book in roundcube.ldap_addressbooks %}
+        ,'{{ book.index }}'
+        {% endfor %}
+      ];
+
 - name: Set addressbooks
   ansible.builtin.blockinfile:
     path: /etc/roundcube/config.inc.php
