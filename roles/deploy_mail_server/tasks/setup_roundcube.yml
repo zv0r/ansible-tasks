@@ -107,7 +107,10 @@
     block: |
       'managesieve',
       'password',
-      'markasjunk'
+      'markasjunk',
+      'new_user_identity',
+      'new_user_dialog',
+      'html5_notifier'
 
 - name: Remove empty configs in plugins
   ansible.builtin.lineinfile:
@@ -143,6 +146,26 @@
     marker: "// {mark} ANSIBLE MANAGED BLOCK"
     block: |
       $config['managesieve_host'] = 'localhost';
+
+- name: Set new_user_identity plugin values
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/plugins/new_user_identity/config.inc.php
+    insertbefore: "^\\?>.*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['new_user_identity_addressbook'] = 'yararchive';
+      $config['new_user_identity_match'] = 'mail';
+      $config['new_user_identity_onlogin'] = true;
+
+- name: Set html5_notifier plugin values
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/plugins/html5_notifier/config.inc.php
+    insertbefore: "^\\?>.*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['html5_notifier_duration'] = '5';
+      $config['html5_notifier_smbox'] = '1';
+      $config['html5_notifier_excluded_directories'] = 'Trash';
 
 - name: Set addressbooks
   ansible.builtin.blockinfile:
