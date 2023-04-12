@@ -187,6 +187,12 @@
     owner: root
     group: root
 
+- name: Set global addressbook config
+  ansible.builtin.template:
+    src: roundcube/globaladdressbook-config.php.j2
+    dest: /var/lib/roundcube/plugins/globaladdressbook/config.inc.php
+    mode: "0644"
+
 - name: Set addressbooks
   ansible.builtin.blockinfile:
     path: /etc/roundcube/config.inc.php
