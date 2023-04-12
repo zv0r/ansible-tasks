@@ -48,6 +48,7 @@ roundcube:
   cert_fullchain_file: /etc/ssl/certs/*.corp.yararchive.ru_fullchain.cer
   cert_key_file: /etc/ssl/private/*.corp.yararchive.ru.key
   ldap_addressbooks: "{{ vault.roundcube.ldap_addressbooks }}"
+  session_lifetime: 120
 postgresql:
   host: 127.0.0.1
   port: 5432

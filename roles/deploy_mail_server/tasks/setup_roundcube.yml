@@ -97,6 +97,7 @@
     - { key: imap_host, value: "tls://{{ mail_domains[0].server_fqdn }}:143" }
     - { key: product_name, value: "{{ mail_domains[0].name }}" }
     - { key: address_book_type, value: "sql" }
+    - { key: session_lifetime, value: "{{ roundcube.session_lifetime }}" }
 
 - name: Enable roundcube plugins
   ansible.builtin.blockinfile:
