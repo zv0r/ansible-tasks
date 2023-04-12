@@ -5,7 +5,7 @@
     regexp: "^.*{{ inventory_hostname_short }}"
     line: "{{ ansible_default_ipv4.address }} \
       {{ inventory_hostname }} \
-      {{ inventory_hostname_short }}\
+      {{ inventory_hostname_short }} \
       {{ roundcube.server_fqdn }} \
       {% for mail_domain in mail_domains %} \
       {{ mail_domain.server_fqdn }}\
