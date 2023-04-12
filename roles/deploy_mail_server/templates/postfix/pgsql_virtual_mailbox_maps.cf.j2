@@ -2,4 +2,4 @@ user = {{ postgresql.mail_server_user_name }}
 password = {{ postgresql.mail_server_user_pass }}
 hosts = {{ postgresql.host }}:{{ postgresql.port }}
 dbname = {{ postgresql.mail_server_database }}
-query = SELECT 1 FROM users_fqda WHERE fqda='%s';
+query = SELECT 1 FROM users_fqda WHERE fqda='%s' AND enabled = true;

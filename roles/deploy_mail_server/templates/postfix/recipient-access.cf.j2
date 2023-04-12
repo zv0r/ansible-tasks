@@ -2,4 +2,4 @@ user = {{ postgresql.mail_server_user_name }}
 password = {{ postgresql.mail_server_user_pass }}
 hosts = {{ postgresql.host }}:{{ postgresql.port }}
 dbname = {{ postgresql.mail_server_database }}
-query = SELECT fqda FROM users_fqda WHERE fqda='%s' AND enabled = true UNION SELECT destination_fqda FROM aliases_fqda WHERE source_fqda='%s';
+query = SELECT CASE WHEN (send_only = true) THEN 'REJECT' ELSE 'OK' END AS access FROM users WHERE local = '%u' AND domain = '%d' AND enabled = true LIMIT 1;

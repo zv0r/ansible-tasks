@@ -12,8 +12,11 @@ user_query = SELECT fqda as user, \
   '{{ [dovecot.mail_storage_user_home, '%d', '%n'] | ansible.builtin.path_join }}' AS "home", \
   {{ dovecot.mail_storage_uid }} AS "uid", \
   {{ dovecot.mail_storage_gid }} AS "gid" \
-  FROM users_fqda WHERE fqda = '%u';
+  FROM users_fqda \
+  WHERE \
+  fqda = '%u' \
+  AND send_only = false;
 
-password_query = SELECT fqda AS user, password_hash AS password FROM users_fqda WHERE fqda = '%u';
+password_query = SELECT fqda AS user, password_hash AS password FROM users_fqda WHERE fqda = '%u' AND enabled = true;
 
-iterate_query = SELECT fqda AS user FROM users_fqda;
+iterate_query = SELECT fqda AS user FROM users_fqda WHERE send_only = false;

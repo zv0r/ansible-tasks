@@ -68,11 +68,21 @@
   changed_when: true
   notify: Restart Postfix
 
-- name: Set overquota restrictions
-  ansible.builtin.command: "postconf smtpd_recipient_restrictions=reject_unauth_destination,\"check_policy_service unix:private/quota-status\""
+- name: Set overquota and send only restrictions
+  ansible.builtin.command: >-
+    postconf
+    smtpd_recipient_restrictions=
+    reject_unauth_destination,"check_recipient_access pgsql:/etc/postfix/recipient-access.cf","check_policy_service unix:private/quota-status"
   failed_when: false
   changed_when: true
   notify: Restart Postfix
+
+- name: Set recipient access map
+  ansible.builtin.template:
+    src: postfix/recipient-access.cf.j2
+    dest: /etc/postfix/recipient-access.cf
+    group: postfix
+    mode: "0640"
 
 - name: Set SMTP authentication config
   ansible.builtin.command: "postconf {{ item | quote }}"

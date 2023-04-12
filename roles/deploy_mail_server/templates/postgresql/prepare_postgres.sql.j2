@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash user_input,
     display_name user_input,
     quota_bytes bigint default 0,
+    enabled boolean default true,
+    send_only boolean default false,
     PRIMARY KEY(domain, local),
     -- entire e-mail address should not exceed 254 characters (RFC 3696)
     CHECK(char_length(local || domain) < 254)
@@ -47,7 +49,7 @@ CREATE TABLE IF NOT EXISTS aliases (
 
 CREATE OR REPLACE VIEW users_fqda AS
     -- fqda = Fully qualified domain address, e.g. alice@{{ mail_domains[0].name }}
-    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name, users.quota_bytes
+    SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name, users.quota_bytes, users.enabled, users.send_only
     FROM users, domains
     WHERE users.domain = domains.domain;
 
