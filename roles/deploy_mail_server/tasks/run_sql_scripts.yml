@@ -9,7 +9,7 @@
 
     - name: "Run SQL script: {{ item.dest }}"
       community.postgresql.postgresql_script:
-        db: "{{ item.db | default(postgresql.mail_server_database) }}"
+        db: "{{ item.db }}"
         path: "{{ item.dest }}"
 
     - name: "Remove SQL script file: {{ item.dest }}"

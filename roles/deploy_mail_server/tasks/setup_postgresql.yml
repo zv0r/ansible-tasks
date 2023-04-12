@@ -23,5 +23,5 @@
     - name: Run SQL scripts
       ansible.builtin.include_tasks: run_sql_scripts.yml
       with_items:
-        - { src: postgresql/prepare_postgres.sql.j2, dest: /tmp/prepare_postgres.sql }
-        - { src: postgresql/test_data.sql.j2, dest: /tmp/test_data.sql }
+        - { db: "{{ postgresql.mail_server_database }}", src: postgresql/prepare_postgres.sql.j2, dest: /tmp/prepare_postgres.sql }
+        - { db: "{{ postgresql.mail_server_database }}", src: postgresql/test_data.sql.j2, dest: /tmp/test_data.sql }
