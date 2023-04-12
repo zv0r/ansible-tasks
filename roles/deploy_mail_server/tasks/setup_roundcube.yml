@@ -110,6 +110,7 @@
       'markasjunk',
       'new_user_identity',
       'new_user_dialog',
+      'globaladdressbook',
       'html5_notifier'
 
 - name: Remove empty configs in plugins
@@ -178,6 +179,13 @@
         ,'{{ book.index }}'
         {% endfor %}
       ];
+
+- name: Unarchive globaladdressbook plugin
+  ansible.builtin.unarchive:
+    src: roundcube/globaladdressbook.tar.gz
+    dest: "/var/lib/roundcube/plugins"
+    owner: root
+    group: root
 
 - name: Set addressbooks
   ansible.builtin.blockinfile:
