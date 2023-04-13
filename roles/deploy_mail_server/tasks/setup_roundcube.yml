@@ -98,6 +98,7 @@
     - { key: product_name, value: "{{ mail_domains[0].name }}" }
     - { key: address_book_type, value: "sql" }
     - { key: session_lifetime, value: "{{ roundcube.session_lifetime }}" }
+    - { key: debug_level, value: "0" }
 
 - name: Enable roundcube plugins
   ansible.builtin.blockinfile:
@@ -134,7 +135,8 @@
       $config['password_algorithm'] = 'dovecot';
       $config['password_algorithm_options'] = [];
       $config['password_algorithm_prefix'] = '';
-      $config['password_db_dsn'] = 'pgsql://{{ postgresql.roundcube_user_name }}:{{ postgresql.roundcube_user_pass }}@{{ postgresql.host }}';
+      $config['password_db_dsn'] =
+        'pgsql://{{ postgresql.roundcube_user_name }}:{{ postgresql.roundcube_user_pass }}@{{ postgresql.host }}/{{ postgresql.mail_server_database }}';
       $config['password_query'] = 'UPDATE users SET password_hash=%P WHERE local=%l AND domain=%d';
       $config['password_dovecotpw_method'] = 'ARGON2ID';
       $config['password_dovecotpw'] = '/usr/bin/doveadm pw -r 2';
@@ -174,24 +176,42 @@
     marker: "// {mark} autocomplete settings ANSIBLE MANAGED BLOCK"
     block: |
       $config['autocomplete_addressbooks'] = [
-        'sql'
+        'sql',
         {% for book in roundcube.ldap_addressbooks %}
-        ,'{{ book.index }}'
+        '{{ book.index }}',
         {% endfor %}
       ];
 
 - name: Unarchive globaladdressbook plugin
   ansible.builtin.unarchive:
     src: roundcube/globaladdressbook.tar.gz
-    dest: "/var/lib/roundcube/plugins"
+    dest: "/usr/share/roundcube/plugins"
     owner: root
     group: root
 
-- name: Set global addressbook config
+- name: Make a link for globaladdressbook plugin
+  ansible.builtin.file:
+    state: link
+    src: /usr/share/roundcube/plugins/globaladdressbook
+    dest: /var/lib/roundcube/plugins/globaladdressbook
+
+- name: Create directory for globaladdressbook plugin config
+  ansible.builtin.file:
+    state: directory
+    path: /etc/roundcube/plugins/globaladdressbook
+    mode: "0755"
+
+- name: Set globaladdressbook plugin config
   ansible.builtin.template:
     src: roundcube/globaladdressbook-config.php.j2
-    dest: /var/lib/roundcube/plugins/globaladdressbook/config.inc.php
+    dest: /etc/roundcube/plugins/globaladdressbook/config.inc.php
     mode: "0644"
+
+- name: Put link to the globaladdressbook plugin config
+  ansible.builtin.file:
+    state: link
+    src: /etc/roundcube/plugins/globaladdressbook/config.inc.php
+    dest: /usr/share/roundcube/plugins/globaladdressbook/config.inc.php
 
 - name: Set addressbooks
   ansible.builtin.blockinfile:
