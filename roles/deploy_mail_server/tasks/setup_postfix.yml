@@ -61,6 +61,8 @@
     - smtp_tls_security_level=may
     - "smtpd_tls_cert_file={{ mail_domains[0].cert_fullchain_file }}"
     - "smtpd_tls_key_file={{ mail_domains[0].cert_key_file }}"
+    - "message_size_limit={{ message_size_limit }}"
+    - inet_interfaces=all
 
 - name: Set virtual transport
   ansible.builtin.command: "postconf virtual_transport=lmtp:unix:private/dovecot-lmtp"

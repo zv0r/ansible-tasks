@@ -32,6 +32,7 @@ mail_domains:
         cert_key_file: /etc/ssl/private/smtp.yararchive.ru.key
 postfix:
   myhostname: static-212.232.41.203.yarnet.ru
+  message_size_limit: 51943040
 dovecot:
   sieve_after_dir: /etc/dovecot/global/sieve_after
   sieve_dir: /etc/dovecot/global/sieve
