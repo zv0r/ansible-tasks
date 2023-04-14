@@ -99,6 +99,8 @@
     - { key: address_book_type, value: "sql" }
     - { key: session_lifetime, value: "{{ roundcube.session_lifetime }}" }
     - { key: debug_level, value: "0" }
+    - { key: reply_mode, value: "1" }
+    - { key: contact_form_mode, value: "business" }
 
 - name: Enable roundcube plugins
   ansible.builtin.blockinfile:
