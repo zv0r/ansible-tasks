@@ -49,7 +49,7 @@
   changed_when: true
   notify: Restart Postfix
 
-- name: Set smtpd SSL config
+- name: Set postfix config values
   ansible.builtin.command: "postconf {{ item | quote }}"
   failed_when: false
   changed_when: true
@@ -63,6 +63,7 @@
     - "smtpd_tls_key_file={{ mail_domains[0].cert_key_file }}"
     - "message_size_limit={{ message_size_limit }}"
     - inet_interfaces=all
+    - recipient_delimiter=+
 
 - name: Set virtual transport
   ansible.builtin.command: "postconf virtual_transport=lmtp:unix:private/dovecot-lmtp"
