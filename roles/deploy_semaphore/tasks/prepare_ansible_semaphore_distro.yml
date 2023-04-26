@@ -1,10 +1,4 @@
 ---
-- name: Download semaphore archive
-  ansible.builtin.get_url:
-    url: "{{ semaphore_archive_url }}"
-    dest: "{{ semaphore_archive_dest }}"
-    mode: "0664"
-
 - name: Create semaphore directory
   ansible.builtin.file:
     path: "{{ semaphore_installation_directory }}"
@@ -15,7 +9,7 @@
 
 - name: Unarchive semaphore installation archive
   ansible.builtin.unarchive:
-    src: "{{ semaphore_archive_dest }}"
+    src: "{{ semaphore_archive_url }}"
     dest: "{{ semaphore_installation_directory }}"
     remote_src: true
 
