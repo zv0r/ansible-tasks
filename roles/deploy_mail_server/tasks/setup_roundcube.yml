@@ -11,6 +11,7 @@
     - roundcube-pgsql
     - php-ldap
     - php-net-ldap3
+    - php-zip
   environment:
     DEBIAN_FRONTEND: noninteractive
 
@@ -114,7 +115,8 @@
       'new_user_identity',
       'new_user_dialog',
       'globaladdressbook',
-      'html5_notifier'
+      'html5_notifier',
+      'zipdownload'
 
 - name: Remove empty configs in plugins
   ansible.builtin.lineinfile:
@@ -124,6 +126,17 @@
   with_items:
     - password
     - managesieve
+    - zipdownload
+
+- name: Set zipdownload plugin values
+  ansible.builtin.blockinfile:
+    path: /etc/roundcube/plugins/zipdownload/config.inc.php
+    insertbefore: "^\\?>.*"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      $config['zipdownload_attachments'] = 1;
+      $config['zipdownload_selection'] = '100MB';
+      $config['zipdownload_charset'] = 'UTF-8';
 
 - name: Set password plugin values
   ansible.builtin.blockinfile:
