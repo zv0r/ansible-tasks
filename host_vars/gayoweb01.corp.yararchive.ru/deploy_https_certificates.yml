@@ -2,5 +2,6 @@
 ssl_cert_domains:
   - "*.corp.yararchive.ru"
   - "*.yararchive.ru"
+  - "yararchive.ru"
 units_to_restart:
   - nginx.service
