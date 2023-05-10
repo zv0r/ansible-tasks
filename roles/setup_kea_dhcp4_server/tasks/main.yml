@@ -113,20 +113,6 @@
     group: root
     mode: "0644"
 
-- name: Allow to read /etc/resolv.conf in apparmor
-  ansible.builtin.lineinfile:
-    state: present
-    path: /etc/apparmor.d/usr.sbin.kea-lfc
-    insertbefore: "^}"
-    line: "  /etc/resolv.conf r,"
-
-- name: Allow to read /etc/resolv.conf in apparmor
-  ansible.builtin.lineinfile:
-    state: present
-    path: /etc/apparmor.d/usr.sbin.kea-lfc
-    insertbefore: ".*/etc/resolv.conf"
-    line: "  network inet stream,"
-
 - name: Allow to run libdhcp_run_script.sh in apparmor
   ansible.builtin.lineinfile:
     state: present
