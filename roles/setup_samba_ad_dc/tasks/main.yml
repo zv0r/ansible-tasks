@@ -71,6 +71,7 @@
   with_items:
     - sysvol-replication.service
     - sysvol-replication.timer
+  ignore_errors: true
 
 - name: Open ports with ufw
   community.general.ufw:
