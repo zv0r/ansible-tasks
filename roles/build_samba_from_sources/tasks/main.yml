@@ -1,6 +1,0 @@
----
-- name: Prepare dependencies
-  ansible.builtin.include_tasks: prepeare-dependencies.yml
-
-- name: Build samba
-  ansible.builtin.include_tasks: build_samba.yml
