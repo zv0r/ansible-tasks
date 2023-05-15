@@ -106,9 +106,9 @@ all:
         mail_servers:
           hosts:
             gayomail01.corp.yararchive.ru:
-        https_servers:
+        ssl_servers:
           children:
-            https_servers_qts:
+            ssl_servers_qts:
               hosts:
                 gayostorage01.corp.yararchive.ru:
                 gayostorage02.corp.yararchive.ru:

@@ -1,8 +1,8 @@
 ---
 - name: Deploy SSL certificates
-  hosts: "{{ deploy_ssl_certificates_hosts | default('https_servers') }}"
+  hosts: "{{ deploy_ssl_certificates_hosts | default('ssl_servers') }}"
   become: true
   gather_facts: false
 
   roles:
-    - role: deploy_https_certificates
+    - role: deploy_ssl_certificates
