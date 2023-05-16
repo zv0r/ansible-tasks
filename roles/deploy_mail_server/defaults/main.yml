@@ -33,6 +33,7 @@ mail_domains:
 postfix:
   myhostname: static-212.232.41.203.yarnet.ru
   message_size_limit: 51943040
+  milter_default_action: accept
 dovecot:
   sieve_after_dir: /etc/dovecot/global/sieve_after
   sieve_dir: /etc/dovecot/global/sieve
