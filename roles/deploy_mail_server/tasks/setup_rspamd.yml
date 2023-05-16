@@ -35,6 +35,7 @@
     - actions.conf
     - classifier-bayes.conf
     - dkim_signing.conf
+    - multimap.conf
   notify: Restart Rspamd
 
 - name: Set override config
@@ -120,6 +121,14 @@
     dest: /etc/rspamd/maps.d/dkim_selectors.map
     mode: "0644"
   when: skip_dkim_gen is not defined
+  notify: Restart Rspamd
+
+- name: Generate whitelisted domains map
+  ansible.builtin.template:
+    src: rspamd/whitelist.sender.domain.map.j2
+    dest: /etc/rspamd/maps.d/whitelist.sender.domain.map
+    mode: "0644"
+    force: false
   notify: Restart Rspamd
 
 - name: Fix DKIM directory and conating files permissions
