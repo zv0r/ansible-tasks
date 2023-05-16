@@ -117,7 +117,7 @@
 - name: Generate DKIM selectors map
   ansible.builtin.template:
     src: rspamd/dkim_selectors.map.j2
-    dest: /etc/rspamd/dkim_selectors.map
+    dest: /etc/rspamd/maps.d/dkim_selectors.map
     mode: "0644"
   when: skip_dkim_gen is not defined
   notify: Restart Rspamd
