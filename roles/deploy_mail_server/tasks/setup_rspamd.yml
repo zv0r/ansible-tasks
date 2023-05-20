@@ -123,12 +123,21 @@
   when: skip_dkim_gen is not defined
   notify: Restart Rspamd
 
+- name: Create directory /etc/rspamd/local.d/maps.d
+  ansible.builtin.file:
+    state: directory
+    path: "/etc/rspamd/local.d/maps.d"
+    mode: "0755"
+
 - name: Generate whitelisted domains map
   ansible.builtin.template:
     src: rspamd/whitelist.sender.domain.map.j2
-    dest: /etc/rspamd/maps.d/whitelist.sender.domain.map
+    dest: "{{ item }}"
     mode: "0644"
     force: false
+  with_items:
+    - /etc/rspamd/maps.d/whitelist.sender.domain.map
+    - /etc/rspamd/local.d/maps.d/dkim_whitelist.inc.local
   notify: Restart Rspamd
 
 - name: Fix DKIM directory and conating files permissions
