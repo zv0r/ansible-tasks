@@ -12,7 +12,7 @@ dependencies:
   - role: debian_based_dist_upgrade
     vars:
       debian_based_dist_upgrade_skip_reboot: true
-  - role: deploy_https_certificates
+  - role: deploy_ssl_certificates
     vars:
       ssl_cert_domains:
         - "{{ ssl_cert_domain_name }}"
