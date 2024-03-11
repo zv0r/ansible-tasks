@@ -2,26 +2,34 @@
 - name: Fetch SSL certificates to local temp block
   delegate_to: "{{ groups[acme_client_group_name | default('acme_clients')][0] }}"
   block:
+    - name: Find directory containing certificate data
+      ansible.builtin.find:
+        paths: "{{ acme_clients_certs_directory }}"
+        depth: 2
+        file_type: directory
+        patterns: "^{{ item }}$"
+      register: item_cert_directory
+
     - name: Fetch CA chain SSL certificate from ACME clients
       ansible.builtin.fetch:
-        src: "{{ acme_clients_certs_directory }}/{{ item }}/ca.cer"
+        src: "{{ item_cert_directory.files[0].path }}/ca.cer"
         dest: "{{ local_temp_ssl_dir }}/{{ item }}/ca.cer"
         flat: true
 
     - name: Fetch full chain SSL certificate from ACME clients
       ansible.builtin.fetch:
-        src: "{{ acme_clients_certs_directory }}/{{ item }}/fullchain.cer"
+        src: "{{ item_cert_directory.files[0].path }}/fullchain.cer"
         dest: "{{ local_temp_ssl_dir }}/{{ item }}/fullchain.cer"
         flat: true
 
     - name: Fetch domain SSL certificate from ACME clients
       ansible.builtin.fetch:
-        src: "{{ acme_clients_certs_directory }}/{{ item }}/{{ item }}.cer"
+        src: "{{ item_cert_directory.files[0].path }}/{{ item }}.cer"
         dest: "{{ local_temp_ssl_dir }}/{{ item }}/cert.pem"
         flat: true
 
     - name: Fetch domain SSL key from ACME clients
       ansible.builtin.fetch:
-        src: "{{ acme_clients_certs_directory }}/{{ item }}/{{ item }}.key"
+        src: "{{ item_cert_directory.files[0].path }}/{{ item }}.key"
         dest: "{{ local_temp_ssl_dir }}/{{ item }}/key.pem"
         flat: true
