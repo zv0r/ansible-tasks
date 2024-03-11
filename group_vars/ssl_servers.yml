@@ -1,5 +1,5 @@
 ---
-acme_clients_certs_directory: /var/etc/acme-client/home
+acme_clients_certs_directory: /var/etc/acme-client/cert-home
 local_temp_ssl_dir: /tmp/ssl_cert
 dest_cert_directory: /etc/ssl/certs
 dest_key_directory: /etc/ssl/private
