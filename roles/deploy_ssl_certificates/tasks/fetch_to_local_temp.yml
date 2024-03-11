@@ -6,16 +6,11 @@
       ansible.builtin.find:
         paths: "{{ acme_clients_certs_directory }}"
         depth: 2
+        recurse: true
         file_type: directory
-        patterns: "^{{ item }}$"
+        patterns: "{{ item | ansible.builtin.regex_escape() }}"
+        use_regex: true
       register: item_cert_directory
-
-    - name: Print return information from the previous task
-      ansible.builtin.debug:
-        var: item_cert_directory
-        verbosity: 2
-
-    - meta: end_play
 
     - name: Fetch CA chain SSL certificate from ACME clients
       ansible.builtin.fetch:
