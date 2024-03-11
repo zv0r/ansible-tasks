@@ -16,6 +16,7 @@
     - ast
     - filecmp
     - glob
+    - mimetypes
   loop_control:
     loop_var: python_module_name
 
