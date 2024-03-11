@@ -10,6 +10,13 @@
         patterns: "^{{ item }}$"
       register: item_cert_directory
 
+    - name: Print return information from the previous task
+      ansible.builtin.debug:
+        var: item_cert_directory
+        verbosity: 2
+
+    - meta: end_play
+
     - name: Fetch CA chain SSL certificate from ACME clients
       ansible.builtin.fetch:
         src: "{{ item_cert_directory.files[0].path }}/ca.cer"
