@@ -17,6 +17,7 @@
     - filecmp
     - glob
     - mimetypes
+    - netrc
   loop_control:
     loop_var: python_module_name
 
