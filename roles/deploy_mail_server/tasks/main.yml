@@ -6,8 +6,8 @@
     line: "{{ ansible_default_ipv4.address }} \
       {{ inventory_hostname }} \
       {{ inventory_hostname_short }} \
-      {{ roundcube.server_fqdn }} \
-      {% for mail_domain in mail_domains %} \
+      {{ deploy_mail_server_roundcube.server_fqdn }} \
+      {% for mail_domain in deploy_mail_server_mail_domains %} \
       {{ mail_domain.server_fqdn }}\
       {% if mail_domain.aliases is defined %}\
       {% for alias in mail_domain.aliases %} \
@@ -42,9 +42,9 @@
     msg:
       - "Job finished!"
       - ""
-      - "Don't forget to create DNS TXT record {{ rspamd.dkim_id }}._domainkey for domains"
-      - "{% for mail_domain in mail_domains %}{{ mail_domain.name }} {% endfor %}"
-      - "check directory {{ rspamd.dkim_dir }}"
+      - "Don't forget to create DNS TXT record {{ deploy_mail_server_rspamd.dkim_id }}._domainkey for domains"
+      - "{% for mail_domain in deploy_mail_server_mail_domains %}{{ mail_domain.name }} {% endfor %}"
+      - "check directory {{ deploy_mail_server_rspamd.dkim_dir }}"
       - ""
       - "Also keep up to date TLS fullchain certificates and TLS keys"
       - ""
@@ -53,10 +53,10 @@
       - ""
       - "It is recommecded to create TXT records for your domains:"
       - "@ IN TXT \"v=spf1 mx -all\""
-      - "_dmarc IN TXT \"v=DMARC1; p=reject; rua=mailto:it@{{ mail_domains[0].name }}; adkim=s; aspf=s; pct=100;\""
+      - "_dmarc IN TXT \"v=DMARC1; p=reject; rua=mailto:it@{{ deploy_mail_server_mail_domains[0].name }}; adkim=s; aspf=s; pct=100;\""
       - ""
-      - "PostgreSQL user is {{ postgresql.mail_server_user_name }}, password is {{ postgresql.mail_server_user_pass }}"
-      - "Database name is {{ postgresql.mail_server_database }}"
+      - "PostgreSQL user is {{ deploy_mail_server_postgresql.mail_server_user_name }}, password is {{ deploy_mail_server_postgresql.mail_server_user_pass }}"
+      - "Database name is {{ deploy_mail_server_postgresql.mail_server_database }}"
       - ""
       - "You need to open these ports in your firewall:"
       - "80/tcp, 443/tcp, 25/tcp, 587/tcp, 143/tcp, 993/tcp, 4190/tcp"

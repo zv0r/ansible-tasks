@@ -29,7 +29,7 @@ $config['globaladdressbooks']['group_mails'] = [
     // admin user(s) can always add/edit/delete entries, overrides readonly
     // either a single username, or an array of usernames, see README for more info
     'admin' => [
-    {% for mail_domain in mail_domains %}
+    {% for mail_domain in deploy_mail_server_mail_domains %}
       'tech@{{ mail_domain.name }}',
     {% endfor %}
     ],

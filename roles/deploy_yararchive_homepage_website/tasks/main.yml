@@ -1,7 +1,7 @@
 ---
 - name: Prepare website directory
   ansible.builtin.file:
-    path: "{{ yararchive_homepage_website_directory }}"
+    path: "{{ deploy_yararchive_homepage_website_directory }}"
     owner: root
     group: root
     mode: "0755"
@@ -11,7 +11,7 @@
 - name: Unarchive files to website directory
   ansible.builtin.unarchive:
     src: www.tar
-    dest: "{{ yararchive_homepage_website_directory }}"
+    dest: "{{ deploy_yararchive_homepage_website_directory }}"
     owner: root
     group: root
     mode: "0644"
@@ -20,6 +20,6 @@
   ansible.builtin.include_role:
     name: setup_nginx_reverse_proxy
   vars:
-    template_file_name: homepage.yararchive.ru.conf.j2
-    nginx_server_config_file_name: homepage.yararchive.ru.conf
-    nginx_server_listen_port: 443
+    setup_nginx_reverse_proxy_template_file: homepage.yararchive.ru.conf.j2
+    setup_nginx_reverse_proxy_config_file: homepage.yararchive.ru.conf
+    setup_nginx_reverse_proxy_listen_port: 443

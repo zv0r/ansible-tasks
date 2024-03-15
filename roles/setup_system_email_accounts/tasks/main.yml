@@ -6,7 +6,7 @@
 - name: Add user to e-mail group
   ansible.builtin.user:
     name: "{{ ansible_user }}"
-    groups: "{{ email_user_group }}"
+    groups: "{{ setup_system_email_accounts_user_group }}"
     append: true
 
 - name: Install dependencies
@@ -24,7 +24,7 @@
   ansible.builtin.lineinfile:
     path: /etc/mail.rc
     regexp: "^alias {{ item }}"
-    line: "alias {{ item }} {{ email_username }}"
+    line: "alias {{ item }} {{ setup_system_email_accounts_username }}"
   with_items:
     - root
     - "{{ system_user_name }}"
@@ -33,7 +33,7 @@
   ansible.builtin.lineinfile:
     path: /etc/ssmtp/revaliases
     regexp: "^{{ item }}"
-    line: "{{ item }}:{{ email_username }}:{{ email_host }}:{{ email_port }}"
+    line: "{{ item }}:{{ setup_system_email_accounts_username }}:{{ setup_system_email_accounts_host }}:{{ setup_system_email_accounts_port }}"
   with_items:
     - root
     - "{{ system_user_name }}"
@@ -43,5 +43,5 @@
     src: ssmtp.conf.j2
     dest: /etc/ssmtp/ssmtp.conf
     owner: root
-    group: "{{ email_user_group }}"
+    group: "{{ setup_system_email_accounts_user_group }}"
     mode: "0640"

@@ -377,11 +377,11 @@ CREATE TABLE IF NOT EXISTS "system" (
 
 INSERT INTO "system" (name, value) VALUES ('roundcube-version', '2022081200') ON CONFLICT DO NOTHING;
 
-GRANT CONNECT ON DATABASE {{ postgresql.roundcube_database }} TO {{ postgresql.roundcube_user_name }};
-GRANT USAGE ON SCHEMA public TO {{ postgresql.roundcube_user_name }};
-GRANT CREATE ON SCHEMA public TO {{ postgresql.roundcube_user_name }};
-GRANT CREATE ON DATABASE {{ postgresql.roundcube_database }} TO {{ postgresql.roundcube_user_name }};
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO {{ postgresql.roundcube_user_name }};
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {{ postgresql.roundcube_user_name }};
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO {{ postgresql.roundcube_user_name }};
-GRANT ALL PRIVILEGES ON DATABASE {{ postgresql.roundcube_database }} TO {{ postgresql.roundcube_user_name }};
+GRANT CONNECT ON DATABASE {{ deploy_mail_server_postgresql.roundcube_database }} TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT USAGE ON SCHEMA public TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT CREATE ON SCHEMA public TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT CREATE ON DATABASE {{ deploy_mail_server_postgresql.roundcube_database }} TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT ALL PRIVILEGES ON DATABASE {{ deploy_mail_server_postgresql.roundcube_database }} TO {{ deploy_mail_server_postgresql.roundcube_user_name }};

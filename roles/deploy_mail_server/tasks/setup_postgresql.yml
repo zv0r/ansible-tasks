@@ -18,10 +18,10 @@
   block:
     - name: Create mail server database
       community.postgresql.postgresql_db:
-        name: "{{ postgresql.mail_server_database }}"
+        name: "{{ deploy_mail_server_postgresql.mail_server_database }}"
 
     - name: Run SQL scripts
       ansible.builtin.include_tasks: run_sql_scripts.yml
       with_items:
-        - { db: "{{ postgresql.mail_server_database }}", src: postgresql/prepare_postgres.sql.j2, dest: /tmp/prepare_postgres.sql }
-        - { db: "{{ postgresql.mail_server_database }}", src: postgresql/test_data.sql.j2, dest: /tmp/test_data.sql }
+        - { db: "{{ deploy_mail_server_postgresql.mail_server_database }}", src: postgresql/prepare_postgres.sql.j2, dest: /tmp/prepare_postgres.sql }
+        - { db: "{{ deploy_mail_server_postgresql.mail_server_database }}", src: postgresql/test_data.sql.j2, dest: /tmp/test_data.sql }

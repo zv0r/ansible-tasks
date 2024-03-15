@@ -1,7 +1,7 @@
 ---
 - name: Create semaphore directory
   ansible.builtin.file:
-    path: "{{ semaphore_installation_directory }}"
+    path: "{{ deploy_semaphore_installation_directory }}"
     state: directory
     mode: "0755"
     owner: root
@@ -10,13 +10,13 @@
 - name: Unarchive semaphore installation archive
   ansible.builtin.unarchive:
     src: "{{ semaphore_archive_url }}"
-    dest: "{{ semaphore_installation_directory }}"
+    dest: "{{ deploy_semaphore_installation_directory }}"
     remote_src: true
 
 - name: Create semaphore config file
   ansible.builtin.template:
     src: config.json.j2
-    dest: "{{ semaphore_config_file }}"
+    dest: "{{ deploy_semaphore_config_file }}"
     owner: root
     group: root
     mode: "0644"

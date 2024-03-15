@@ -1,7 +1,7 @@
 ---
-public_ips:
+deploy_mail_server_public_ips:
   - 212.232.41.203
-mail_domains:
+deploy_mail_server_mail_domains:
   - name: corp.yararchive.ru
     server_fqdn: m.corp.yararchive.ru
     cert_fullchain_file: /etc/ssl/certs/m.corp.yararchive.ru_fullchain.cer
@@ -30,11 +30,11 @@ mail_domains:
       - name: smtp.yararchive.ru
         cert_fullchain_file: /etc/ssl/certs/smtp.yararchive.ru_fullchain.cer
         cert_key_file: /etc/ssl/private/smtp.yararchive.ru.key
-postfix:
+deploy_mail_server_postfix:
   myhostname: static-212.232.41.203.yarnet.ru
   message_size_limit: 51943040
   milter_default_action: accept
-dovecot:
+deploy_mail_server_dovecot:
   sieve_after_dir: /etc/dovecot/global/sieve_after
   sieve_dir: /etc/dovecot/global/sieve
   mail_storage_user: vmail
@@ -42,24 +42,24 @@ dovecot:
   mail_storage_uid: 5000
   mail_storage_gid: 5000
   mail_storage_user_home: /var/vmail
-rspamd:
+deploy_mail_server_rspamd:
   dkim_dir: /var/lib/rspamd/dkim
   dkim_id: "{{ ansible_date_time.epoch }}"
-roundcube:
+deploy_mail_server_roundcube:
   server_fqdn: mail.corp.yararchive.ru
   cert_fullchain_file: /etc/ssl/certs/*.corp.yararchive.ru_fullchain.cer
   cert_key_file: /etc/ssl/private/*.corp.yararchive.ru.key
   ldap_addressbooks: "{{ vault.roundcube.ldap_addressbooks }}"
   session_lifetime: 120
-postgresql:
+deploy_mail_server_postgresql:
   host: 127.0.0.1
   port: 5432
   mail_server_database: vmail
   mail_server_user_name: vmail
   mail_server_user_pass: "{{ lookup('ansible.builtin.password', \
-    '/dev/null seed=postgresql.mail_server_user_name chars=ascii_letters,digits length=32') }}"
+    '/dev/null seed=deploy_mail_server_postgresql.mail_server_user_name chars=ascii_letters,digits length=32') }}"
   roundcube_database: roundcube
   roundcube_user_name: roundcube
   roundcube_user_pass: "{{ lookup('ansible.builtin.password', \
-    '/dev/null seed=postgresql.roundcube_user_name chars=ascii_letters,digits length=32') }}"
-dh_params: /etc/ssl/ffdhe4096.pem
+    '/dev/null seed=deploy_mail_server_postgresql.roundcube_user_name chars=ascii_letters,digits length=32') }}"
+deploy_mail_server_dh_params: /etc/ssl/ffdhe4096.pem

@@ -34,8 +34,8 @@
     group: root
     mode: "0755"
   with_items:
-    - "{{ apt_daily_timer_directory }}"
-    - "{{ apt_daily_upgrade_timer_directory }}"
+    - "{{ setup_unattended_upgrades_apt_daily_timer_directory }}"
+    - "{{ setup_unattended_upgrades_apt_daily_upgrade_timer_directory }}"
 
 - name: Override systemd timers settings
   ansible.builtin.template:
@@ -45,8 +45,8 @@
     group: root
     mode: "0644"
   with_items:
-    - { template_file: "apt-daily.timer.j2", override_directory: "{{ apt_daily_timer_directory }}" }
-    - { template_file: "apt-daily-upgrade.timer.j2", override_directory: "{{ apt_daily_upgrade_timer_directory }}" }
+    - { template_file: "apt-daily.timer.j2", override_directory: "{{ setup_unattended_upgrades_apt_daily_timer_directory }}" }
+    - { template_file: "apt-daily-upgrade.timer.j2", override_directory: "{{ setup_unattended_upgrades_apt_daily_upgrade_timer_directory }}" }
 
 - name: Reload systemd daemon
   ansible.builtin.systemd:

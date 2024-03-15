@@ -12,7 +12,7 @@ Unattended-Upgrade::Package-Blacklist {
 Unattended-Upgrade::AutoFixInterruptedDpkg "true";
 Unattended-Upgrade::MinimalSteps "true";
 Unattended-Upgrade::InstallOnShutdown "false";
-Unattended-Upgrade::Mail "{{ unattended_updates_notify_email }}";
+Unattended-Upgrade::Mail "{{ setup_unattended_upgrades_notify_email }}";
 Unattended-Upgrade::MailReport "only-on-error";
 Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
 Unattended-Upgrade::Remove-New-Unused-Dependencies "false";

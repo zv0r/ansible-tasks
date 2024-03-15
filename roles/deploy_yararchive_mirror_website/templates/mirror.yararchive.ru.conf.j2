@@ -25,7 +25,7 @@ server {
   chunked_transfer_encoding on;
 
   location / {
-    root {{ yararchive_mirror_website_directory }};
+    root {{ deploy_yararchive_mirror_website_directory }};
     try_files $uri $uri/ =404;
     autoindex on;
     autoindex_localtime on;

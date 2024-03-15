@@ -1,5 +1,5 @@
 -- passwords are alice123, bob123, carl123, tech123
-{% for mail_domain in mail_domains %}
+{% for mail_domain in deploy_mail_server_mail_domains %}
 INSERT INTO users (local, domain, password_hash, quota_bytes) VALUES
 ('tech','{{ mail_domain.name }}','$argon2id$v=19$m=16,t=2,p=1$T0lZZ2Q4ZGZnaA$Ih9I537tvyQIEcBr+T3TkrY7z3R8XQ', 10737418240)
 ON CONFLICT DO NOTHING;

@@ -1,7 +1,7 @@
 ---
 - name: Create perl modules directory
   ansible.builtin.file:
-    path: "{{ perl_modules_directory }}"
+    path: "{{ deploy_yararchive_website_perl_modules_directory }}"
     state: directory
     owner: root
     group: root
@@ -9,8 +9,8 @@
 
 - name: Create perl modules links
   ansible.builtin.file:
-    src: "{{ yararchive_cman_directory }}/{{ item }}"
-    dest: "{{ perl_modules_directory }}/{{ item }}"
+    src: "{{ deploy_yararchive_website_cman_directory }}/{{ item }}"
+    dest: "{{ deploy_yararchive_website_perl_modules_directory }}/{{ item }}"
     owner: root
     group: root
     state: link

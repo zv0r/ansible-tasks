@@ -1,11 +1,11 @@
 {
     "Control-agent": {
         "http-host": "{{ ansible_default_ipv4.address }}",
-        "http-port": {{ kea_ctrl_agent_port }},
+        "http-port": {{ setup_kea_dhcp4_server_ctrl_agent_port }},
         "control-sockets": {
             "dhcp4": {
                 "socket-type": "unix",
-                "socket-name": "{{ kea_dhcp4_socket_name }}"
+                "socket-name": "{{ setup_kea_dhcp4_server_socket_name }}"
             },
             "dhcp6": {
                 "socket-type": "unix",

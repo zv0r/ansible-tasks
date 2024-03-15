@@ -12,11 +12,11 @@
   ansible.builtin.include_role:
     name: setup_nginx_reverse_proxy
   vars:
-    template_file_name: semaphore.conf.j2
-    nginx_server_config_file_name: semaphore.conf
-    nginx_server_listen_port: 443
+    setup_nginx_reverse_proxy_template_file: semaphore.conf.j2
+    setup_nginx_reverse_proxy_config_file: semaphore.conf
+    setup_nginx_reverse_proxy_listen_port: 443
 
 - name: Delete installation archive file
   ansible.builtin.file:
-    path: "{{ semaphore_archive_dest }}"
+    path: "{{ deploy_semaphore_archive_dest }}"
     state: absent

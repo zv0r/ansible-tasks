@@ -1,13 +1,13 @@
                             "peers": [
                                 {
                                     "name": "cdnidc01",
-                                    "url": "http://172.17.50.1:{{ kea_ctrl_agent_port }}/",
+                                    "url": "http://172.17.50.1:{{ setup_kea_dhcp4_server_ctrl_agent_port }}/",
                                     "role": "primary",
                                     "auto-failover": true
                                 },
                                 {
                                     "name": "cdnidc02",
-                                    "url": "http://172.17.50.100:{{ kea_ctrl_agent_port }}/",
+                                    "url": "http://172.17.50.100:{{ setup_kea_dhcp4_server_ctrl_agent_port }}/",
                                     "role": "standby",
                                     "auto-failover": true
                                 }

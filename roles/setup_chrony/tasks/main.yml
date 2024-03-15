@@ -8,7 +8,7 @@
 - name: Put config in the chrony directory
   ansible.builtin.template:
     src: chrony.conf.j2
-    dest: "{{ chrony_directory }}/chrony.conf"
+    dest: "{{ setup_chrony_directory }}/chrony.conf"
     owner: root
     group: root
     mode: "0644"

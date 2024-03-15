@@ -1,15 +1,15 @@
 ---
 - name: Ensure group for systemd service user
   ansible.builtin.group:
-    name: "{{ semaphore_service_group }}"
+    name: "{{ deploy_semaphore_service_group }}"
     state: present
 
 - name: Add the user for systemd service
   ansible.builtin.user:
-    name: "{{ semaphore_service_user }}"
+    name: "{{ deploy_semaphore_service_user }}"
     comment: Ansible Semaphore user
-    group: "{{ semaphore_service_group }}"
-    home: "{{ semaphore_service_user_home }}"
+    group: "{{ deploy_semaphore_service_group }}"
+    home: "{{ deploy_semaphore_service_user_home }}"
     create_home: true
     shell: /bin/false
     state: present
@@ -31,4 +31,4 @@
 
 - name: Wait for webapp start
   ansible.builtin.wait_for:
-    port: "{{ semaphore_webapp_port }}"
+    port: "{{ deploy_semaphore_webapp_port }}"

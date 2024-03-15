@@ -1,13 +1,13 @@
 ---
-kea_directory: /etc/kea
-kea_service_user: _kea
-kea_service_group: _kea
-kea_ctrl_agent_port: 8000
-kerberos_keytab_user: dhcpduser
-kerberos_keytab_file: "{{ kea_directory }}/libdhcp_run_script.keytab"
-kea_dhcp4_socket_name: /run/kea/kea4-ctrl-socket
-libdhcp_run_script_sh_file: "{{ kea_directory }}/libdhcp_run_script.sh"
-kea_ctrl_agent_ufw_alowed_addresses:
+setup_kea_dhcp4_server_directory: /etc/kea
+setup_kea_dhcp4_server_service_user: _kea
+setup_kea_dhcp4_server_service_group: _kea
+setup_kea_dhcp4_server_kerberos_keytab_user: dhcpduser
+setup_kea_dhcp4_server_kerberos_keytab_file: "{{ setup_kea_dhcp4_server_directory }}/libdhcp_run_script.keytab"
+setup_kea_dhcp4_server_socket_name: /run/kea/kea4-ctrl-socket
+setup_kea_dhcp4_server_libdhcp_run_script_sh_file: "{{ setup_kea_dhcp4_server_directory }}/libdhcp_run_script.sh"
+setup_kea_dhcp4_server_ctrl_agent_port: 8000
+setup_kea_dhcp4_server_ctrl_agent_ufw_alowed_addresses:
   gayodc01.corp.yararchive.ru:
     - 172.16.50.100
   gayodc02.corp.yararchive.ru:

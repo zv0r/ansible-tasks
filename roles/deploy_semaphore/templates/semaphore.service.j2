@@ -5,13 +5,13 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User={{ semaphore_service_user }}
-Group={{ semaphore_service_group }}
+User={{ deploy_semaphore_service_user }}
+Group={{ deploy_semaphore_service_group }}
 Restart=on-failure
 RestartSec=60
 Type=simple
 ExecReload=/bin/kill -HUP $MAINPID
-ExecStart={{ semaphore_installation_directory }}/semaphore service --config={{ semaphore_config_file }}
+ExecStart={{ deploy_semaphore_installation_directory }}/semaphore service --config={{ deploy_semaphore_config_file }}
 SyslogIdentifier=semaphore
 
 [Install]

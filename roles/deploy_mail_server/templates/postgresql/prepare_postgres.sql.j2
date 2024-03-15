@@ -17,7 +17,7 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS domains (
-    domain domain_part PRIMARY KEY -- e.g. {{ mail_domains[0].name }}
+    domain domain_part PRIMARY KEY -- e.g. {{ deploy_mail_server_mail_domains[0].name }}
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -48,37 +48,37 @@ CREATE TABLE IF NOT EXISTS aliases (
 );
 
 CREATE OR REPLACE VIEW users_fqda AS
-    -- fqda = Fully qualified domain address, e.g. alice@{{ mail_domains[0].name }}
+    -- fqda = Fully qualified domain address, e.g. alice@{{ deploy_mail_server_mail_domains[0].name }}
     SELECT users.local || '@' || domains.domain AS "fqda", users.password_hash, users.display_name, users.quota_bytes, users.enabled, users.send_only
     FROM users, domains
     WHERE users.domain = domains.domain;
 
 CREATE OR REPLACE VIEW aliases_fqda AS
-    -- fqda = Fully qualified domain address,  e.g. alice@{{ mail_domains[0].name }}
+    -- fqda = Fully qualified domain address,  e.g. alice@{{ deploy_mail_server_mail_domains[0].name }}
     SELECT source_local || '@' || source_domain AS "source_fqda",
     destination_local || '@' || destination_domain AS "destination_fqda"
     FROM aliases;
 
 DO $$ BEGIN
-  CREATE ROLE {{ postgresql.mail_server_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.mail_server_user_pass }}';
+  CREATE ROLE {{ deploy_mail_server_postgresql.mail_server_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ deploy_mail_server_postgresql.mail_server_user_pass }}';
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
 
-GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.mail_server_user_name }};
-GRANT SELECT ON domains, users, aliases, users_fqda, aliases_fqda TO {{ postgresql.mail_server_user_name }};
+GRANT CONNECT ON DATABASE {{ deploy_mail_server_postgresql.mail_server_database }} TO {{ deploy_mail_server_postgresql.mail_server_user_name }};
+GRANT SELECT ON domains, users, aliases, users_fqda, aliases_fqda TO {{ deploy_mail_server_postgresql.mail_server_user_name }};
 
 DO $$ BEGIN
-  CREATE ROLE {{ postgresql.roundcube_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ postgresql.roundcube_user_pass }}';
+  CREATE ROLE {{ deploy_mail_server_postgresql.roundcube_user_name }} WITH LOGIN ENCRYPTED PASSWORD '{{ deploy_mail_server_postgresql.roundcube_user_pass }}';
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
 
-GRANT CONNECT ON DATABASE {{ postgresql.mail_server_database }} TO {{ postgresql.roundcube_user_name }};
-GRANT SELECT, INSERT, DELETE ON users TO {{ postgresql.roundcube_user_name }};
-GRANT SELECT ON domains, users_fqda, aliases_fqda TO {{ postgresql.roundcube_user_name }};
-GRANT UPDATE (password_hash, display_name) ON users TO {{ postgresql.roundcube_user_name }};
+GRANT CONNECT ON DATABASE {{ deploy_mail_server_postgresql.mail_server_database }} TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT SELECT, INSERT, DELETE ON users TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT SELECT ON domains, users_fqda, aliases_fqda TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
+GRANT UPDATE (password_hash, display_name) ON users TO {{ deploy_mail_server_postgresql.roundcube_user_name }};
 
-{% for mail_domain in mail_domains %}
+{% for mail_domain in deploy_mail_server_mail_domains %}
 INSERT INTO domains (domain) VALUES ('{{ mail_domain.name }}') ON CONFLICT DO NOTHING;
 {% endfor %}

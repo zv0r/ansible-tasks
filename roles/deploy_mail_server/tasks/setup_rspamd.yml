@@ -53,25 +53,25 @@
   ansible.builtin.file:
     state: directory
     path: "{{ item }}"
-    owner: "{{ dovecot.mail_storage_user }}"
-    group: "{{ dovecot.mail_storage_group }}"
+    owner: "{{ deploy_mail_server_dovecot.mail_storage_user }}"
+    group: "{{ deploy_mail_server_dovecot.mail_storage_group }}"
     mode: "0755"
   with_items:
-    - "{{ dovecot.sieve_after_dir }}"
-    - "{{ dovecot.sieve_dir }}"
+    - "{{ deploy_mail_server_dovecot.sieve_after_dir }}"
+    - "{{ deploy_mail_server_dovecot.sieve_dir }}"
 
 - name: Copy spam-to-folder sieve script
   ansible.builtin.copy:
     src: rspamd/spam-to-folder.sieve
-    dest: "{{ [dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
+    dest: "{{ [deploy_mail_server_dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
     mode: "0644"
 
 - name: Copy learm spam and ham sieve scripts
   ansible.builtin.copy:
     src: "rspamd/{{ item }}"
-    dest: "{{ [dovecot.sieve_dir, item] | ansible.builtin.path_join }}"
-    owner: "{{ dovecot.mail_storage_user }}"
-    group: "{{ dovecot.mail_storage_group }}"
+    dest: "{{ [deploy_mail_server_dovecot.sieve_dir, item] | ansible.builtin.path_join }}"
+    owner: "{{ deploy_mail_server_dovecot.mail_storage_user }}"
+    group: "{{ deploy_mail_server_dovecot.mail_storage_group }}"
     mode: "{{ (item | splitext | last == '.sh') | ternary('0755', '0644') }}"
   with_items:
     - learn-spam.sieve
@@ -96,14 +96,14 @@
   changed_when: true
   notify: Restart Dovecot
   with_items:
-    - "{{ [dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
-    - "{{ [dovecot.sieve_dir, 'learn-ham.sieve'] | ansible.builtin.path_join }}"
-    - "{{ [dovecot.sieve_dir, 'learn-spam.sieve'] | ansible.builtin.path_join }}"
+    - "{{ [deploy_mail_server_dovecot.sieve_after_dir, 'spam-to-folder.sieve'] | ansible.builtin.path_join }}"
+    - "{{ [deploy_mail_server_dovecot.sieve_dir, 'learn-ham.sieve'] | ansible.builtin.path_join }}"
+    - "{{ [deploy_mail_server_dovecot.sieve_dir, 'learn-spam.sieve'] | ansible.builtin.path_join }}"
 
 - name: Create directory for DKIM signatures
   ansible.builtin.file:
     state: directory
-    path: "{{ rspamd.dkim_dir }}"
+    path: "{{ deploy_mail_server_rspamd.dkim_dir }}"
     owner: "_rspamd"
     group: "_rspamd"
     mode: "0770"
@@ -111,7 +111,7 @@
 - name: Generate DKIM signatures
   ansible.builtin.include_tasks: generate_dkim.yml
   when: skip_dkim_gen is not defined
-  loop: "{{ mail_domains }}"
+  loop: "{{ deploy_mail_server_mail_domains }}"
   loop_control:
     loop_var: mail_domain
 
@@ -143,7 +143,7 @@
 - name: Fix DKIM directory and conating files permissions
   ansible.builtin.file:
     state: directory
-    path: "{{ rspamd.dkim_dir }}"
+    path: "{{ deploy_mail_server_rspamd.dkim_dir }}"
     owner: _rspamd
     group: _rspamd
     mode: "{{ item.mode }}"

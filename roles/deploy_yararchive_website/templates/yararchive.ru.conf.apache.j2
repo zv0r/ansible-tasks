@@ -1,9 +1,9 @@
-<VirtualHost 127.0.0.1:{{ apache_server_port }}>
-  DocumentRoot {{ yararchive_website_directory }}
+<VirtualHost 127.0.0.1:{{ deploy_yararchive_website_apache_server_port }}>
+  DocumentRoot {{ deploy_yararchive_website_directory }}
 
   SuexecUserGroup {{ ansible_user }} {{ ansible_user }}
 
-  <Directory {{ yararchive_website_directory }}>
+  <Directory {{ deploy_yararchive_website_directory }}>
     Options +FollowSymLinks
     AllowOverride All
     AddType text/html .shtml
@@ -13,7 +13,7 @@
     Require all granted
   </Directory>
 
-  <Directory {{ yararchive_fcgi_directory }}>
+  <Directory {{ deploy_yararchive_website_fcgi_directory }}>
     AddHandler fcgid-script fcg fcgi fpl cgi
     AllowOverride All
     Options ExecCGI FollowSymLinks

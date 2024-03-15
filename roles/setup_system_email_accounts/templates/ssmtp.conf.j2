@@ -1,11 +1,11 @@
-root={{ email_username }}
-Mailhub={{ email_host }}:{{ email_port }}
-RewriteDomain={{ ssmtp_rewrite_domain }}
+root={{ setup_system_email_accounts_username }}
+Mailhub={{ setup_system_email_accounts_host }}:{{ setup_system_email_accounts_port }}
+RewriteDomain={{ setup_system_email_accounts_ssmtp_rewrite_domain }}
 Hostname={{ inventory_hostname }}
 FromLineOverride=YES
 UseTLS=YES
 TLS_CA_File=/etc/ssl/certs/ca-certificates.crt
 TLS_CA_Dir=/etc/ssl/certs
-AuthUser={{ email_username }}
-AuthPass={{ email_password }}
+AuthUser={{ setup_system_email_accounts_username }}
+AuthPass={{ setup_system_email_accounts_password }}
 AuthMethod=LOGIN

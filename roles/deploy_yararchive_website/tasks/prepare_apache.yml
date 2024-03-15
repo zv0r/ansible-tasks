@@ -1,7 +1,7 @@
 ---
 - name: Prepare website directory
   ansible.builtin.file:
-    path: "{{ yararchive_website_directory }}"
+    path: "{{ deploy_yararchive_website_directory }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "0755"

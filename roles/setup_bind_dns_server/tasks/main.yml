@@ -8,7 +8,7 @@
 - name: Put yararchive.ru zone config in the bind directory
   ansible.builtin.template:
     src: db.yararchive.ru.j2
-    dest: "{{ bind_directory }}/db.yararchive.ru"
+    dest: "{{ setup_bind_dns_server_directory }}/db.yararchive.ru"
     owner: root
     group: root
     mode: "0644"
@@ -16,7 +16,7 @@
 - name: Put local config in the bind directory
   ansible.builtin.template:
     src: named.conf.local.j2
-    dest: "{{ bind_directory }}/named.conf.local"
+    dest: "{{ setup_bind_dns_server_directory }}/named.conf.local"
     owner: root
     group: root
     mode: "0644"
@@ -24,7 +24,7 @@
 - name: Put options config in the bind directory
   ansible.builtin.template:
     src: named.conf.options.j2
-    dest: "{{ bind_directory }}/named.conf.options"
+    dest: "{{ setup_bind_dns_server_directory }}/named.conf.options"
     owner: root
     group: root
     mode: "0644"

@@ -1,5 +1,5 @@
 zone "yararchive.ru" {
     type master;
     allow-update { none; };
-    file "{{ bind_directory }}/db.yararchive.ru";
+    file "{{ setup_bind_dns_server_directory }}/db.yararchive.ru";
 };

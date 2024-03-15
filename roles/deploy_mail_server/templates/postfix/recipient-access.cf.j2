@@ -1,5 +1,5 @@
-user = {{ postgresql.mail_server_user_name }}
-password = {{ postgresql.mail_server_user_pass }}
-hosts = {{ postgresql.host }}:{{ postgresql.port }}
-dbname = {{ postgresql.mail_server_database }}
+user = {{ deploy_mail_server_postgresql.mail_server_user_name }}
+password = {{ deploy_mail_server_postgresql.mail_server_user_pass }}
+hosts = {{ deploy_mail_server_postgresql.host }}:{{ deploy_mail_server_postgresql.port }}
+dbname = {{ deploy_mail_server_postgresql.mail_server_database }}
 query = SELECT CASE WHEN (send_only = true) THEN 'REJECT' ELSE 'OK' END AS access FROM users WHERE local = '%u' AND domain = '%d' AND enabled = true LIMIT 1;

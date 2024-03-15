@@ -1,5 +1,5 @@
 ---
-samba_tls_directory: /var/lib/samba/private/tls
-samba_tls_ca: "{{ samba_tls_directory }}/ca.pem"
-samba_tls_cert: "{{ samba_tls_directory }}/cert.pem"
-samba_tls_key: "{{ samba_tls_directory }}/key.pem"
+update_samba_tls_keys_directory: /var/lib/samba/private/tls
+update_samba_tls_keys_ca: "{{ update_samba_tls_keys_directory }}/ca.pem"
+update_samba_tls_keys_cert: "{{ update_samba_tls_keys_directory }}/cert.pem"
+update_samba_tls_keys_key: "{{ update_samba_tls_keys_directory }}/key.pem"

@@ -15,24 +15,24 @@
 
 - name: Create group for mail storage directories
   ansible.builtin.group:
-    name: "{{ dovecot.mail_storage_group }}"
+    name: "{{ deploy_mail_server_dovecot.mail_storage_group }}"
     state: present
-    gid: "{{ dovecot.mail_storage_gid }}"
+    gid: "{{ deploy_mail_server_dovecot.mail_storage_gid }}"
 
 - name: Create user for mail storage directories
   ansible.builtin.user:
-    name: "{{ dovecot.mail_storage_user }}"
-    uid: "{{ dovecot.mail_storage_uid }}"
+    name: "{{ deploy_mail_server_dovecot.mail_storage_user }}"
+    uid: "{{ deploy_mail_server_dovecot.mail_storage_uid }}"
     shell: /usr/sbin/nologin
-    home: "{{ dovecot.mail_storage_user_home }}"
-    group: "{{ dovecot.mail_storage_group }}"
+    home: "{{ deploy_mail_server_dovecot.mail_storage_user_home }}"
+    group: "{{ deploy_mail_server_dovecot.mail_storage_group }}"
 
 - name: Set ownership for mail storage directory
   ansible.builtin.file:
     state: directory
-    owner: "{{ dovecot.mail_storage_user }}"
-    group: "{{ dovecot.mail_storage_group }}"
-    path: "{{ dovecot.mail_storage_user_home }}"
+    owner: "{{ deploy_mail_server_dovecot.mail_storage_user }}"
+    group: "{{ deploy_mail_server_dovecot.mail_storage_group }}"
+    path: "{{ deploy_mail_server_dovecot.mail_storage_user_home }}"
     mode: "0770"
     recurse: true
 

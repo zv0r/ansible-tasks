@@ -1,12 +1,12 @@
 ---
 - name: "Set key file for {{ mail_domain.name }}"
   ansible.builtin.set_fact:
-    dkim_key_file: "{{ [rspamd.dkim_dir, rspamd.dkim_id + '.' + mail_domain.name + '.key'] | ansible.builtin.path_join }}"
+    dkim_key_file: "{{ [deploy_mail_server_rspamd.dkim_dir, deploy_mail_server_rspamd.dkim_id + '.' + mail_domain.name + '.key'] | ansible.builtin.path_join }}"
 
 - name: "Generate DKIM for {{ mail_domain.name }}"
   ansible.builtin.command: "rspamadm dkim_keygen \
     -d {{ mail_domain.name }} \
-    -s {{ rspamd.dkim_id }} \
+    -s {{ deploy_mail_server_rspamd.dkim_id }} \
     -k {{ dkim_key_file | ansible.builtin.quote }}"
   failed_when: false
   changed_when: true

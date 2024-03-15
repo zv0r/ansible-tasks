@@ -1,13 +1,13 @@
 ---
-semaphore_service_user: "_ansiblesemaphore"
-semaphore_service_group: "{{ semaphore_service_user }}"
-semaphore_service_user_home: "/var/lib/ansiblesemaphore"
-semaphore_installation_directory: "/etc/semaphore"
-semaphore_config_file: "{{ semaphore_installation_directory }}/config.json"
-semaphore_archive_dest: "/tmp/semaphore.tar.gz"
-semaphore_db_dialect: bolt # bolt|mysql|postgres
-semaphore_db_bolt_path: "{{ semaphore_service_user_home }}/db.bolt"
-semaphore_webapp_port: 3000
-semaphore_cookie_hash: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
-semaphore_cookie_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
-semaphore_key_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
+deploy_semaphore_service_user: "_ansiblesemaphore"
+deploy_semaphore_service_group: "{{ deploy_semaphore_service_user }}"
+deploy_semaphore_service_user_home: "/var/lib/ansiblesemaphore"
+deploy_semaphore_installation_directory: "/etc/semaphore"
+deploy_semaphore_config_file: "{{ deploy_semaphore_installation_directory }}/config.json"
+deploy_semaphore_archive_dest: "/tmp/semaphore.tar.gz"
+deploy_semaphore_db_dialect: bolt # bolt|mysql|postgres
+deploy_semaphore_db_bolt_path: "{{ deploy_semaphore_service_user_home }}/db.bolt"
+deploy_semaphore_webapp_port: 3000
+deploy_semaphore_cookie_hash: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
+deploy_semaphore_cookie_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"
+deploy_semaphore_key_encryption: "{{ lookup('ansible.builtin.pipe', 'head -c32 /dev/urandom | base64') }}"

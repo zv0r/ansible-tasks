@@ -7,7 +7,7 @@
                 "options": null
         },
         "bolt": {
-                "host": "{{ semaphore_db_bolt_path | default('') }}"
+                "host": "{{ deploy_semaphore_db_bolt_path | default('') }}"
         },
         "postgres": {
                 "host": "{{ semaphore_db_postgres_host | default('') }}:{{ semaphore_db_postgres_port | default('') }}",
@@ -16,18 +16,18 @@
                 "name": "{{ semaphore_db_postgres_name | default('') }}",
                 "options": null
         },
-        "dialect": "{{ semaphore_db_dialect }}",
-        "port": "{{ semaphore_webapp_port }}",
+        "dialect": "{{ deploy_semaphore_db_dialect }}",
+        "port": "{{ deploy_semaphore_webapp_port }}",
         "interface": "",
         "tmp_path": "/tmp/semaphore",
-        "cookie_hash": "{{ semaphore_cookie_hash }}",
-        "cookie_encryption": "{{ semaphore_cookie_encryption }}",
-        "access_key_encryption": "{{ semaphore_key_encryption }}",
-        "email_sender": "{{ semaphore_email_sender }}",
-        "email_host": "{{ semaphore_email_host }}",
-        "email_port": "{{ semaphore_email_port }}",
-        "email_username": "{{ semaphore_email_username }}",
-        "email_password": "{{ semaphore_email_password }}",
+        "cookie_hash": "{{ deploy_semaphore_cookie_hash }}",
+        "cookie_encryption": "{{ deploy_semaphore_cookie_encryption }}",
+        "access_key_encryption": "{{ deploy_semaphore_key_encryption }}",
+        "email_sender": "{{ deploy_semaphore_email_sender }}",
+        "email_host": "{{ deploy_semaphore_email_host }}",
+        "email_port": "{{ deploy_semaphore_email_port }}",
+        "email_username": "{{ deploy_semaphore_email_username }}",
+        "email_password": "{{ deploy_semaphore_email_password }}",
         "web_host": "https://{{ ansible_fqdn }}",
         "ldap_binddn": "",
         "ldap_bindpassword": "",

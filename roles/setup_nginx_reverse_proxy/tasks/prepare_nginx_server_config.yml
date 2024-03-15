@@ -3,16 +3,16 @@
   block:
     - name: Create nginx website config
       ansible.builtin.template:
-        src: "{{ template_file_name }}"
-        dest: "/etc/nginx/sites-available/{{ nginx_server_config_file_name }}"
+        src: "{{ setup_nginx_reverse_proxy_template_file }}"
+        dest: "/etc/nginx/sites-available/{{ setup_nginx_reverse_proxy_config_file }}"
         owner: root
         group: root
         mode: "0644"
 
     - name: Create a symbolic link for nginx website config
       ansible.builtin.file:
-        src: "/etc/nginx/sites-available/{{ nginx_server_config_file_name }}"
-        dest: "/etc/nginx/sites-enabled/{{ nginx_server_config_file_name }}"
+        src: "/etc/nginx/sites-available/{{ setup_nginx_reverse_proxy_config_file }}"
+        dest: "/etc/nginx/sites-enabled/{{ setup_nginx_reverse_proxy_config_file }}"
         owner: root
         group: root
         state: link

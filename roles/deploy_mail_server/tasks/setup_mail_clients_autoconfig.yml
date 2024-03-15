@@ -9,6 +9,6 @@
   ansible.builtin.include_tasks: local_vhosts_configs.yml
   vars:
     template_local_config: true
-  loop: "{{ mail_domains }}"
+  loop: "{{ deploy_mail_server_mail_domains }}"
   loop_control:
     loop_var: mail_domain

@@ -1,3 +1,3 @@
 ---
-yararchive_mirror_website_directory: /var/www/mirror.yararchive.ru
-fstab_mount_source: gayostorage02.corp.yararchive.ru:/mirror
+deploy_yararchive_mirror_website_directory: /var/www/mirror.yararchive.ru
+deploy_yararchive_mirror_website_fstab_mount_source: gayostorage02.corp.yararchive.ru:/mirror

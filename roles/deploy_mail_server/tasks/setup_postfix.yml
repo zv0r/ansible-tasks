@@ -15,13 +15,13 @@
   ansible.builtin.command: "postconf {{ item.key }}={{ item.value | quote }}"
   failed_when: false
   changed_when: true
-  with_items: "{{ postfix | ansible.builtin.dict2items }}"
+  with_items: "{{ deploy_mail_server_postfix | ansible.builtin.dict2items }}"
 
 - name: Set proxy_interfaces if pulic IP's list is defined
-  ansible.builtin.command: "postconf proxy_interfaces={{ public_ips | join(', ') | quote }}"
+  ansible.builtin.command: "postconf proxy_interfaces={{ deploy_mail_server_public_ips | join(', ') | quote }}"
   failed_when: false
   changed_when: true
-  when: public_ips is defined
+  when: deploy_mail_server_public_ips is defined
   notify: Restart Postfix
 
 - name: Set SSL certs for domains
@@ -38,7 +38,7 @@
   notify: Restart Postfix
 
 - name: Set default cert
-  ansible.builtin.command: "postconf smtpd_tls_chain_files={{ [mail_domains[0].cert_key_file, mail_domains[0].cert_fullchain_file] | join(', ') | quote }}"
+  ansible.builtin.command: "postconf smtpd_tls_chain_files={{ [deploy_mail_server_mail_domains[0].cert_key_file, deploy_mail_server_mail_domains[0].cert_fullchain_file] | join(', ') | quote }}"
   failed_when: false
   changed_when: true
   notify: Restart Postfix
@@ -59,8 +59,8 @@
     - smtpd_tls_security_level=may
     - smtpd_tls_auth_only=yes
     - smtp_tls_security_level=may
-    - "smtpd_tls_cert_file={{ mail_domains[0].cert_fullchain_file }}"
-    - "smtpd_tls_key_file={{ mail_domains[0].cert_key_file }}"
+    - "smtpd_tls_cert_file={{ deploy_mail_server_mail_domains[0].cert_fullchain_file }}"
+    - "smtpd_tls_key_file={{ deploy_mail_server_mail_domains[0].cert_key_file }}"
     - "message_size_limit={{ message_size_limit }}"
     - inet_interfaces=all
     - recipient_delimiter=+
@@ -100,10 +100,10 @@
 - name: Set users, aliases, domains data backends
   ansible.builtin.include_tasks: set_postfix_data_backends.yml
   with_items:
-    - { map: virtual_mailbox_domains, test_data: "{{ mail_domains[0].name }}", res: "1" }
-    - { map: virtual_mailbox_maps, test_data: "tech@{{ mail_domains[0].name }}", res: "1" }
-    - { map: virtual_alias_maps, test_data: "postmaster@{{ mail_domains[0].name }}", res: "tech@{{ mail_domains[0].name }}" }
-    - { map: smtpd_sender_login_maps, test_data: "postmaster@{{ mail_domains[0].name }}", res: "tech@{{ mail_domains[0].name }}" }
+    - { map: virtual_mailbox_domains, test_data: "{{ deploy_mail_server_mail_domains[0].name }}", res: "1" }
+    - { map: virtual_mailbox_maps, test_data: "tech@{{ deploy_mail_server_mail_domains[0].name }}", res: "1" }
+    - { map: virtual_alias_maps, test_data: "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
+    - { map: smtpd_sender_login_maps, test_data: "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
 
 - name: Enable submission in master.cf
   ansible.builtin.command: >-

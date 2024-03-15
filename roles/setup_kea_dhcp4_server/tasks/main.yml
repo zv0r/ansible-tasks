@@ -44,12 +44,12 @@
     rule: allow
     name: kea ctrl agent
     src: "{{ item }}"
-  with_items: "{{ kea_ctrl_agent_ufw_alowed_addresses[inventory_hostname] }}"
+  with_items: "{{ setup_kea_dhcp4_server_ctrl_agent_ufw_alowed_addresses[inventory_hostname] }}"
 
 - name: Put libdhcp_run_script.conf config in kea directory
   ansible.builtin.template:
     src: libdhcp_run_script.conf.j2
-    dest: "{{ kea_directory }}/libdhcp_run_script.conf"
+    dest: "{{ setup_kea_dhcp4_server_directory }}/libdhcp_run_script.conf"
     owner: root
     group: root
     mode: "0644"
@@ -60,23 +60,23 @@
       - "/usr/bin/samba-tool"
       - "domain"
       - "exportkeytab"
-      - "--principal={{ kerberos_keytab_user }}@{{ ansible_domain | upper }}"
-      - "{{ kerberos_keytab_file }}"
+      - "--principal={{ setup_kea_dhcp4_server_kerberos_keytab_user }}@{{ ansible_domain | upper }}"
+      - "{{ setup_kea_dhcp4_server_kerberos_keytab_file }}"
   register: samba_tool_output
   changed_when: samba_tool_output.rc != 0
   failed_when: samba_tool_output.rc != 0
 
 - name: Set chmod to the keytab file
   ansible.builtin.file:
-    path: "{{ kerberos_keytab_file }}"
+    path: "{{ setup_kea_dhcp4_server_kerberos_keytab_file }}"
     mode: "0400"
-    owner: "{{ kea_service_user }}"
-    group: "{{ kea_service_group }}"
+    owner: "{{ setup_kea_dhcp4_server_service_user }}"
+    group: "{{ setup_kea_dhcp4_server_service_group }}"
 
 - name: Put libdhcp_run_script.sh config in kea directory
   ansible.builtin.template:
     src: libdhcp_run_script.sh.j2
-    dest: "{{ libdhcp_run_script_sh_file }}"
+    dest: "{{ setup_kea_dhcp4_server_libdhcp_run_script_sh_file }}"
     owner: root
     group: root
     mode: "0755"
@@ -84,7 +84,7 @@
 - name: Put samba-dnsupdate.sh config in kea directory
   ansible.builtin.template:
     src: samba-dnsupdate.sh.j2
-    dest: "{{ kea_directory }}/samba-dnsupdate.sh"
+    dest: "{{ setup_kea_dhcp4_server_directory }}/samba-dnsupdate.sh"
     owner: root
     group: root
     mode: "0755"
@@ -92,7 +92,7 @@
 - name: Put kea-ctrl-agent.conf config in kea directory
   ansible.builtin.template:
     src: kea-ctrl-agent.conf.j2
-    dest: "{{ kea_directory }}/kea-ctrl-agent.conf"
+    dest: "{{ setup_kea_dhcp4_server_directory }}/kea-ctrl-agent.conf"
     owner: root
     group: root
     mode: "0644"
@@ -100,7 +100,7 @@
 - name: Put kea-dhcp4-reservations.conf config in kea directory
   ansible.builtin.template:
     src: "{{ inventory_hostname }}/kea-dhcp4-reservations.conf.j2"
-    dest: "{{ kea_directory }}/kea-dhcp4-reservations.conf"
+    dest: "{{ setup_kea_dhcp4_server_directory }}/kea-dhcp4-reservations.conf"
     owner: root
     group: root
     mode: "0644"
@@ -108,7 +108,7 @@
 - name: Put kea-dhcp4.conf config in kea directory
   ansible.builtin.template:
     src: "kea-dhcp4.conf.j2"
-    dest: "{{ kea_directory }}/kea-dhcp4.conf"
+    dest: "{{ setup_kea_dhcp4_server_directory }}/kea-dhcp4.conf"
     owner: root
     group: root
     mode: "0644"

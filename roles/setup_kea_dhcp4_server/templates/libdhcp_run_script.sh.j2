@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. {{ kea_directory }}/libdhcp_run_script.conf || exit 1
+. {{ setup_kea_dhcp4_server_directory }}/libdhcp_run_script.conf || exit 1
 . /etc/environment || exit 1
 
 HNAME=`echo "${LEASE4_HOSTNAME}" | sed "s/\..*$//"`
@@ -27,5 +27,5 @@ if [ -n "$1" ] && [ -n "${HNAME}" ] && [ -n "${LEASE_ADDRESS}" ]; then
     IP=$LEASE_ADDRESS
     export PATH KRB5CC KEYTAB DOMAIN REALM PRINCIPAL NAMESERVER ZONE ACTION IP HNAME
 
-    {{ kea_directory }}/samba-dnsupdate.sh -m &
+    {{ setup_kea_dhcp4_server_directory }}/samba-dnsupdate.sh -m &
 fi

@@ -1,13 +1,13 @@
 <VirtualHost *:443>
-    ServerName {{ roundcube.server_fqdn }}
+    ServerName {{ deploy_mail_server_roundcube.server_fqdn }}
     DocumentRoot /var/lib/roundcube/public_html
     Include /etc/roundcube/apache.conf
     SSLEngine on
-    SSLCertificateFile {{ roundcube.cert_fullchain_file }}
-    SSLCertificateKeyFile {{ roundcube.cert_key_file }}
+    SSLCertificateFile {{ deploy_mail_server_roundcube.cert_fullchain_file }}
+    SSLCertificateKeyFile {{ deploy_mail_server_roundcube.cert_key_file }}
 </VirtualHost>
 
 <VirtualHost *:80>
-    ServerName {{ roundcube.server_fqdn }}
-    Redirect permanent / https://{{ roundcube.server_fqdn }}/
+    ServerName {{ deploy_mail_server_roundcube.server_fqdn }}
+    Redirect permanent / https://{{ deploy_mail_server_roundcube.server_fqdn }}/
 </VirtualHost>

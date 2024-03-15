@@ -1,2 +1,2 @@
 ---
-bind_directory: "/etc/bind"
+setup_bind_dns_server_directory: "/etc/bind"

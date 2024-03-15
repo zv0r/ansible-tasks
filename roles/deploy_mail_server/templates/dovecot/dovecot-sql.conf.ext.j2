@@ -1,17 +1,17 @@
 driver = pgsql
 default_pass_scheme = ARGON2ID
 connect = \
-  host={{ postgresql.host }} \
-  port={{ postgresql.port }} \
-  dbname={{ postgresql.mail_server_database }} \
-  user={{ postgresql.mail_server_user_name }} \
-  password={{ postgresql.mail_server_user_pass }}
+  host={{ deploy_mail_server_postgresql.host }} \
+  port={{ deploy_mail_server_postgresql.port }} \
+  dbname={{ deploy_mail_server_postgresql.mail_server_database }} \
+  user={{ deploy_mail_server_postgresql.mail_server_user_name }} \
+  password={{ deploy_mail_server_postgresql.mail_server_user_pass }}
 
 user_query = SELECT fqda as user, \
   '*:bytes=' || quota_bytes AS "quota_rule", \
-  '{{ [dovecot.mail_storage_user_home, '%d', '%n'] | ansible.builtin.path_join }}' AS "home", \
-  {{ dovecot.mail_storage_uid }} AS "uid", \
-  {{ dovecot.mail_storage_gid }} AS "gid" \
+  '{{ [deploy_mail_server_dovecot.mail_storage_user_home, '%d', '%n'] | ansible.builtin.path_join }}' AS "home", \
+  {{ deploy_mail_server_dovecot.mail_storage_uid }} AS "uid", \
+  {{ deploy_mail_server_dovecot.mail_storage_gid }} AS "gid" \
   FROM users_fqda \
   WHERE \
   fqda = '%u' \

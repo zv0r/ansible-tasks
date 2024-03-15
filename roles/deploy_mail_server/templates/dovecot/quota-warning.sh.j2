@@ -2,7 +2,7 @@
 PERCENT=$1
 USER=$2
 cat << EOF | /usr/lib/dovecot/dovecot-lda -d $USER -o "plugin/quota=maildir:User quota:noenforcing"
-From: postmaster@{{ mail_domains[0].server_fqdn }}
+From: postmaster@{{ deploy_mail_server_mail_domains[0].server_fqdn }}
 Subject: Quota warning - $PERCENT% reached
 
 Your mailbox can only store a limited amount of emails.

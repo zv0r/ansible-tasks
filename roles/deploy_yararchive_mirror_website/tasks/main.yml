@@ -7,7 +7,7 @@
 
 - name: Prepare website directory
   ansible.builtin.file:
-    path: "{{ yararchive_mirror_website_directory }}"
+    path: "{{ deploy_yararchive_mirror_website_directory }}"
     owner: root
     group: root
     mode: "0755"
@@ -16,8 +16,8 @@
 
 - name: Prepare fstab
   ansible.posix.mount:
-    src: "{{ fstab_mount_source }}"
-    path: "{{ yararchive_mirror_website_directory }}"
+    src: "{{ deploy_yararchive_mirror_website_fstab_mount_source }}"
+    path: "{{ deploy_yararchive_mirror_website_directory }}"
     opts: "ro,noexec,nosuid,nodev"
     state: mounted
     boot: true
@@ -27,6 +27,6 @@
   ansible.builtin.include_role:
     name: setup_nginx_reverse_proxy
   vars:
-    template_file_name: mirror.yararchive.ru.conf.j2
-    nginx_server_config_file_name: mirror.yararchive.ru.conf
-    nginx_server_listen_port: 443
+    setup_nginx_reverse_proxy_template_file: mirror.yararchive.ru.conf.j2
+    setup_nginx_reverse_proxy_config_file: mirror.yararchive.ru.conf
+    setup_nginx_reverse_proxy_listen_port: 443

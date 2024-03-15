@@ -8,7 +8,7 @@
         },
         "control-socket": {
             "socket-type": "unix",
-            "socket-name": "{{ kea_dhcp4_socket_name }}"
+            "socket-name": "{{ setup_kea_dhcp4_server_socket_name }}"
         },
         "lease-database": {
             "type": "memfile",
@@ -46,7 +46,7 @@
             {
                 "library": "/usr/lib/x86_64-linux-gnu/kea/hooks/libdhcp_run_script.so",
                 "parameters": {
-                    "name": "{{ libdhcp_run_script_sh_file }}",
+                    "name": "{{ setup_kea_dhcp4_server_libdhcp_run_script_sh_file }}",
                     "sync": false
                 }
             },
@@ -76,7 +76,7 @@
             {
 {% include "templates/" + inventory_hostname + "/kea-dhcp4.conf.subnets.j2" %}
 
-                <? include "{{ kea_directory }}/kea-dhcp4-reservations.conf" ?>
+                <? include "{{ setup_kea_dhcp4_server_directory }}/kea-dhcp4-reservations.conf" ?>
             }
         ],
         "loggers": [

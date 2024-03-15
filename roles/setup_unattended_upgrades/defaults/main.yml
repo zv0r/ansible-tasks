@@ -1,5 +1,5 @@
 ---
-skip_setup_system_email_accounts: false
-unattended_updates_notify_email: it@yararchive.ru
-apt_daily_timer_directory: /etc/systemd/system/apt-daily.timer.d
-apt_daily_upgrade_timer_directory: /etc/systemd/system/apt-daily-upgrade.timer.d
+setup_unattended_upgrades_skip_setup_system_email_accounts: false
+setup_unattended_upgrades_notify_email: it@yararchive.ru
+setup_unattended_upgrades_apt_daily_timer_directory: /etc/systemd/system/apt-daily.timer.d
+setup_unattended_upgrades_apt_daily_upgrade_timer_directory: /etc/systemd/system/apt-daily-upgrade.timer.d

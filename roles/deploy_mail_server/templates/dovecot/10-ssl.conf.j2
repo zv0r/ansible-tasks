@@ -9,9 +9,9 @@ ssl = required
 # dropping root privileges, so keep the key file unreadable by anyone but
 # root. Included doc/mkcert.sh can be used to easily generate self-signed
 # certificate, just make sure to update the domains in dovecot-openssl.cnf
-ssl_cert = <{{ mail_domains[0].cert_fullchain_file }}
-ssl_key = <{{ mail_domains[0].cert_key_file }}
-{% for mail_domain in mail_domains %}
+ssl_cert = <{{ deploy_mail_server_mail_domains[0].cert_fullchain_file }}
+ssl_key = <{{ deploy_mail_server_mail_domains[0].cert_key_file }}
+{% for mail_domain in deploy_mail_server_mail_domains %}
 
 local_name {{ mail_domain.server_fqdn }} {
   ssl_cert = <{{ mail_domain.cert_fullchain_file }}

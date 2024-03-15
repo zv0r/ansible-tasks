@@ -1,2 +1,2 @@
 ---
-skip_setup_system_email_accounts: true
+setup_unattended_upgrades_skip_setup_system_email_accounts: true

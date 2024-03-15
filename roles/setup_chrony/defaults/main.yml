@@ -1,2 +1,2 @@
 ---
-chrony_directory: "/etc/chrony"
+setup_chrony_directory: "/etc/chrony"
