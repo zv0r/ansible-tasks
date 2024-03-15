@@ -67,7 +67,7 @@
 
 - name: Setup Roundcube PostgreSQL db
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   become_user: postgres
   block:
     - name: Create Roundcube database

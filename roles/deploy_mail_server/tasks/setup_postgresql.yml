@@ -13,7 +13,7 @@
 
 - name: Set PostgreSQL up
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   become_user: postgres
   block:
     - name: Create mail server database
