@@ -38,7 +38,8 @@
   notify: Restart Postfix
 
 - name: Set default cert
-  ansible.builtin.command: "postconf smtpd_tls_chain_files={{ [deploy_mail_server_mail_domains[0].cert_key_file, deploy_mail_server_mail_domains[0].cert_fullchain_file] | join(', ') | quote }}"
+  ansible.builtin.command: "postconf smtpd_tls_chain_files=\
+    {{ [deploy_mail_server_mail_domains[0].cert_key_file, deploy_mail_server_mail_domains[0].cert_fullchain_file] | join(', ') | quote }}"
   failed_when: false
   changed_when: true
   notify: Restart Postfix
@@ -102,8 +103,10 @@
   with_items:
     - { map: virtual_mailbox_domains, test_data: "{{ deploy_mail_server_mail_domains[0].name }}", res: "1" }
     - { map: virtual_mailbox_maps, test_data: "tech@{{ deploy_mail_server_mail_domains[0].name }}", res: "1" }
-    - { map: virtual_alias_maps, test_data: "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
-    - { map: smtpd_sender_login_maps, test_data: "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
+    - { map: virtual_alias_maps, test_data:
+          "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
+    - { map: smtpd_sender_login_maps, test_data:
+          "postmaster@{{ deploy_mail_server_mail_domains[0].name }}", res: "tech@{{ deploy_mail_server_mail_domains[0].name }}" }
 
 - name: Enable submission in master.cf
   ansible.builtin.command: >-
